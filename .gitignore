@@ -1,5 +1,8 @@
 # Documentation files
-*.md
+travel_ui.md
+PWA_Implementation_Summary.md
+Travel_Expense_Manager_PRD_Consolidated_v1_v2.md
+travel-module-e2e-spec.md
 *.docx
 
 # OS generated files
