@@ -7,7 +7,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#4f46e5">
     <link rel="apple-touch-icon" href="icon-192.svg">
 </head>
 <body>
@@ -15,7 +15,7 @@
     <header class="header">
         <div class="container">
             <div class="logo">
-                <i class="fas fa-plane"></i>
+                <i class="fas fa-car"></i>
                 <span>TravelExpense</span>
             </div>
             <div class="user-info">
@@ -60,9 +60,9 @@
     </nav>
 
     <!-- Main Content -->
-    <main class="main-content" style="padding: 24px; max-width: 1280px; margin: 0 auto;">
+    <main class="main-content">
         <!-- Page Header -->
-        <div class="page-header" style="margin-bottom: 24px;">
+        <div class="page-header page-container" style="margin-bottom: 16px;">
             <h1 style="font-size: 28px; font-weight: 700; color: #1E1E1E; margin: 0; display: flex; align-items: center; gap: 12px;">
                 <i class="fas fa-car" style="color: #667eea;"></i>
                 Vehicle & Mileage
@@ -70,70 +70,93 @@
             <p style="color: #666; margin: 8px 0 0 0;">Manage your vehicles and track your trips</p>
         </div>
         <!-- KPI Cards -->
-        <section class="kpi-section">
-            <div class="kpi-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin: 24px 0;">
-                <div class="kpi-card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 16px;">
-                    <div class="kpi-icon" style="width: 40px; height: 40px; background: #e3f2fd; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #1976d2;">
+        <section class="kpi-section page-container">
+            <div class="kpi-grid">
+                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
+                    <div class="kpi-icon" style="width:40px;height:40px;background:#e3f2fd;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1976d2;">
                         <i class="fas fa-route"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 style="font-size: 24px; font-weight: 700; color: #1E1E1E; margin: 0;">24</h3>
-                        <p style="font-size: 14px; color: #666; margin: 4px 0;">Trips Logged</p>
-                        <span class="kpi-period" style="font-size: 12px; color: #999;">This Month</span>
+                        <h3 class="kpi-number" data-count="24" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">0</h3>
+                        <p style="font-size:14px;color:#666;margin:4px 0;">Trips Logged</p>
+                        <span class="kpi-period" style="font-size:12px;color:#999;">This Month</span>
                     </div>
                 </div>
                 
-                <div class="kpi-card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 16px;">
-                    <div class="kpi-icon pending" style="width: 40px; height: 40px; background: #fff3e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f57c00;">
+                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
+                    <div class="kpi-icon pending" style="width:40px;height:40px;background:#fff3e0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#f57c00;">
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 style="font-size: 24px; font-weight: 700; color: #1E1E1E; margin: 0;">3</h3>
-                        <p style="font-size: 14px; color: #666; margin: 4px 0;">Pending Approval</p>
-                        <span class="kpi-period" style="font-size: 12px; color: #999;">Awaiting Review</span>
+                        <h3 class="kpi-number" data-count="3" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">0</h3>
+                        <p style="font-size:14px;color:#666;margin:4px 0;">Pending Approval</p>
+                        <span class="kpi-period" style="font-size:12px;color:#999;">Awaiting Review</span>
                     </div>
                 </div>
                 
-                <div class="kpi-card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 16px;">
-                    <div class="kpi-icon cost" style="width: 40px; height: 40px; background: #e8f5e8; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #388e3c;">
+                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
+                    <div class="kpi-icon cost" style="width:40px;height:40px;background:#e8f5e8;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#388e3c;">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 style="font-size: 24px; font-weight: 700; color: #1E1E1E; margin: 0;">Rp 2.4M</h3>
-                        <p style="font-size: 14px; color: #666; margin: 4px 0;">Est. Cost</p>
-                        <span class="kpi-period" style="font-size: 12px; color: #999;">This Month</span>
+                        <h3 class="kpi-number" data-count-text="Rp 2.4M" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">Rp 0</h3>
+                        <p style="font-size:14px;color:#666;margin:4px 0;">Est. Cost</p>
+                        <span class="kpi-period" style="font-size:12px;color:#999;">This Month</span>
                     </div>
                 </div>
                 
-                <div class="kpi-card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 16px;">
-                    <div class="kpi-icon warning" style="width: 40px; height: 40px; background: #ffebee; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #d32f2f;">
+                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
+                    <div class="kpi-icon warning" style="width:40px;height:40px;background:#ffebee;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#d32f2f;">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 style="font-size: 24px; font-weight: 700; color: #1E1E1E; margin: 0;">1</h3>
-                        <p style="font-size: 14px; color: #666; margin: 4px 0;">Policy Violations</p>
-                        <span class="kpi-period" style="font-size: 12px; color: #999;">Needs Attention</span>
+                        <h3 class="kpi-number" data-count="1" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">0</h3>
+                        <p style="font-size:14px;color:#666;margin:4px 0;">Policy Violations</p>
+                        <span class="kpi-period" style="font-size:12px;color:#999;">Needs Attention</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Action Bar -->
-        <section class="action-bar">
+        <section class="action-bar page-container">
             <button class="btn-primary" onclick="showNewLogChooser()">
                 <i class="fas fa-plus"></i>
-                New Vehicle Log
+                New vehicle log
             </button>
-            <button class="btn-secondary" onclick="showImportDialog()" title="Bulk import vehicle logs from CSV/XLSX template (max 100 rows)" disabled>
-                <i class="fas fa-file-import"></i>
-                Bulk import (CSV/XLSX)
-                <i class="fas fa-info-circle" style="margin-left: 4px; opacity: 0.7;"></i>
-                <span style="font-size: 12px; color: #999; margin-left: 8px;">(Coming soon)</span>
-            </button>
+
+            <!-- Tooltip-wrapped import button (max ~72 characters width) -->
+            <span class="tooltip-wrap" style="position: relative; display: inline-flex; align-items: center;">
+                <button class="btn-secondary" onclick="showImportDialog()" aria-describedby="import-tip" disabled>
+                    <i class="fas fa-file-import"></i>
+                    Bulk import (CSV/XLSX)
+                    <i class="fas fa-info-circle" style="margin-left: 4px; opacity: 0.7;"></i>
+                    <span style="font-size: 12px; color: #999; margin-left: 8px;">(Available Q4)</span>
+                </button>
+                <span id="import-tip" class="tip" role="tooltip" style="position: absolute; bottom: calc(100% + 8px); left: 0; background: #111827; color: #fff; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.4; max-width: 72ch; width: auto; box-shadow: 0 6px 20px rgba(0,0,0,0.25); opacity: 0; pointer-events: none; transform: translateY(4px); transition: opacity .15s ease, transform .15s ease; overflow-wrap: anywhere; z-index: 10; white-space: normal;">
+                    Bulk import vehicle logs from CSV/XLSX template (max 100 rows)
+                </span>
+            </span>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const wrap = document.querySelector('.tooltip-wrap');
+                    const tip = wrap?.querySelector('.tip');
+                    if (wrap && tip) {
+                        wrap.addEventListener('mouseenter', () => {
+                            tip.style.opacity = '1';
+                            tip.style.transform = 'translateY(0)';
+                        });
+                        wrap.addEventListener('mouseleave', () => {
+                            tip.style.opacity = '0';
+                            tip.style.transform = 'translateY(4px)';
+                        });
+                    }
+                });
+            </script>
         </section>
 
         <!-- Filter Bar -->
-        <div class="filter-bar" style="background: white; padding: 16px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 24px 0; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+        <div class="filter-bar page-container" style="background: white; padding: 12px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 16px 0; display: grid; grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; gap: 12px; white-space: nowrap;">
             <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
                 <label style="font-size: 14px; color: #666; font-weight: 500;">Saved Views:</label>
                 <select id="savedViewsFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;">
@@ -190,7 +213,7 @@
         </div>
 
         <!-- Vehicle Logs -->
-        <section class="vehicle-logs">
+        <section class="vehicle-logs page-container">
             <div class="section-header">
                 <h3>Vehicle Logs</h3>
                 <span class="log-count">24 logs found</span>
@@ -207,7 +230,7 @@
                         <div class="log-status" style="display: flex; gap: 8px; align-items: center;">
                             <span class="status-badge pending" aria-label="Status: Pending approval" style="background: #fff3e0; color: #f57c00; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;">Pending</span>
                             <span class="policy-chip violation" aria-label="Policy violation: Over budget limit" style="background: #ffebee; color: #d32f2f; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Over Budget</span>
-                            <span class="sla-chip" aria-label="SLA status: Due in 2 days" style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Due in 2 days</span>
+                            <span class="sla-chip" aria-label="SLA status: Due in 2 days" style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Due in 2 days</span>
                         </div>
                     </div>
                     <div class="log-content" style="display: flex; justify-content: space-between; align-items: flex-end;">
@@ -220,15 +243,15 @@
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Fuel</div>
                                     <div style="font-weight: 500;">20L × Rp 15,000/L</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 300,000</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 300,000</div>
                                 </div>
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Parking</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 10,000</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 10,000</div>
                                 </div>
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Toll</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 5,000</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 5,000</div>
                                 </div>
                             </div>
                             <style>
@@ -239,10 +262,10 @@
                                 }
                             </style>
                         </div>
-                        <div class="log-actions" style="display: flex; gap: 8px; margin-left: 20px;">
-                            <button class="btn-sm" onclick="viewLog('VH-2025-0315-001')" style="padding: 8px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer;">View</button>
-                            <button class="btn-sm secondary" onclick="editLog('VH-2025-0315-001')" style="padding: 8px 16px; border: none; background: #1976d2; color: white; border-radius: 6px; font-size: 14px; cursor: pointer;">Edit</button>
-                        </div>
+                    </div>
+                    <div class="log-actions footer-row" style="display: flex; gap: 8px; margin-left: 0; padding: 10px 0 0; border-top: 1px solid #f0f0f0;">
+                        <button class="btn-sm" onclick="viewLog('VH-2025-0315-001')" style="padding: 8px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer;">View</button>
+                        <button class="btn-sm secondary" onclick="editLog('VH-2025-0315-001')" style="padding: 8px 16px; border: none; background: #1976d2; color: white; border-radius: 6px; font-size: 14px; cursor: pointer;">Edit</button>
                     </div>
                 </div>
 
@@ -268,22 +291,22 @@
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Fuel</div>
                                     <div style="font-weight: 500;">12L × Rp 14,200/L</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 170,400</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 170,400</div>
                                 </div>
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Parking</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 5,000</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 5,000</div>
                                 </div>
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Toll</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 0</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 0</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="log-actions" style="display: flex; gap: 8px; margin-left: 20px;">
-                            <button class="btn-sm" onclick="viewLog('VH-2025-0314-002')" style="padding: 8px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">View</button>
-                            <button class="btn-sm convert" onclick="convertToExpense('VH-2025-0314-002')" title="Create pre-filled expense report from this log" style="padding: 8px 16px; border: none; background: #388e3c; color: white; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">Create Expense Report</button>
-                        </div>
+                    </div>
+                    <div class="log-actions footer-row" style="display: flex; gap: 8px; margin-left: 0; padding: 10px 0 0; border-top: 1px solid #f0f0f0;">
+                        <button class="btn-sm" onclick="viewLog('VH-2025-0314-002')" style="padding: 8px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">View</button>
+                        <button class="btn-sm convert" onclick="convertToExpense('VH-2025-0314-002')" title="Convert this log into an expense draft" style="padding: 8px 16px; border: none; background: #388e3c; color: white; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">Convert to expense</button>
                     </div>
                 </div>
 
@@ -309,19 +332,19 @@
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Fuel</div>
                                     <div style="font-weight: 500;">18L × Rp 14,800/L</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 266,400</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 266,400</div>
                                 </div>
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Parking</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 15,000</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 15,000</div>
                                 </div>
                                 <div>
                                     <div style="color: #666; margin-bottom: 2px;">Toll</div>
-                                    <div style="color: #333; font-weight: bold; text-align: right;">Rp 10,000</div>
+                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 10,000</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="log-actions" style="display: flex; gap: 8px; margin-left: 20px; position: sticky; bottom: 0; background: white; padding: 12px 0; border-top: 1px solid #f0f0f0; margin-top: 16px;">
+                        <div class="log-actions footer-row" style="display: flex; gap: 8px; margin-left: 20px; position: sticky; bottom: 0; background: white; padding: 12px 0; border-top: 1px solid #f0f0f0; margin-top: 16px;">
                             <button class="btn-sm" onclick="viewLog('VH-2025-0313-003')" style="padding: 10px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">View</button>
                             <button class="btn-sm primary" onclick="submitLog('VH-2025-0313-003')" style="padding: 10px 20px; border: none; background: #2196F3; color: white; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 600; text-transform: none;">Submit for approval</button>
                         </div>
@@ -334,7 +357,7 @@
         <div id="newLogModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
             <div class="modal-content" style="background: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
                 <div class="modal-header">
-                    <h3>Create New Vehicle Log</h3>
+                    <h3>Create new vehicle log</h3>
                     <button class="modal-close" onclick="closeModal('newLogModal')">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -350,7 +373,7 @@
                             <div class="type-icon">
                                 <i class="fas fa-parking"></i>
                             </div>
-                            <h4>Parking/Toll Only</h4>
+                            <h4>Parking/Toll only</h4>
                             <p>Record parking fees and toll charges</p>
                         </div>
                         <div class="log-type-card" onclick="openMaintenanceForm()">
@@ -369,114 +392,168 @@
                 <div style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;">
                     <i class="fas fa-car"></i>
                 </div>
-                <h3 style="color: #666; margin-bottom: 8px; font-size: 18px;">No vehicle logs found</h3>
-                <p style="color: #999; font-size: 14px; margin-bottom: 24px;">Try adjusting your filters or create a new vehicle log</p>
+                <h3 style="color: #666; margin-bottom: 8px; font-size: 18px;">No vehicle logs yet</h3>
+                <p style="color: #999; font-size: 14px; margin-bottom: 24px;">Try adjusting filters or create a new vehicle log</p>
                 <button onclick="showNewLogChooser()" style="padding: 12px 24px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer;">
                     <i class="fas fa-plus" style="margin-right: 8px;"></i>
-                    New Vehicle Log
+                    Create vehicle log
                 </button>
             </div>
         </div>
 
-        <!-- Fuel + Mileage Form Modal -->
+        <!-- New Vehicle Log Wizard Modal (3-step) -->
         <div id="fuelMileageModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div class="modal-content large" style="background: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            <div class="modal-content large" style="background: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 90vh; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column;">
                 <div class="modal-header">
-                    <h3>Fuel + Mileage Log</h3>
+                    <h3>New vehicle log</h3>
                     <button class="modal-close" onclick="closeModal('fuelMileageModal')">&times;</button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="padding-bottom: 0;">
+                    <!-- Step Tabs -->
+                    <div class="wizard-tabs" style="display: flex; gap: 8px; border-bottom: 1px solid #eee; margin: -14px -16px 12px; padding: 0 16px;">
+                        <button type="button" class="wizard-tab" data-step="0" aria-current="page" style="border: none; background: none; padding: 12px 8px; font-weight: 600; color: #4f46e5;">Basic</button>
+                        <button type="button" class="wizard-tab" data-step="1" style="border: none; background: none; padding: 12px 8px; color: #64748b;">Fuel</button>
+                        <button type="button" class="wizard-tab" data-step="2" style="border: none; background: none; padding: 12px 8px; color: #64748b;">Attachments</button>
+                    </div>
                     <form id="fuelMileageForm" class="vehicle-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="vehicleSelect">Vehicle *</label>
-                                <select id="vehicleSelect" required>
-                                    <option value="">Select Vehicle</option>
-                                    <option value="B1234ABC">B 1234 ABC - Honda Civic</option>
-                                    <option value="B5678DEF">B 5678 DEF - Toyota Avanza</option>
-                                </select>
+                        <!-- Step 0: Basic -->
+                        <div class="wizard-step" data-step="0">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="vehicleSelect">Vehicle <span class="req">*</span></label>
+                                    <select id="vehicleSelect" required>
+                                        <option value="">Select Vehicle</option>
+                                        <option value="B1234ABC">B 1234 ABC - Honda Civic</option>
+                                        <option value="B5678DEF">B 5678 DEF - Toyota Avanza</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="logDate">Date <span class="req">*</span></label>
+                                    <input type="date" id="logDate" required>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="logDate">Date *</label>
-                                <input type="date" id="logDate" required>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="odoStart">Odometer Start (km) <span class="req">*</span></label>
+                                    <input type="number" id="odoStart" placeholder="12,500" required>
+                                    <small class="form-hint">Auto-prefilled from last record</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="odoEnd">Odometer End (km) <span class="req">*</span></label>
+                                    <input type="number" id="odoEnd" placeholder="12,640" required>
+                                    <small class="form-hint">Distance will be calculated automatically</small>
+
+                                    <!-- Policy helper banner (green / amber / red / neutral) -->
+                                    <div id="rate-per-km" class="banner banner-neutral" role="status" aria-live="polite" style="margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 12px; display: none; border: 1px solid transparent; display: none;">
+                                        <span id="rate-icon" class="icon" style="margin-right: 6px;"></span>
+                                        <span id="rate-display">Enter fuel volume and price to compute rate per km.</span>
+                                        <div id="policy-caption" style="margin-top: 4px; font-weight: 500;"></div>
+                                    </div>
+
+                                    <style>
+                                        /* Inline banner palette for wizard policy helper */
+                                        .banner { display: none; }
+                                        .banner-neutral { background: #f3f4f6; color: #374151; border-color: #e5e7eb !important; }
+                                        .banner-ok { background: #ecfdf5; color: #065f46; border-color: #a7f3d0 !important; }
+                                        .banner-amber { background: #fffbeb; color: #92400e; border-color: #fde68a !important; }
+                                        .banner-red { background: #fef2f2; color: #991b1b; border-color: #fecaca !important; }
+                                        .banner .icon { display: inline-flex; width: 16px; height: 16px; vertical-align: -2px; }
+                                        .banner-ok .icon::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                        .banner-amber .icon::before { content: "\f071"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                        .banner-red .icon::before { content: "\f06a"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                        .banner-neutral .icon::before { content: "\f129"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                    </style>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="form-row">
+                        <!-- Step 1: Fuel -->
+                        <div class="wizard-step" data-step="1" style="display:none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fuelVolume">Fuel Volume (L) <span class="req">*</span></label>
+                                    <input type="number" step="0.1" id="fuelVolume" placeholder="20.0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pricePerL">Price per Liter (Rp) <span class="req">*</span></label>
+                                    <input type="number" id="pricePerL" placeholder="14,000" required>
+                                    <small class="form-hint policy-hint">Soft cap: Rp 14,500/L</small>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="parkingFee">Parking Fee (Rp)</label>
+                                    <input type="number" id="parkingFee" placeholder="0">
+                                    <small class="form-hint">Hard cap: Rp 100,000/day</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tollFee">Toll Fee (Rp)</label>
+                                    <input type="number" id="tollFee" placeholder="0">
+                                </div>
+                            </div>
+                            <!-- Policy helper banner mirrored in Step 1 (Fuel) -->
+                            <div id="rate-per-km-step1" class="banner banner-neutral" role="status" aria-live="polite" style="margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 12px; display: none; border: 1px solid transparent; display: none;">
+                                <span class="icon" style="margin-right: 6px;"></span>
+                                <span class="rate-display">Masukkan volume & harga BBM untuk menghitung Rp/km.</span>
+                                <div class="policy-caption" style="margin-top: 4px; font-weight: 500;"></div>
+                            </div>
+                            <style>
+                                /* Reuse inline banner palette */
+                                #rate-per-km-step1.banner { display: none; }
+                                #rate-per-km-step1.banner-neutral { background: #f3f4f6; color: #374151; border-color: #e5e7eb !important; }
+                                #rate-per-km-step1.banner-ok { background: #ecfdf5; color: #065f46; border-color: #a7f3d0 !important; }
+                                #rate-per-km-step1.banner-amber { background: #fffbeb; color: #92400e; border-color: #fde68a !important; }
+                                #rate-per-km-step1.banner-red { background: #fef2f2; color: #991b1b; border-color: #fecaca !important; }
+                                #rate-per-km-step1 .icon { display: inline-flex; width: 16px; height: 16px; vertical-align: -2px; }
+                                #rate-per-km-step1.banner-ok .icon::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                #rate-per-km-step1.banner-amber .icon::before { content: "\f071"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                #rate-per-km-step1.banner-red .icon::before { content: "\f06a"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                                #rate-per-km-step1.banner-neutral .icon::before { content: "\f129"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
+                            </style>
+                        </div>
+                        <!-- Step 2: Attachments -->
+                        <div class="wizard-step" data-step="2" style="display:none;">
                             <div class="form-group">
-                                <label for="odoStart">Odometer Start (km) *</label>
-                                <input type="number" id="odoStart" placeholder="12,500" required>
-                                <small class="form-hint">Auto-prefilled from last record</small>
+                                <label for="receipt">Receipt</label>
+                                <input type="file" id="receipt" accept=".jpg,.jpeg,.png,.pdf">
+                                <small class="form-hint">Required if fuel > 10L. Max 5MB</small>
                             </div>
                             <div class="form-group">
-                                <label for="odoEnd">Odometer End (km) *</label>
-                                <input type="number" id="odoEnd" placeholder="12,640" required>
-                                <small class="form-hint">Distance will be calculated automatically</small>
-                                <div id="rate-per-km" style="margin-top: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; font-size: 12px; display: none;">
-                                    <span id="rate-display"></span>
-                                    <div id="policy-warning" style="color: #d32f2f; font-weight: 500; margin-top: 4px; display: none;">
-                                        <i class="fas fa-exclamation-triangle"></i> Exceeds soft cap of Rp 1,500/km
+                                <label for="odoPhoto">Odometer photo</label>
+                                <input type="file" id="odoPhoto" accept="image/*" capture="environment">
+                                <small class="form-hint">Required when distance ≥ 100 km</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="autoSyncGPS">
+                                    <span class="checkmark"></span>
+                                    Auto-sync GPS location
+                                </label>
+                            </div>
+                            <!-- Policy Panel -->
+                            <div class="policy-panel">
+                                <h4>Policy check</h4>
+                                <div class="policy-indicators">
+                                    <div class="policy-item ok">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Fuel efficiency within normal range</span>
+                                    </div>
+                                    <div class="policy-item warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Price per liter approaching soft cap</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="fuelVolume">Fuel Volume (L) *</label>
-                                <input type="number" step="0.1" id="fuelVolume" placeholder="20.0" required>
+                        <!-- Wizard Navigation -->
+                        <div class="modal-footer" style="display:flex;justify-content:space-between;gap:8px;border-top:1px solid #eee;margin:0 -16px;padding:12px 16px;">
+                            <div>
+                                <button type="button" class="btn btn-ghost" id="wizardBackBtn" onclick="wizardPrev()" disabled>Back</button>
                             </div>
-                            <div class="form-group">
-                                <label for="pricePerL">Price per Liter (Rp) *</label>
-                                <input type="number" id="pricePerL" placeholder="14,000" required>
-                                <small class="form-hint policy-hint">Soft cap: Rp 14,500/L</small>
+                            <div>
+                                <button type="button" class="btn btn-ghost" onclick="saveDraft()">Save draft</button>
+                                <button type="button" class="btn primary" id="wizardNextBtn" onclick="wizardNext()">Next</button>
+                                <button type="submit" class="btn primary" id="wizardSubmitBtn" style="display:none;">Submit for approval</button>
                             </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="parkingFee">Parking Fee (Rp)</label>
-                                <input type="number" id="parkingFee" placeholder="0">
-                                <small class="form-hint">Hard cap: Rp 100,000/day</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="tollFee">Toll Fee (Rp)</label>
-                                <input type="number" id="tollFee" placeholder="0">
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="receipt">Receipt</label>
-                            <input type="file" id="receipt" accept=".jpg,.jpeg,.png,.pdf">
-                            <small class="form-hint">Required if fuel > 10L. Max 5MB</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="checkbox-label">
-                                <input type="checkbox" id="autoSyncGPS">
-                                <span class="checkmark"></span>
-                                Auto-sync GPS location
-                            </label>
-                        </div>
-                        
-                        <!-- Policy Panel -->
-                        <div class="policy-panel">
-                            <h4>Policy Check</h4>
-                            <div class="policy-indicators">
-                                <div class="policy-item ok">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Fuel efficiency within normal range</span>
-                                </div>
-                                <div class="policy-item warning">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <span>Price per liter approaching soft cap</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button type="button" class="btn-secondary" onclick="saveDraft()">Save draft</button>
-                            <button type="submit" class="btn-primary">Submit for approval</button>
                         </div>
                     </form>
                 </div>
@@ -484,38 +561,7 @@
         </div>
     </main>
 
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-        </a>
-        <a href="mwp.html" class="nav-item">
-            <i class="fas fa-calendar-alt"></i>
-            <span>MWP</span>
-        </a>
-        <a href="travel.html" class="nav-item">
-            <i class="fas fa-plane"></i>
-            <span>Travel</span>
-        </a>
-        <a href="#" class="nav-item">
-                <i class="fas fa-receipt"></i>
-                <span>Expenses</span>
-            </a>
-            <a href="vehicle.html" class="nav-item active" style="position: relative;">
-                <i class="fas fa-car"></i>
-                <span>Vehicle</span>
-                <div class="nav-badge" style="position: absolute; top: 8px; right: 12px; background: #d32f2f; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold;">1</div>
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fas fa-check-circle"></i>
-                <span>Approvals</span>
-            </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </nav>
+    <!-- Bottom Navigation (single instance kept at top) -->
 
     <script src="script.js"></script>
     <script>
@@ -533,6 +579,8 @@
             document.getElementById('fuelMileageModal').style.display = 'flex';
             // Set today's date as default
             document.getElementById('logDate').value = new Date().toISOString().split('T')[0];
+            // Initialize wizard to first step
+            setWizardStep(0);
         }
 
         function openParkingTollForm() {
@@ -562,11 +610,66 @@
         }
 
         function convertToExpense(logId) {
-            if (confirm(`Create expense report from log ${logId}?`)) {
-                // Show success snackbar
+            if (confirm(`Convert log ${logId} into an expense draft?`)) {
                 const expenseId = `EXP-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`;
-                showSnackbar(`✓ Expense report ${expenseId} created from vehicle log ${logId}`);
+                showSnackbar(`Vehicle log ${logId} converted to draft ${expenseId}`);
             }
+        }
+
+        // Simple wizard state
+        let wizardStep = 0;
+        function setWizardStep(step) {
+            wizardStep = step;
+            // Tabs
+            document.querySelectorAll('.wizard-tab').forEach(tab => {
+                const s = parseInt(tab.dataset.step, 10);
+                tab.setAttribute('aria-current', s === step ? 'page' : 'false');
+                tab.style.color = s === step ? '#4f46e5' : '#64748b';
+                tab.style.fontWeight = s === step ? '600' : '500';
+                tab.style.borderBottom = s === step ? '2px solid #4f46e5' : '2px solid transparent';
+            });
+            // Steps
+            document.querySelectorAll('.wizard-step').forEach(p => {
+                p.style.display = parseInt(p.dataset.step, 10) === step ? 'block' : 'none';
+            });
+            // Buttons
+            const back = document.getElementById('wizardBackBtn');
+            const next = document.getElementById('wizardNextBtn');
+            const submit = document.getElementById('wizardSubmitBtn');
+            back.disabled = step === 0;
+            next.style.display = step < 2 ? 'inline-flex' : 'none';
+            submit.style.display = step === 2 ? 'inline-flex' : 'none';
+        }
+        function wizardNext() {
+            if (!validateWizardStep(wizardStep)) return;
+            setWizardStep(Math.min(2, wizardStep + 1));
+        }
+        function wizardPrev() {
+            setWizardStep(Math.max(0, wizardStep - 1));
+        }
+        function validateWizardStep(step) {
+            // Minimal per-step validation to unblock QA
+            if (step === 0) {
+                const vehicle = document.getElementById('vehicleSelect').value;
+                const date = document.getElementById('logDate').value;
+                const start = document.getElementById('odoStart').value;
+                const end = document.getElementById('odoEnd').value;
+                if (!vehicle || !date || !start || !end || Number(end) - Number(start) <= 0) {
+                    alert('Please fill vehicle, date, and valid odometer values.');
+                    return false;
+                }
+                return true;
+            }
+            if (step === 1) {
+                const vol = parseFloat(document.getElementById('fuelVolume').value);
+                const price = parseFloat(document.getElementById('pricePerL').value);
+                if (!(vol > 0) || !(price > 0)) {
+                    alert('Please input fuel volume and price per liter.');
+                    return false;
+                }
+                return true;
+            }
+            return true;
         }
 
         // Show snackbar notification
@@ -659,6 +762,26 @@
                 alert('Receipt is required for fuel volume > 10L');
                 return false;
             }
+
+            // Hard-cap: Rp 1,600/km based on distance
+            const startKm = parseFloat(document.getElementById('odoStart').value) || 0;
+            const endKm = parseFloat(document.getElementById('odoEnd').value) || 0;
+            const distance = endKm - startKm;
+            const fuelCost = (fuelVolume > 0 && pricePerL > 0) ? (fuelVolume * pricePerL) : 0;
+            if (distance > 0 && fuelCost > 0) {
+                const ratePerKm = fuelCost / distance;
+                if (ratePerKm > 1600) {
+                    alert('Rate per km exceeds hard cap (Rp 1,600/km). Please adjust inputs.');
+                    return false;
+                }
+            }
+
+            // Require odometer photo when distance ≥ 100 km
+            const odoPhoto = document.getElementById('odoPhoto')?.files?.[0];
+            if (distance >= 100 && !odoPhoto) {
+                alert('Odometer photo is required when distance is ≥ 100 km.');
+                return false;
+            }
             
             return true;
         }
@@ -676,38 +799,108 @@
             }
         }
         
-        // Calculate rate per km and show policy warning
+        // Calculate rate per km and show policy states (green/amber/red + neutral)
         function calculateRatePerKm(distance) {
             const fuelVolume = parseFloat(document.getElementById('fuelVolume').value) || 0;
             const pricePerL = parseFloat(document.getElementById('pricePerL').value) || 0;
-            const fuelCost = fuelVolume * pricePerL;
-            
-            if (fuelCost > 0 && distance > 0) {
-                const ratePerKm = fuelCost / distance;
-                const formattedRate = new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0
-                }).format(ratePerKm);
-                
-                document.getElementById('rate-display').textContent = `Rate: ${formattedRate}/km`;
-                document.getElementById('rate-per-km').style.display = 'block';
-                
-                // Show warning if exceeds soft cap of Rp 1,500/km
-                const policyWarning = document.getElementById('policy-warning');
-                if (ratePerKm > 1500) {
-                    policyWarning.style.display = 'block';
-                } else {
-                    policyWarning.style.display = 'none';
+
+            // Step 0 elements
+            const rateWrap0 = document.getElementById('rate-per-km');
+            const rateDisplay0 = document.getElementById('rate-display');
+            const policyCaption0 = document.getElementById('policy-caption');
+
+            // Step 1 mirrored elements
+            const rateWrap1 = document.getElementById('rate-per-km-step1');
+            const rateDisplay1 = rateWrap1?.querySelector('.rate-display');
+            const policyCaption1 = rateWrap1?.querySelector('.policy-caption');
+
+            // Helper to update a banner set
+            const updateBanner = (wrap, displayEl, captionEl, state, formattedRate) => {
+                if (!wrap) return;
+                // Ensure visible when we have distance
+                wrap.style.display = distance > 0 ? 'block' : 'none';
+                wrap.classList.remove('banner-ok','banner-amber','banner-red','banner-neutral');
+                wrap.classList.add('banner', state);
+                if (displayEl) {
+                    if (formattedRate) {
+                        displayEl.textContent = `Rate: ${formattedRate}/km`;
+                    } else {
+                        displayEl.textContent = 'Masukkan volume & harga BBM untuk menghitung Rp/km.';
+                    }
                 }
-            } else {
+                if (captionEl) {
+                    captionEl.textContent = (
+                        state === 'banner-ok' ? 'Dalam kebijakan' :
+                        state === 'banner-amber' ? 'Mendekati batas soft cap' :
+                        state === 'banner-red' ? 'Melebihi soft cap' : ''
+                    );
+                }
+            };
+
+            if (!(distance > 0)) {
+                // Hide both when distance invalid
                 hideRatePerKm();
+                if (rateWrap1) {
+                    rateWrap1.style.display = 'none';
+                    rateWrap1.classList.remove('banner-ok','banner-amber','banner-red');
+                    rateWrap1.classList.add('banner-neutral');
+                    if (policyCaption1) policyCaption1.textContent = '';
+                }
+                return;
+            }
+
+            const fuelCost = (fuelVolume > 0 && pricePerL > 0) ? (fuelVolume * pricePerL) : 0;
+
+            // Thresholds
+            const OK_MAX = 1200;
+            const AMBER_MAX = 1500;
+
+            if (fuelCost <= 0) {
+                // Incomplete inputs -> neutral on both
+                updateBanner(rateWrap0, rateDisplay0, policyCaption0, 'banner-neutral', null);
+                updateBanner(rateWrap1, rateDisplay1, policyCaption1, 'banner-neutral', null);
+                return;
+            }
+
+            const ratePerKm = fuelCost / distance;
+            const formattedRate = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(ratePerKm);
+
+            if (ratePerKm <= OK_MAX) {
+                updateBanner(rateWrap0, rateDisplay0, policyCaption0, 'banner-ok', formattedRate);
+                updateBanner(rateWrap1, rateDisplay1, policyCaption1, 'banner-ok', formattedRate);
+            } else if (ratePerKm <= AMBER_MAX) {
+                updateBanner(rateWrap0, rateDisplay0, policyCaption0, 'banner-amber', formattedRate);
+                updateBanner(rateWrap1, rateDisplay1, policyCaption1, 'banner-amber', formattedRate);
+            } else {
+                updateBanner(rateWrap0, rateDisplay0, policyCaption0, 'banner-red', formattedRate);
+                updateBanner(rateWrap1, rateDisplay1, policyCaption1, 'banner-red', formattedRate);
             }
         }
-        
+
         function hideRatePerKm() {
-            document.getElementById('rate-per-km').style.display = 'none';
+            const rateWrap0 = document.getElementById('rate-per-km');
+            const policyCaption0 = document.getElementById('policy-caption');
+            if (rateWrap0) {
+                rateWrap0.style.display = 'none';
+                rateWrap0.classList.remove('banner-ok','banner-amber','banner-red');
+                rateWrap0.classList.add('banner-neutral');
+            }
+            if (policyCaption0) policyCaption0.textContent = '';
+
+            // Also hide Step 1 mirrored banner
+            const rateWrap1 = document.getElementById('rate-per-km-step1');
+            const policyCaption1 = rateWrap1?.querySelector('.policy-caption');
+            if (rateWrap1) {
+                rateWrap1.style.display = 'none';
+                rateWrap1.classList.remove('banner-ok','banner-amber','banner-red');
+                rateWrap1.classList.add('banner-neutral');
+            }
+            if (policyCaption1) policyCaption1.textContent = '';
         }
 
         // Auto-calculate distance
@@ -718,6 +911,8 @@
             const end = parseFloat(document.getElementById('odoEnd').value) || 0;
             if (end > start) {
                 calculateRatePerKm(end - start);
+            } else {
+                hideRatePerKm();
             }
         });
         document.getElementById('pricePerL').addEventListener('input', function() {
@@ -725,17 +920,19 @@
             const end = parseFloat(document.getElementById('odoEnd').value) || 0;
             if (end > start) {
                 calculateRatePerKm(end - start);
+            } else {
+                hideRatePerKm();
             }
         });
 
         // Form submission
-        document.getElementById('fuelMileageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (validateFuelMileageForm()) {
-                showNotImplementedPopup('Submit Fuel + Mileage Log');
-                closeModal('fuelMileageModal');
-            }
-        });
+       document.getElementById('fuelMileageForm').addEventListener('submit', function(e) {
+           e.preventDefault();
+           if (validateFuelMileageForm()) {
+               showSnackbar('Vehicle log created • pending submission review');
+               closeModal('fuelMileageModal');
+           }
+       });
 
         // Filter and sort event listeners
         document.getElementById('savedViewsFilter').addEventListener('change', function() {
@@ -867,16 +1064,92 @@
             if (userEmail) {
                 document.querySelector('.user-info span').textContent = `Hello, ${userEmail.split('@')[0]}`;
             }
+
+            // KPI count-up (unified)
+            const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+            function animateNumber(el, to, formatText) {
+                const start = performance.now();
+                const dur = 900;
+                function tick(now) {
+                    const p = Math.min(1, (now - start) / dur);
+                    const val = Math.round(to * easeOutCubic(p));
+                    el.textContent = formatText ? formatText(val) : String(val);
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            }
+            document.querySelectorAll('.kpi-number').forEach(el => {
+                const countText = el.getAttribute('data-count-text');
+                const count = el.getAttribute('data-count');
+                if (countText) {
+                    // currency or formatted text — just snap after short delay to avoid layout shift
+                    setTimeout(() => { el.textContent = countText; }, 350);
+                } else if (count) {
+                    const to = parseInt(count, 10) || 0;
+                    animateNumber(el, to);
+                }
+            });
+
+            // Footer-row behavior: sticky on mobile, hover show on desktop
+            const mq = window.matchMedia('(min-width: 1025px)');
+            const applyFooter = () => {
+                document.querySelectorAll('.log-card').forEach(card => {
+                    const footer = card.querySelector('.footer-row') || card.querySelector('.log-actions.footer-row');
+                    if (!footer) return;
+                    if (mq.matches) {
+                        // Desktop: hidden by default, show thin footer bar on hover
+                        footer.style.display = 'none';
+                        card.onmouseenter = () => {
+                            footer.style.display = 'flex';
+                            footer.style.borderTop = '1px solid #f0f0f0';
+                            footer.style.paddingTop = '8px';
+                            footer.style.marginTop = '8px';
+                        };
+                        card.onmouseleave = () => {
+                            footer.style.display = 'none';
+                        };
+                        footer.style.position = '';
+                        footer.style.bottom = '';
+                        footer.style.background = '';
+                        footer.style.paddingBottom = '';
+                    } else {
+                        // Mobile: sticky footer visible
+                        card.onmouseenter = null;
+                        card.onmouseleave = null;
+                        footer.style.display = 'flex';
+                        footer.style.position = 'sticky';
+                        footer.style.bottom = '0';
+                        footer.style.background = '#fff';
+                        footer.style.paddingBottom = '8px';
+                        // Prevent overlap by ensuring min padding bottom on card
+                        card.style.paddingBottom = '56px';
+                    }
+                });
+            };
+            applyFooter();
+            mq.addEventListener?.('change', applyFooter);
+
+            // Numeric alignment guard
+            document.querySelectorAll('.cost-breakdown div div:last-child').forEach(el => {
+                el.classList.add('numeric');
+                el.style.textAlign = 'right';
+            });
+
+            // Deep link: open chooser or wizard directly
+            if (location.hash === '#new-log') {
+                showNewLogChooser();
+                // optional: jump straight to wizard fuel+mileage
+                setTimeout(() => {
+                    if (document.getElementById('newLogModal').style.display === 'flex') {
+                        openFuelMileageForm();
+                    }
+                }, 200);
+            }
+
+            // No-op: gutters handled by CSS classes (page-container)
         });
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update user info
-            const userEmail = localStorage.getItem('userEmail');
-            if (userEmail) {
-                document.querySelector('.user-info span').textContent = `Hello, ${userEmail.split('@')[0]}`;
-            }
-        });
+        // Initialize page (duplicate cleanup consolidated above)
     </script>
 </body>
 </html>

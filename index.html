@@ -49,6 +49,7 @@
         <a href="vehicle.html" class="nav-item">
             <i class="fas fa-car"></i>
             <span>Vehicle</span>
+            <span class="nav-badge warning" id="badge-vehicle" data-count="3" title="3 pending/policy issues">3</span>
         </a>
         <a href="expenses.html" class="nav-item">
             <i class="fas fa-receipt"></i>
@@ -110,7 +111,7 @@
                             <button class="cta-button primary">Review now</button>
                         </div>
                     </div>
-
+    
                     <!-- My Reports -->
                     <div class="dashboard-card reports-card" onclick="window.location.href='expenses.html'">
                         <div class="card-header">
@@ -129,7 +130,7 @@
                             <button class="cta-button secondary" onclick="event.stopPropagation(); showNotImplementedPopup('New Report')">New report</button>
                         </div>
                     </div>
-
+    
                     <!-- Vehicle Logs -->
                     <div class="dashboard-card vehicle-card" onclick="window.location.href='vehicle.html'">
                         <div class="card-header">
@@ -144,7 +145,27 @@
                                 <span class="stat-divider">•</span>
                                 <span class="stat-item">Est. Cost <strong>Rp 2.4M</strong></span>
                             </div>
-                            <button class="cta-button primary" onclick="event.stopPropagation(); window.location.href='vehicle.html'">New log</button>
+                            <button class="cta-button primary" onclick="event.stopPropagation(); window.location.href='vehicle.html#new-log'">
+                                <i class="fas fa-road"></i> Log mileage
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- NEW: KPI tile “Vehicle logs this month” (deep-links to vehicle.html) -->
+                    <div class="dashboard-card" onclick="window.location.href='vehicle.html'">
+                        <div class="card-header">
+                            <h3><i class="fas fa-tachometer-alt"></i> Vehicle logs this month</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="mwp-stats">
+                                <div class="stat-item text-center">
+                                    <span class="stat-value kpi-number" data-count="12">0</span>
+                                    <span class="stat-label">Trips logged</span>
+                                </div>
+                            </div>
+                            <button class="cta-button secondary" onclick="event.stopPropagation(); window.location.href='vehicle.html#new-log'">
+                                Log mileage
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -393,19 +414,23 @@
                  <div class="action-sheet-header">
                      <h3>Quick Actions</h3>
                  </div>
-                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Add Expense');">
+                 <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='vehicle.html#new-log';" aria-label="Log mileage">
+                     <i class="fas fa-road"></i>
+                     <span>Log mileage</span>
+                 </button>
+                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Add Expense');" aria-label="Add expense">
                      <i class="fas fa-plus"></i>
                      <span>Add Expense</span>
                  </button>
-                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Create MWP');">
+                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Create MWP');" aria-label="Create MWP">
                      <i class="fas fa-plane"></i>
                      <span>Create MWP</span>
                  </button>
-                 <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='cash-advance.html';">
+                 <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='cash-advance.html';" aria-label="Request advance">
                      <i class="fas fa-money-bill"></i>
                      <span>Request Advance</span>
                  </button>
-                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Scan Receipts');">
+                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Scan Receipts');" aria-label="Scan receipts">
                      <i class="fas fa-camera"></i>
                      <span>Scan Receipts</span>
                  </button>
@@ -423,6 +448,24 @@
              initializeLazyChart();
              checkConvertButtonState();
              initializeUploadDownload();
+
+             // KPI count-up for dashboard tiles (Vehicle logs this month)
+             const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+             const duration = 900;
+             function animateNumber(el, to) {
+                 const start = performance.now();
+                 function tick(now) {
+                     const p = Math.min(1, (now - start) / duration);
+                     const val = Math.round(to * easeOutCubic(p));
+                     el.textContent = String(val);
+                     if (p < 1) requestAnimationFrame(tick);
+                 }
+                 requestAnimationFrame(tick);
+             }
+             document.querySelectorAll('.kpi-number[data-count]').forEach(el => {
+                 const to = parseInt(el.getAttribute('data-count'), 10) || 0;
+                 animateNumber(el, to);
+             });
          });
 
         // New Upload/Download System

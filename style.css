@@ -42,7 +42,8 @@ body {
 }
 
 .logo i {
-    font-size: 2rem;
+    font-size: 28px; /* Standardized header logo icon size per PRD */
+    line-height: 1;
 }
 
 .user-info {
@@ -1714,6 +1715,14 @@ body {
             }
         }
 
+        /* SLA chip (Vehicle) */
+        .chip.sla,
+        .sla-chip {
+          background: #fff3cd !important;
+          color: #856404 !important;
+          border-radius: 12px;
+        }
+        
         /* Export Menu Styling */
         .export-menu {
             position: absolute;

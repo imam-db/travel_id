@@ -86,7 +86,7 @@
                         </div>
                         <div class="kpi-content">
                             <h3>Total Bookings</h3>
-                            <span class="kpi-number">12</span>
+                            <span class="kpi-number" data-count="12">0</span>
                             <span class="kpi-period">This month</span>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                         </div>
                         <div class="kpi-content">
                             <h3>Pending Approval</h3>
-                            <span class="kpi-number">3</span>
+                            <span class="kpi-number" data-count="3">0</span>
                             <span class="kpi-period">Needs review</span>
                         </div>
                     </div>
@@ -108,7 +108,7 @@
                         </div>
                         <div class="kpi-content">
                             <h3>Est. Cost</h3>
-                            <span class="kpi-number">$8,450</span>
+                            <span class="kpi-number" data-count-text="$8,450">$0</span>
                             <span class="kpi-period">This month</span>
                         </div>
                     </div>
@@ -355,6 +355,34 @@
             </section>
             </div>
         </div>
+<!-- Mobile Quick Actions -->
+        <div class="quick-actions-mobile">
+            <button class="fab-main" onclick="toggleActionSheet()">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Action Sheet Backdrop -->
+        <div class="action-sheet-backdrop" id="actionSheetBackdrop" onclick="closeActionSheet()"></div>
+        
+        <!-- Action Sheet -->
+        <div class="action-sheet" id="actionSheet" aria-label="Quick actions menu">
+            <div class="action-sheet-header">
+                <h3>Quick Actions</h3>
+            </div>
+            <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='vehicle.html#new-log';">
+                <i class="fas fa-road"></i>
+                <span>Log mileage</span>
+            </button>
+            <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='travel-new.html';">
+                <i class="fas fa-plane"></i>
+                <span>New Trip</span>
+            </button>
+            <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='cash-advance.html';">
+                <i class="fas fa-money-bill"></i>
+                <span>Request Advance</span>
+            </button>
+        </div>
     </main>
 
     <script src="script.js"></script>
@@ -530,6 +558,33 @@
                 
                 // Status filter
                 if (statusFilter !== 'all' && card.dataset.status !== statusFilter) {
+// Action Sheet handlers (scoped to Travel)
+function toggleActionSheet() {
+    const sheet = document.getElementById('actionSheet');
+    const backdrop = document.getElementById('actionSheetBackdrop');
+    if (!sheet || !backdrop) return;
+    const isOpen = sheet.classList.contains('open');
+    if (isOpen) {
+        sheet.classList.remove('open');
+        backdrop.classList.remove('show');
+        document.body.style.overflow = '';
+    } else {
+        sheet.classList.add('open');
+        backdrop.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+}
+function closeActionSheet() {
+    const sheet = document.getElementById('actionSheet');
+    const backdrop = document.getElementById('actionSheetBackdrop');
+    if (sheet) sheet.classList.remove('open');
+    if (backdrop) backdrop.classList.remove('show');
+    document.body.style.overflow = '';
+}
+// Accessibility: close on Escape
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeActionSheet();
+});
                     show = false;
                 }
                 
@@ -560,7 +615,42 @@
             }
         }
     </script>
-    
+
+    <script>
+        // KPI count-up animation scoped to Travel page
+        document.addEventListener('DOMContentLoaded', function () {
+            const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+            const duration = 900;
+
+            function animateNumber(el, to, formatText) {
+                const from = 0;
+                const start = performance.now();
+                function tick(now) {
+                    const p = Math.min(1, (now - start) / duration);
+                    const val = Math.round(from + (to - from) * easeOutCubic(p));
+                    el.textContent = formatText ? formatText(val) : String(val);
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            }
+
+            document.querySelectorAll('.kpi-number[data-count]').forEach(el => {
+                const to = parseInt(el.getAttribute('data-count'), 10) || 0;
+                animateNumber(el, to);
+            });
+
+            document.querySelectorAll('.kpi-number[data-count-text]').forEach(el => {
+                const target = el.getAttribute('data-count-text') || '';
+                // Extract numeric part for animation and preserve non-digits as prefix/suffix
+                const num = (target.match(/[\d,\.]+/) || ['0'])[0];
+                const to = Number(num.replace(/,/g, ''));
+                const [prefix, suffix] = target.split(num);
+                const formatter = new Intl.NumberFormat('en-US');
+                animateNumber(el, to, v => `${prefix || ''}${formatter.format(v)}${suffix || ''}`);
+            });
+        });
+    </script>
+
     <style>
         /* Breadcrumbs */
         .breadcrumbs {
@@ -893,9 +983,10 @@
             color: #065f46;
         }
         
+        /* Align urgent SLA to amber per PRD (alias of .sla) */
         .sla-chip.urgent {
-            background: #fee2e2;
-            color: #991b1b;
+            background: #fff3cd;
+            color: #856404;
         }
         
         .booking-actions {
