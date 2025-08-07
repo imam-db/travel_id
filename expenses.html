@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expenses - Travel Expense Manager</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item active">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="page-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-receipt"></i> Expense Reports</h1>
+                    <p>Manage your travel expense reports</p>
+                </div>
+                <div class="currency-controls">
+                    <div class="base-currency-toggle" onclick="toggleBaseCurrency()" title="Switch base currency">
+                        <span>Base: USD</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="currency-dropdown" id="currencyDropdown">
+                        <div class="currency-option" onclick="setBaseCurrency('USD')">USD - US Dollar</div>
+                        <div class="currency-option" onclick="setBaseCurrency('IDR')">IDR - Indonesian Rupiah</div>
+                        <div class="currency-option" onclick="setBaseCurrency('EUR')">EUR - Euro</div>
+                        <div class="currency-option" onclick="setBaseCurrency('SGD')">SGD - Singapore Dollar</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Stats -->
+            <section class="expense-stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Total Reports</h4>
+                            <span class="stat-number">8</span>
+                            <span class="stat-period">This month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Pending</h4>
+                            <span class="stat-number">3</span>
+                            <span class="stat-period">Awaiting approval</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Total Amount</h4>
+                            <span class="stat-number">$12.5K</span>
+                            <span class="stat-period">This month</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-buttons">
+                <a href="#" onclick="createNewExpense(); return false;" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New Report
+                </a>
+                <button class="btn btn-secondary" onclick="exportReports()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </section>
+
+            <!-- Saved Views -->
+            <section class="saved-views">
+                <div class="view-tabs">
+                    <button class="view-tab active" onclick="loadSavedView('all')" data-view="all">All Reports</button>
+                    <button class="view-tab" onclick="loadSavedView('drafts')" data-view="drafts">My Drafts</button>
+                    <button class="view-tab" onclick="loadSavedView('submitted')" data-view="submitted">Submitted this month</button>
+                    <button class="view-tab" onclick="loadSavedView('paid-q1')" data-view="paid-q1">Paid Q1</button>
+                    <button class="view-tab" onclick="loadSavedView('over-policy')" data-view="over-policy">Over policy</button>
+                    <button class="view-tab-add" onclick="createCustomView()" title="Create custom view">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Filter Section -->
+            <section class="filter-section">
+                <div class="filter-row">
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="draft">Draft</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="queued">Queued for Payment</option>
+                        <option value="paid">Paid</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    
+                    <select class="filter-select" id="periodFilter">
+                        <option value="all">All Periods</option>
+                        <option value="2024-02">February 2024</option>
+                        <option value="2024-01">January 2024</option>
+                        <option value="2023-12">December 2023</option>
+                    </select>
+                    
+                    <select class="filter-select" id="sortFilter">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="highest">Highest Amount</option>
+                        <option value="lowest">Lowest Amount</option>
+                    </select>
+                    
+                    <input type="text" class="search-input" placeholder="Search reports..." id="searchInput">
+                </div>
+            </section>
+
+            <!-- Expense Reports List -->
+            <section class="expense-list">
+                <div class="expense-cards">
+                    <!-- Expense Report 1 -->
+                    <div class="expense-card" data-status="pending" data-period="2024-02" onclick="viewExpense('expense-detail.html')">
+                        <div class="expense-header">
+                            <div class="expense-title">
+                                <h4>Expense Report - Jakarta Trip</h4>
+                                <span class="expense-code">#EXP-2024-001</span>
+                            </div>
+                            <div class="expense-status pending">
+                                <i class="fas fa-clock"></i>
+                                Pending
+                            </div>
+                        </div>
+                        
+                        <div class="expense-content">
+                            <div class="expense-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Periode:</span>
+                                    <span class="detail-value">15-17 Feb 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Total Amount:</span>
+                                    <span class="detail-value amount">$2,450</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Items:</span>
+                                    <span class="detail-value">8 items</span>
+                                </div>
+                            </div>
+                            
+                            <div class="expense-categories">
+                                <span class="category-tag">Transportation</span>
+                                <span class="category-tag">Accommodation</span>
+                                <span class="category-tag">Meals</span>
+                                <span class="category-more">+2 more</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-footer">
+                            <div class="expense-timestamps">
+                                <span class="timestamp">
+                                    <i class="fas fa-clock"></i>
+                                    Created • Submitted • Pending
+                                </span>
+                            </div>
+                            <div class="expense-actions">
+                                <button class="btn-action primary" onclick="event.stopPropagation(); recallExpense('EXP-2024-001')" title="Recall submission">
+                                    <i class="fas fa-undo"></i> Recall
+                                </button>
+                                <div class="dropdown-actions">
+                                    <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="action-menu">
+                                        <button onclick="event.stopPropagation(); viewExpenseDetail('EXP-2024-001')">View Details</button>
+                                        <button onclick="event.stopPropagation(); exportExpense('EXP-2024-001')">Export</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense Report 2 -->
+                    <div class="expense-card" data-status="approved" data-period="2024-01" onclick="viewExpense('expense-detail.html')">
+                        <div class="expense-header">
+                            <div class="expense-title">
+                                <h4>Expense Report - Surabaya Training</h4>
+                                <span class="expense-code">#EXP-2024-002</span>
+                            </div>
+                            <div class="expense-status queued">
+                                <i class="fas fa-clock"></i>
+                                Queued for Payment
+                            </div>
+                        </div>
+                        
+                        <div class="expense-content">
+                            <div class="expense-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Periode:</span>
+                                    <span class="detail-value">22-24 Jan 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Total Amount:</span>
+                                    <span class="detail-value amount">$1,850</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Items:</span>
+                                    <span class="detail-value">6 items</span>
+                                </div>
+                            </div>
+                            
+                            <div class="expense-categories">
+                                <span class="category-tag">Flight</span>
+                                <span class="category-tag">Hotel</span>
+                                <span class="category-tag">Meals</span>
+                                <span class="category-tag">+1 more</span>
+                            </div>
+                            
+                            <!-- Receipt & Policy Completeness -->
+                            <div class="completeness-meter">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%;"></div>
+                                </div>
+                                <span class="completeness-text" onclick="event.stopPropagation(); showReceiptDetails('EXP-2024-002')" title="Click to view receipt details">
+                                    Receipts: 6/8 • Policy flags: 0
+                                </span>
+                            </div>
+                            
+                            <!-- Multi-currency indicator -->
+                            <div class="currency-info">
+                                <span class="amount-breakdown">$1,850 (~IDR 29.6jt)</span>
+                                <span class="exchange-rate" title="Rates as of transaction date">💱</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-footer">
+                            <div class="expense-timestamps">
+                                <span class="timestamp">
+                                    <i class="fas fa-clock"></i>
+                                    Created • Submitted • Approved
+                                </span>
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-batch">
+                                    <span class="batch-label">Payment batch:</span>
+                                    <span class="batch-id" onclick="event.stopPropagation(); showPaymentBatch('RBV-2024-001')">RBV-2024-001</span>
+                                </div>
+                            </div>
+                            <div class="expense-actions">
+                                <button class="btn-action primary" onclick="event.stopPropagation(); viewExpenseDetail('EXP-2024-002')" title="View details">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <div class="dropdown-actions">
+                                    <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="action-menu">
+                                        <button onclick="event.stopPropagation(); exportExpense('EXP-2024-002')">Export</button>
+                                        <button onclick="event.stopPropagation(); showPaymentHistory('EXP-2024-002')">Payment History</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense Report 3 -->
+                    <div class="expense-card" data-status="paid" data-period="2024-01" onclick="viewExpense('expense-detail.html')">
+                        <div class="expense-header">
+                            <div class="expense-title">
+                                <h4>Expense Report - Bandung Meeting</h4>
+                                <span class="expense-code">#EXP-2024-003</span>
+                            </div>
+                            <div class="expense-status paid">
+                                <i class="fas fa-money-check-alt"></i>
+                                Paid
+                            </div>
+                        </div>
+                        
+                        <div class="expense-content">
+                            <div class="expense-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Periode:</span>
+                                    <span class="detail-value">10-11 Jan 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Total Amount:</span>
+                                    <span class="detail-value amount">$1,200</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Items:</span>
+                                    <span class="detail-value">5 items</span>
+                                </div>
+                            </div>
+                            
+                            <div class="expense-categories">
+                                <span class="category-tag">Car Rental</span>
+                                <span class="category-tag">Fuel</span>
+                                <span class="category-tag">Meals</span>
+                                <span class="category-tag">Parking</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-footer">
+                            <div class="expense-timestamps">
+                                <span class="timestamp">
+                                    <i class="fas fa-clock"></i>
+                                    Created • Submitted • Approved • Paid
+                                </span>
+                            </div>
+                            <div class="payment-info">
+                                <div class="payment-details">
+                                    <span class="payment-date">Paid on: 15 Jan 2024</span>
+                                    <span class="payment-ref">Ref: PAY-2024-001</span>
+                                    <span class="payment-method">Method: Bank Transfer</span>
+                                </div>
+                            </div>
+                            <div class="expense-actions">
+                                <button class="btn-action primary" onclick="event.stopPropagation(); viewExpenseDetail('EXP-2024-003')" title="View details">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <div class="dropdown-actions">
+                                    <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="action-menu">
+                                        <button onclick="event.stopPropagation(); exportExpense('EXP-2024-003')">Export</button>
+                                        <button onclick="event.stopPropagation(); downloadReceipt('EXP-2024-003')">Download Receipt</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Expense Report 4 -->
+                    <div class="expense-card" data-status="draft" data-period="2024-02" onclick="viewExpense('expense-detail.html')">
+                        <div class="expense-header">
+                            <div class="expense-title">
+                                <h4>Expense Report - Yogyakarta Conference</h4>
+                                <span class="expense-code">#EXP-2024-004</span>
+                            </div>
+                            <div class="expense-status draft">
+                                <i class="fas fa-edit"></i>
+                                Draft
+                            </div>
+                        </div>
+                        
+                        <div class="expense-content">
+                            <div class="expense-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Periode:</span>
+                                    <span class="detail-value">25-27 Feb 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Total Amount:</span>
+                                    <span class="detail-value amount">$1,750</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Items:</span>
+                                    <span class="detail-value">4 items</span>
+                                </div>
+                            </div>
+                            
+                            <div class="expense-categories">
+                                <span class="category-tag">Flight</span>
+                                <span class="category-tag">Hotel</span>
+                                <span class="category-tag">Conference Fee</span>
+                            </div>
+                            
+                            <!-- Receipt & Policy Completeness -->
+                            <div class="completeness-meter">
+                                <div class="progress-bar">
+                                    <div class="progress-fill error" style="width: 50%;"></div>
+                                </div>
+                                <span class="completeness-text error" onclick="event.stopPropagation(); showReceiptDetails('EXP-2024-004')" title="Click to view receipt details">
+                                    Receipts: 2/4 • Policy flags: 1
+                                </span>
+                            </div>
+                            
+                            <!-- Cash Advance Settlement -->
+                            <div class="cash-advance-info">
+                                <span class="advance-chip settlement" onclick="event.stopPropagation(); showAdvanceBreakdown('EXP-2024-004')" title="Click to view settlement breakdown">
+                                    Settles Advance: $300
+                                </span>
+                                <span class="advance-chip outstanding" onclick="event.stopPropagation(); showAdvanceBreakdown('EXP-2024-004')" title="Click to view outstanding balance">
+                                    Outstanding: $120
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-footer">
+                            <div class="expense-timestamps">
+                                <span class="timestamp">
+                                    <i class="fas fa-clock"></i>
+                                    Created • Last modified: 1 Mar 2024
+                                </span>
+                            </div>
+                            <div class="expense-actions">
+                                <button class="btn-action primary" onclick="event.stopPropagation(); editExpense('EXP-2024-004')" title="Edit expense">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-action secondary" onclick="event.stopPropagation(); addItems('EXP-2024-004')" title="Add items">
+                                    <i class="fas fa-plus"></i> Add Items
+                                </button>
+                                <div class="dropdown-actions">
+                                    <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <div class="action-menu">
+                                        <button onclick="event.stopPropagation(); importFromBooking('EXP-2024-004')">Import from Booking</button>
+                                        <button onclick="event.stopPropagation(); submitForApproval('EXP-2024-004')">Submit for Approval</button>
+                                        <button onclick="event.stopPropagation(); deleteExpense('EXP-2024-004')" class="danger">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+            
+            <!-- Pagination -->
+            <div class="pager-wrap">
+                <div class="pagination-info">
+                    <span>Showing 1-20 of 156 reports</span>
+                    <select class="page-size-select" onchange="changePageSize(this.value)">
+                        <option value="10">10 per page</option>
+                        <option value="20" selected>20 per page</option>
+                        <option value="50">50 per page</option>
+                    </select>
+                </div>
+                <div class="pager">
+                    <button class="btn" onclick="loadPage(currentPage - 1)" disabled aria-label="Previous page">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn num" data-edge="1" onclick="loadPage(1)" aria-current="page" aria-label="Page 1">1</button>
+                    <button class="btn num" onclick="loadPage(2)" aria-label="Page 2">2</button>
+                    <button class="btn num" onclick="loadPage(3)" aria-label="Page 3">3</button>
+                    <span class="page-ellipsis">...</span>
+                    <button class="btn num" data-edge="last" onclick="loadPage(8)" aria-label="Page 8">8</button>
+                    <button class="btn" onclick="loadPage(currentPage + 1)" aria-label="Next page">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Export Modal -->
+        <div id="exportModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Export Expense Reports</h3>
+                    <button class="modal-close" onclick="closeExportModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <div class="option-group">
+                            <label>Format:</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="format" value="pdf" checked>
+                                    <span>PDF</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="format" value="excel">
+                                    <span>Excel</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="format" value="json">
+                                    <span>JSON</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label>Scope:</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="scope" value="selected" checked>
+                                    <span>Selected reports (3)</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="scope" value="current">
+                                    <span>Current view (20)</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="scope" value="all">
+                                    <span>All reports (156)</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="option-group">
+                            <label>Detail Level:</label>
+                            <div class="radio-group">
+                                <label class="radio-option">
+                                    <input type="radio" name="detail" value="summary" checked>
+                                    <span>Summary only</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="detail" value="line-items">
+                                    <span>Line-items with receipts</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeExportModal()">Cancel</button>
+                    <button class="btn-primary" onclick="processExport()">Export</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        function viewExpense(url) {
+            window.location.href = url;
+        }
+        
+        function exportReports() {
+            document.getElementById('exportModal').style.display = 'block';
+        }
+        
+        function createNewExpense() {
+            window.location.href = 'expense-form.html';
+        }
+
+        // Currency Controls
+        function toggleBaseCurrency() {
+            const dropdown = document.getElementById('currencyDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function setBaseCurrency(currency) {
+            const toggle = document.querySelector('.base-currency-toggle span');
+            toggle.textContent = `Base: ${currency}`;
+            document.getElementById('currencyDropdown').style.display = 'none';
+            // Refresh amounts with new base currency
+            refreshAmountsWithCurrency(currency);
+        }
+
+        function refreshAmountsWithCurrency(baseCurrency) {
+            // Update all amount displays with new base currency
+            console.log(`Refreshing amounts with base currency: ${baseCurrency}`);
+        }
+
+        // Saved Views
+        function loadSavedView(viewType) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.view-tab').forEach(tab => tab.classList.remove('active'));
+            // Add active class to clicked tab
+            document.querySelector(`[data-view="${viewType}"]`).classList.add('active');
+            
+            // Apply view filters
+            switch(viewType) {
+                case 'drafts':
+                    document.getElementById('statusFilter').value = 'draft';
+                    break;
+                case 'submitted':
+                    document.getElementById('statusFilter').value = 'pending';
+                    document.getElementById('periodFilter').value = '2024-02';
+                    break;
+                case 'paid-q1':
+                    document.getElementById('statusFilter').value = 'paid';
+                    document.getElementById('periodFilter').value = '2024-01';
+                    break;
+                case 'over-policy':
+                    // Custom filter for policy violations
+                    break;
+                default:
+                    document.getElementById('statusFilter').value = 'all';
+                    document.getElementById('periodFilter').value = 'all';
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('selectedView', viewType);
+            filterExpenses();
+        }
+
+        function createCustomView() {
+            const viewName = prompt('Enter name for custom view:');
+            if (viewName) {
+                // Create new tab and save current filters
+                console.log(`Creating custom view: ${viewName}`);
+            }
+        }
+
+        // Pagination
+        let currentPage = 1;
+        const itemsPerPage = 20;
+
+        function loadPage(page) {
+            currentPage = page;
+            console.log(`Loading page: ${page}`);
+            // Update pagination controls
+            updatePaginationControls();
+            // Load page data
+            loadPageData(page);
+        }
+
+        function updatePaginationControls() {
+            // Update active page button
+            document.querySelectorAll('.btn-page').forEach(btn => btn.classList.remove('active'));
+            // Enable/disable navigation buttons based on current page
+        }
+
+        function loadPageData(page) {
+            // Show skeleton loading
+            showSkeletonLoading();
+            // Simulate API call
+            setTimeout(() => {
+                hideSkeletonLoading();
+                console.log(`Loaded data for page ${page}`);
+            }, 1000);
+        }
+
+        function showSkeletonLoading() {
+            // Add skeleton cards
+            console.log('Showing skeleton loading...');
+        }
+
+        function hideSkeletonLoading() {
+            // Remove skeleton cards
+            console.log('Hiding skeleton loading...');
+        }
+
+        function changePageSize(newSize) {
+            const pageSize = parseInt(newSize);
+            currentPage = 1; // Reset to first page
+            loadPageData(currentPage);
+            
+            // Update pagination info
+            const totalItems = 156;
+            const startItem = (currentPage - 1) * pageSize + 1;
+            const endItem = Math.min(currentPage * pageSize, totalItems);
+            document.querySelector('.pagination-info span').textContent = 
+                `Showing ${startItem}-${endItem} of ${totalItems} reports`;
+        }
+
+        // Export Modal
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function processExport() {
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const scope = document.querySelector('input[name="scope"]:checked').value;
+            const detail = document.querySelector('input[name="detail"]:checked').value;
+            
+            console.log(`Exporting: Format=${format}, Scope=${scope}, Detail=${detail}`);
+            
+            // Show loading state
+            const exportBtn = document.querySelector('#exportModal .btn-primary');
+            exportBtn.textContent = 'Exporting...';
+            exportBtn.disabled = true;
+            
+            // Simulate export process
+            setTimeout(() => {
+                exportBtn.textContent = 'Export';
+                exportBtn.disabled = false;
+                closeExportModal();
+                alert('Export completed successfully!');
+            }, 2000);
+        }
+
+        // Action Menu Toggle
+        function toggleActionMenu(button) {
+            const menu = button.nextElementSibling;
+            const isVisible = menu.style.display === 'block';
+            
+            // Close all other menus
+            document.querySelectorAll('.action-menu').forEach(m => m.style.display = 'none');
+            
+            // Toggle current menu
+            menu.style.display = isVisible ? 'none' : 'block';
+        }
+
+        // Expense Actions
+        function editExpense(expenseId) {
+            window.location.href = `expense-form.html?id=${expenseId}`;
+        }
+
+        function addItems(expenseId) {
+            window.location.href = `expense-items.html?id=${expenseId}`;
+        }
+
+        function importFromBooking(expenseId) {
+            console.log(`Importing from booking for expense: ${expenseId}`);
+        }
+
+        function submitForApproval(expenseId) {
+            if (confirm('Submit this expense report for approval?')) {
+                console.log(`Submitting expense for approval: ${expenseId}`);
+            }
+        }
+
+        function deleteExpense(expenseId) {
+            if (confirm('Are you sure you want to delete this expense report?')) {
+                console.log(`Deleting expense: ${expenseId}`);
+            }
+        }
+
+        function recallExpense(expenseId) {
+            if (confirm('Recall this expense report from approval?')) {
+                console.log(`Recalling expense: ${expenseId}`);
+            }
+        }
+
+        function viewExpenseDetail(expenseId) {
+            window.location.href = `expense-detail.html?id=${expenseId}`;
+        }
+
+        function exportExpense(expenseId) {
+            console.log(`Exporting single expense: ${expenseId}`);
+        }
+
+        function downloadReceipt(expenseId) {
+            console.log(`Downloading receipt for expense: ${expenseId}`);
+        }
+
+        function showReceiptDetails(expenseId) {
+            console.log(`Showing receipt details for expense: ${expenseId}`);
+        }
+
+        function showAdvanceBreakdown(expenseId) {
+            console.log(`Showing advance breakdown for expense: ${expenseId}`);
+        }
+
+        function showPaymentBatch(batchId) {
+            console.log(`Showing payment batch details: ${batchId}`);
+        }
+
+        function showPaymentHistory(expenseId) {
+            console.log(`Showing payment history for expense: ${expenseId}`);
+        }
+        
+        // Filter functionality
+        document.getElementById('statusFilter').addEventListener('change', filterExpenses);
+        document.getElementById('periodFilter').addEventListener('change', filterExpenses);
+        document.getElementById('searchInput').addEventListener('input', filterExpenses);
+        
+        function filterExpenses() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const periodFilter = document.getElementById('periodFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.expense-card');
+            
+            cards.forEach(card => {
+                const cardStatus = card.getAttribute('data-status');
+                const cardPeriod = card.getAttribute('data-period');
+                const cardText = card.textContent.toLowerCase();
+                
+                let showCard = true;
+                
+                // Status filter
+                if (statusFilter !== 'all' && cardStatus !== statusFilter) {
+                    showCard = false;
+                }
+                
+                // Period filter
+                if (periodFilter !== 'all' && cardPeriod !== periodFilter) {
+                    showCard = false;
+                }
+                
+                // Search filter
+                if (searchTerm && !cardText.includes(searchTerm)) {
+                    showCard = false;
+                }
+                
+                card.style.display = showCard ? 'block' : 'none';
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load saved view from localStorage
+            const savedView = localStorage.getItem('selectedView') || 'all';
+            loadSavedView(savedView);
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.currency-controls')) {
+                    document.getElementById('currencyDropdown').style.display = 'none';
+                }
+                if (!e.target.closest('.dropdown-actions')) {
+                    document.querySelectorAll('.action-menu').forEach(menu => {
+                        menu.style.display = 'none';
+                    });
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        .header-content {
+            text-align: left;
+        }
+        
+        .header-content h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .header-content p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .expense-stats {
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-icon i {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+        
+        .stat-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-number {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+        
+        .stat-period {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .filter-section {
+            margin-bottom: 30px;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-select, .search-input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+        }
+        
+        .search-input {
+            min-width: 200px;
+        }
+        
+        .expense-cards {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .expense-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .expense-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Header Controls */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header-content h1 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .currency-controls {
+            position: relative;
+        }
+
+        .base-currency-toggle {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 120px;
+            transition: all 0.2s ease;
+        }
+
+        .base-currency-toggle:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        .currency-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 200px;
+            display: none;
+        }
+
+        .currency-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .currency-option:hover {
+            background: #f8f9fa;
+        }
+
+        /* Saved Views */
+        .saved-views {
+            margin-bottom: 20px;
+        }
+
+        .view-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 0;
+        }
+
+        .view-tab {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            transition: all 0.2s ease;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .view-tab:hover {
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .view-tab.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .view-tab-add {
+            background: none;
+            border: 1px dashed #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            cursor: pointer;
+            color: #6c757d;
+            transition: all 0.2s ease;
+            margin-left: auto;
+        }
+
+        .view-tab-add:hover {
+            border-color: #007bff;
+            color: #007bff;
+        }
+
+        /* Completeness Meter */
+        .completeness-meter {
+            margin: 12px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.complete {
+            background: #28a745;
+        }
+
+        .progress-fill.warning {
+            background: #ffc107;
+        }
+
+        .progress-fill.error {
+            background: #dc3545;
+        }
+
+        .completeness-text {
+            font-size: 12px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .completeness-text.complete {
+            color: #28a745;
+        }
+
+        .completeness-text.warning {
+            color: #856404;
+        }
+
+        .completeness-text.error {
+            color: #dc3545;
+        }
+
+        .completeness-text:hover {
+            text-decoration: underline;
+        }
+
+        /* Cash Advance Info */
+        .cash-advance-info {
+            margin: 8px 0;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .advance-chip {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .advance-chip.settlement {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .advance-chip.outstanding {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .advance-chip:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Multi-currency Display */
+        .currency-info {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .amount-breakdown {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .exchange-rate {
+            cursor: help;
+        }
+
+        /* Payment Info */
+        .payment-info {
+            margin: 8px 0;
+        }
+
+        .payment-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .payment-details span {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .payment-batch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .batch-label {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .batch-id {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .batch-id:hover {
+            background: #bbdefb;
+        }
+
+        /* Action Buttons */
+        .expense-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-action {
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            min-height: 32px;
+        }
+
+        .btn-action.primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-action.primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-action.secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .btn-action.secondary:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .dropdown-actions {
+            position: relative;
+        }
+
+        .action-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 150px;
+            display: none;
+        }
+
+        .action-menu button {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 13px;
+        }
+
+        .action-menu button:hover {
+            background: #f8f9fa;
+        }
+
+        .action-menu button.danger {
+            color: #dc3545;
+        }
+
+        .action-menu button.danger:hover {
+            background: #f8d7da;
+        }
+
+        /* Timestamps */
+        .expense-timestamps {
+            flex: 1;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Pagination */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .pagination-info {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-pagination {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6c757d;
+        }
+
+        .btn-pagination:hover:not(:disabled) {
+            background: #f8f9fa;
+            border-color: #adb5bd;
+        }
+
+        .btn-pagination:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-page {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6c757d;
+            min-width: 40px;
+        }
+
+        .btn-page:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-page.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
+        .page-ellipsis {
+            padding: 8px 4px;
+            color: #6c757d;
+        }
+
+        /* Export Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 4px;
+        }
+
+        .modal-close:hover {
+            color: #495057;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .export-options {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-group label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .radio-option:hover {
+            background: #f8f9fa;
+        }
+
+        .radio-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .expense-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .expense-title h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .expense-code {
+            color: #666;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+        
+        .expense-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .expense-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .expense-status.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .expense-status.paid {
+            background: #cce5ff;
+            color: #004085;
+        }
+        
+        .expense-status.draft {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .expense-status.queued {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .category-more {
+            background: #f8f9fa;
+            color: #6c757d;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px dashed #dee2e6;
+            cursor: pointer;
+        }
+
+        .category-more:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        
+        .expense-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 3px;
+        }
+        
+        .detail-value {
+            color: #333;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .detail-value.amount {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .expense-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .category-tag {
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .draft-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .expense-footer {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.8rem;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .expense-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .expense-details {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .expense-footer {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</body>
+</html>

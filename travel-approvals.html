@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Approvals - Travel Expense Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="back-btn" onclick="window.location.href='travel.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1>Travel Approvals</h1>
+            </div>
+            <div class="user-info">
+                <span>Hello, Sarah Johnson</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- KPI Header -->
+            <section class="kpi-section">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <span class="kpi-value">8</span>
+                            <span class="kpi-label">Pending Approvals</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon approved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <span class="kpi-value">24</span>
+                            <span class="kpi-label">Approved This Month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon rejected">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <span class="kpi-value">2</span>
+                            <span class="kpi-label">Rejected</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon total">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <span class="kpi-value">$12,450</span>
+                            <span class="kpi-label">Total Value</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Filter Bar -->
+            <section class="filter-section">
+                <div class="filter-bar">
+                    <div class="filter-left">
+                        <div class="filter-group">
+                            <select class="filter-select" id="statusFilter">
+                                <option value="all">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <select class="filter-select" id="departmentFilter">
+                                <option value="all">All Departments</option>
+                                <option value="engineering">Engineering</option>
+                                <option value="sales">Sales</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="hr">Human Resources</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <select class="filter-select" id="priorityFilter">
+                                <option value="all">All Priority</option>
+                                <option value="urgent">Urgent</option>
+                                <option value="high">High</option>
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-right">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search by employee or destination..." id="searchInput">
+                        </div>
+                        
+                        <button class="btn-secondary" onclick="exportApprovals()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Approvals List -->
+            <section class="approvals-section">
+                <div class="approvals-header">
+                    <h3>Pending Approvals</h3>
+                    <div class="bulk-actions">
+                        <button class="btn-ghost" onclick="selectAll()">
+                            <i class="fas fa-check-square"></i> Select All
+                        </button>
+                        <button class="btn-primary" onclick="bulkApprove()" disabled id="bulkApproveBtn">
+                            <i class="fas fa-check"></i> Approve Selected
+                        </button>
+                        <button class="btn-danger" onclick="bulkReject()" disabled id="bulkRejectBtn">
+                            <i class="fas fa-times"></i> Reject Selected
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="approvals-list" id="approvalsList">
+                    <!-- Approval items will be populated by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Sample approval data
+        const approvalsData = [
+            {
+                id: 'TR-2024-001',
+                employee: {
+                    name: 'John Doe',
+                    department: 'Engineering',
+                    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NjdlZWEiLz4KPHN2Zz4K'
+                },
+                trip: {
+                    destination: 'Jakarta → Surabaya',
+                    dates: 'Mar 5-12, 2024',
+                    duration: '7 days',
+                    purpose: 'Client Meeting'
+                },
+                cost: {
+                    total: 465,
+                    breakdown: 'Flight + Hotel'
+                },
+                status: 'pending',
+                priority: 'high',
+                submittedDate: '2024-03-01',
+                urgency: 'Travel date in 3 days',
+                policyCompliance: {
+                    status: 'compliant',
+                    issues: []
+                }
+            },
+            {
+                id: 'TR-2024-002',
+                employee: {
+                    name: 'Jane Smith',
+                    department: 'Sales',
+                    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNlZDY0YTYiLz4KPHN2Zz4K'
+                },
+                trip: {
+                    destination: 'Singapore',
+                    dates: 'Mar 15-18, 2024',
+                    duration: '3 days',
+                    purpose: 'Conference'
+                },
+                cost: {
+                    total: 890,
+                    breakdown: 'Flight + Hotel + Conference Fee'
+                },
+                status: 'pending',
+                priority: 'normal',
+                submittedDate: '2024-02-28',
+                urgency: null,
+                policyCompliance: {
+                    status: 'warning',
+                    issues: ['Hotel rate exceeds per-diem by $25/night']
+                }
+            },
+            {
+                id: 'TR-2024-003',
+                employee: {
+                    name: 'Mike Johnson',
+                    department: 'Marketing',
+                    avatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiMxMGI5ODEiLz4KPHN2Zz4K'
+                },
+                trip: {
+                    destination: 'Bali',
+                    dates: 'Mar 20-25, 2024',
+                    duration: '5 days',
+                    purpose: 'Team Building'
+                },
+                cost: {
+                    total: 650,
+                    breakdown: 'Flight + Resort + Activities'
+                },
+                status: 'pending',
+                priority: 'urgent',
+                submittedDate: '2024-03-02',
+                urgency: 'Requires immediate approval',
+                policyCompliance: {
+                    status: 'violation',
+                    issues: ['Business class flight not approved', 'Resort exceeds budget limit']
+                }
+            }
+        ];
+        
+        let selectedApprovals = new Set();
+        
+        function renderApprovals(data = approvalsData) {
+            const container = document.getElementById('approvalsList');
+            
+            if (data.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h4>No approvals found</h4>
+                        <p>There are no travel requests matching your current filters.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = data.map(approval => `
+                <div class="approval-card" data-id="${approval.id}">
+                    <div class="approval-header">
+                        <div class="approval-checkbox">
+                            <label class="checkbox-container">
+                                <input type="checkbox" onchange="toggleSelection('${approval.id}')">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="employee-info">
+                            <img src="${approval.employee.avatar}" alt="${approval.employee.name}" class="employee-avatar">
+                            <div class="employee-details">
+                                <h4>${approval.employee.name}</h4>
+                                <span class="department">${approval.employee.department}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-badges">
+                            ${approval.priority === 'urgent' ? '<span class="priority-badge urgent">Urgent</span>' : ''}
+                            ${approval.priority === 'high' ? '<span class="priority-badge high">High</span>' : ''}
+                            ${approval.urgency ? '<span class="urgency-badge">' + approval.urgency + '</span>' : ''}
+                        </div>
+                        
+                        <div class="approval-cost">
+                            <span class="cost-amount">$${approval.cost.total}</span>
+                            <span class="cost-breakdown">${approval.cost.breakdown}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="approval-content">
+                        <div class="trip-info">
+                            <div class="trip-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${approval.trip.destination}</span>
+                            </div>
+                            <div class="trip-detail">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>${approval.trip.dates} • ${approval.trip.duration}</span>
+                            </div>
+                            <div class="trip-detail">
+                                <i class="fas fa-briefcase"></i>
+                                <span>${approval.trip.purpose}</span>
+                            </div>
+                            <div class="trip-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>Submitted ${formatDate(approval.submittedDate)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="policy-compliance">
+                            <div class="compliance-header">
+                                <span class="compliance-title">Policy Compliance</span>
+                                <span class="compliance-status ${approval.policyCompliance.status}">
+                                    ${approval.policyCompliance.status === 'compliant' ? 
+                                        '<i class="fas fa-check-circle"></i> Compliant' :
+                                        approval.policyCompliance.status === 'warning' ?
+                                        '<i class="fas fa-exclamation-triangle"></i> Warning' :
+                                        '<i class="fas fa-times-circle"></i> Violation'
+                                    }
+                                </span>
+                            </div>
+                            ${approval.policyCompliance.issues.length > 0 ? `
+                                <div class="compliance-issues">
+                                    ${approval.policyCompliance.issues.map(issue => `
+                                        <div class="issue-item">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                            <span>${issue}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="approval-actions">
+                        <button class="btn-ghost" onclick="viewDetails('${approval.id}')">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                        <button class="btn-secondary" onclick="requestChanges('${approval.id}')">
+                            <i class="fas fa-edit"></i> Request Changes
+                        </button>
+                        <button class="btn-danger" onclick="rejectApproval('${approval.id}')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button class="btn-primary" onclick="approveRequest('${approval.id}')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return 'yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            return date.toLocaleDateString();
+        }
+        
+        function toggleSelection(id) {
+            if (selectedApprovals.has(id)) {
+                selectedApprovals.delete(id);
+            } else {
+                selectedApprovals.add(id);
+            }
+            updateBulkActions();
+        }
+        
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.approval-card input[type="checkbox"]');
+            const allSelected = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !allSelected;
+                const id = checkbox.closest('.approval-card').dataset.id;
+                if (!allSelected) {
+                    selectedApprovals.add(id);
+                } else {
+                    selectedApprovals.delete(id);
+                }
+            });
+            
+            updateBulkActions();
+        }
+        
+        function updateBulkActions() {
+            const bulkApproveBtn = document.getElementById('bulkApproveBtn');
+            const bulkRejectBtn = document.getElementById('bulkRejectBtn');
+            const hasSelection = selectedApprovals.size > 0;
+            
+            bulkApproveBtn.disabled = !hasSelection;
+            bulkRejectBtn.disabled = !hasSelection;
+        }
+        
+        function bulkApprove() {
+            if (selectedApprovals.size === 0) return;
+            
+            if (confirm(`Are you sure you want to approve ${selectedApprovals.size} travel request(s)?`)) {
+                showNotification(`Approving ${selectedApprovals.size} requests...`, 'info');
+                
+                setTimeout(() => {
+                    showNotification(`${selectedApprovals.size} requests approved successfully`, 'success');
+                    selectedApprovals.clear();
+                    updateBulkActions();
+                    // In real app, would update the data and re-render
+                }, 2000);
+            }
+        }
+        
+        function bulkReject() {
+            if (selectedApprovals.size === 0) return;
+            
+            showRejectModal(Array.from(selectedApprovals));
+        }
+        
+        function approveRequest(id) {
+            if (confirm('Are you sure you want to approve this travel request?')) {
+                showNotification('Approving request...', 'info');
+                
+                setTimeout(() => {
+                    showNotification('Request approved successfully', 'success');
+                    // In real app, would update the data and re-render
+                }, 1500);
+            }
+        }
+        
+        function rejectApproval(id) {
+            showRejectModal([id]);
+        }
+        
+        function requestChanges(id) {
+            showRequestChangesModal(id);
+        }
+        
+        function viewDetails(id) {
+            window.location.href = `travel-detail.html?id=${id}`;
+        }
+        
+        function showRejectModal(ids) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content reject-modal">
+                    <div class="modal-header">
+                        <h3>Reject Travel Request${ids.length > 1 ? 's' : ''}</h3>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please provide a reason for rejecting ${ids.length > 1 ? 'these requests' : 'this request'}:</p>
+                        
+                        <div class="form-group">
+                            <label>Rejection Reason</label>
+                            <select class="form-control" id="rejectionReason">
+                                <option value="">Select a reason...</option>
+                                <option value="budget">Exceeds budget limits</option>
+                                <option value="policy">Policy violation</option>
+                                <option value="timing">Inappropriate timing</option>
+                                <option value="documentation">Insufficient documentation</option>
+                                <option value="business">Business justification unclear</option>
+                                <option value="other">Other (specify below)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Additional Comments</label>
+                            <textarea class="form-control" rows="4" placeholder="Provide additional details or suggestions for resubmission..." id="rejectionComments"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="allowResubmission" checked>
+                                <span class="checkmark"></span>
+                                Allow resubmission after corrections
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cancel</button>
+                        <button class="btn-danger" onclick="processRejection(['${ids.join("', '")}'])">Reject Request${ids.length > 1 ? 's' : ''}</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function showRequestChangesModal(id) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content changes-modal">
+                    <div class="modal-header">
+                        <h3>Request Changes</h3>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Specify what changes are needed before this request can be approved:</p>
+                        
+                        <div class="changes-checklist">
+                            <h5>Common Issues:</h5>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="budget">
+                                <span class="checkmark"></span>
+                                Reduce costs to meet budget limits
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="dates">
+                                <span class="checkmark"></span>
+                                Adjust travel dates
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="accommodation">
+                                <span class="checkmark"></span>
+                                Choose different accommodation
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="flight">
+                                <span class="checkmark"></span>
+                                Select economy class flight
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="documentation">
+                                <span class="checkmark"></span>
+                                Provide additional documentation
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="justification">
+                                <span class="checkmark"></span>
+                                Improve business justification
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Specific Instructions</label>
+                            <textarea class="form-control" rows="4" placeholder="Provide specific instructions for what needs to be changed..." id="changeInstructions"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Deadline for Resubmission</label>
+                            <input type="date" class="form-control" id="resubmissionDeadline">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cancel</button>
+                        <button class="btn-primary" onclick="processChangeRequest('${id}')">Send Change Request</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function processRejection(ids) {
+            const reason = document.getElementById('rejectionReason').value;
+            const comments = document.getElementById('rejectionComments').value;
+            
+            if (!reason) {
+                showNotification('Please select a rejection reason', 'error');
+                return;
+            }
+            
+            showNotification(`Rejecting ${ids.length} request${ids.length > 1 ? 's' : ''}...`, 'info');
+            
+            setTimeout(() => {
+                showNotification(`Request${ids.length > 1 ? 's' : ''} rejected successfully`, 'success');
+                document.querySelector('.modal-overlay').remove();
+                selectedApprovals.clear();
+                updateBulkActions();
+                // In real app, would update the data and re-render
+            }, 2000);
+        }
+        
+        function processChangeRequest(id) {
+            const instructions = document.getElementById('changeInstructions').value;
+            
+            if (!instructions.trim()) {
+                showNotification('Please provide specific instructions', 'error');
+                return;
+            }
+            
+            showNotification('Sending change request...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Change request sent successfully', 'success');
+                document.querySelector('.modal-overlay').remove();
+                // In real app, would update the data and re-render
+            }, 1500);
+        }
+        
+        function exportApprovals() {
+            showNotification('Generating export...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Export downloaded successfully', 'success');
+            }, 2000);
+        }
+        
+        // Filter functionality
+        function setupFilters() {
+            const statusFilter = document.getElementById('statusFilter');
+            const departmentFilter = document.getElementById('departmentFilter');
+            const priorityFilter = document.getElementById('priorityFilter');
+            const searchInput = document.getElementById('searchInput');
+            
+            [statusFilter, departmentFilter, priorityFilter].forEach(filter => {
+                filter.addEventListener('change', applyFilters);
+            });
+            
+            searchInput.addEventListener('input', applyFilters);
+        }
+        
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const priorityFilter = document.getElementById('priorityFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredData = approvalsData.filter(approval => {
+                const matchesStatus = statusFilter === 'all' || approval.status === statusFilter;
+                const matchesDepartment = departmentFilter === 'all' || approval.employee.department.toLowerCase() === departmentFilter;
+                const matchesPriority = priorityFilter === 'all' || approval.priority === priorityFilter;
+                const matchesSearch = searchTerm === '' || 
+                    approval.employee.name.toLowerCase().includes(searchTerm) ||
+                    approval.trip.destination.toLowerCase().includes(searchTerm);
+                
+                return matchesStatus && matchesDepartment && matchesPriority && matchesSearch;
+            });
+            
+            renderApprovals(filteredData);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderApprovals();
+            setupFilters();
+            
+            // Show page load notification
+            setTimeout(() => {
+                showNotification('Approvals loaded', 'success');
+            }, 500);
+        });
+    </script>
+    
+    <style>
+        /* Approval specific styles */
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .kpi-section {
+            margin-bottom: 2rem;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .kpi-icon.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .kpi-icon.approved {
+            background: #d1fae5;
+            color: #059669;
+        }
+        
+        .kpi-icon.rejected {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .kpi-icon.total {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+        
+        .kpi-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .kpi-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .kpi-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .filter-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-left {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: white;
+            min-width: 150px;
+        }
+        
+        .filter-right {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        
+        .search-box input {
+            padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            min-width: 250px;
+        }
+        
+        .approvals-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .approvals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .approvals-header h3 {
+            margin: 0;
+            color: #111827;
+        }
+        
+        .bulk-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .approval-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .approval-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+        }
+        
+        .approval-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .approval-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .approval-checkbox {
+            flex-shrink: 0;
+        }
+        
+        .checkbox-container {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .checkbox-container input {
+            opacity: 0;
+            position: absolute;
+        }
+        
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .checkbox-container input:checked + .checkmark {
+            background: #667eea;
+            border-color: #667eea;
+        }
+        
+        .checkbox-container input:checked + .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .employee-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .employee-details h4 {
+            margin: 0 0 0.25rem 0;
+            color: #111827;
+            font-size: 1rem;
+        }
+        
+        .department {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .approval-badges {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .priority-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .priority-badge.urgent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .priority-badge.high {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .urgency-badge {
+            padding: 0.25rem 0.5rem;
+            background: #fef2f2;
+            color: #dc2626;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        .approval-cost {
+            text-align: right;
+        }
+        
+        .cost-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            display: block;
+        }
+        
+        .cost-breakdown {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .approval-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .trip-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .trip-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .trip-detail i {
+            color: #9ca3af;
+            width: 16px;
+        }
+        
+        .policy-compliance {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .compliance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .compliance-title {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .compliance-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .compliance-status.compliant {
+            color: #059669;
+        }
+        
+        .compliance-status.warning {
+            color: #d97706;
+        }
+        
+        .compliance-status.violation {
+            color: #dc2626;
+        }
+        
+        .compliance-issues {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .issue-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #dc2626;
+        }
+        
+        .issue-item i {
+            margin-top: 0.1rem;
+            flex-shrink: 0;
+        }
+        
+        .approval-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+        
+        .empty-state h4 {
+            margin: 0 0 0.5rem 0;
+            color: #374151;
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #111827;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.25rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: normal;
+            margin-bottom: 0.5rem;
+        }
+        
+        .changes-checklist {
+            margin-bottom: 1.5rem;
+        }
+        
+        .changes-checklist h5 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-left {
+                justify-content: space-between;
+            }
+            
+            .filter-select {
+                min-width: auto;
+                flex: 1;
+            }
+            
+            .search-box input {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .approvals-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .bulk-actions {
+                justify-content: center;
+            }
+            
+            .approval-header {
+                flex-wrap: wrap;
+            }
+            
+            .approval-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .trip-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .approval-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-left {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</body>
+</html>

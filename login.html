@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Travel Expense Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo h1 {
+            color: #2563eb;
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .logo p {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin: 0.5rem 0 0 0;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 1rem;
+        }
+        
+        .login-btn:hover {
+            background: #1d4ed8;
+        }
+        
+        .login-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .sso-section {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .sso-btn {
+            width: 100%;
+            background: white;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .sso-btn:hover {
+            background: #f9fafb;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .forgot-password a {
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .install-prompt {
+            position: fixed;
+            bottom: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: #1f2937;
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+        
+        .install-prompt button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .close-install {
+            background: transparent !important;
+            color: #9ca3af;
+            padding: 0.25rem !important;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>✈️ TravelExpense</h1>
+                <p>Sign in to your Travel Expense Manager account</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+                
+                <div class="forgot-password">
+                    <a href="#" onclick="showForgotPassword()">Forgot your password?</a>
+                </div>
+            </form>
+            
+            <div class="sso-section">
+                <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1rem;">or sign in with:</p>
+                <button class="sso-btn" onclick="showNotImplementedPopup('Google SSO Login')">
+                    <span>🔍</span> Sign in with Google
+                </button>
+                <button class="sso-btn" onclick="showNotImplementedPopup('Microsoft SSO Login')">
+                    <span>🏢</span> Sign in with Microsoft
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PWA Install Prompt -->
+    <div class="install-prompt" id="installPrompt">
+        <div>
+            <strong>Install TravelExpense App</strong>
+            <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #d1d5db;">Get quick access and work offline</p>
+        </div>
+        <div>
+            <button onclick="installPWA()">Install</button>
+            <button class="close-install" onclick="closeInstallPrompt()">✕</button>
+        </div>
+    </div>
+    
+    <script>
+        // PWA Install Prompt
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').style.display = 'flex';
+        });
+        
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    }
+                    deferredPrompt = null;
+                    closeInstallPrompt();
+                });
+            }
+        }
+        
+        function closeInstallPrompt() {
+            document.getElementById('installPrompt').style.display = 'none';
+        }
+        
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Simulate login process
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            
+            setTimeout(() => {
+                // Store user session
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loginTime', new Date().toISOString());
+                
+                // Redirect to dashboard
+                window.location.href = 'index.html';
+            }, 1500);
+        });
+        
+        function showNotImplementedPopup(feature) {
+             // Create popup overlay
+             const overlay = document.createElement('div');
+             overlay.className = 'popup-overlay';
+             overlay.innerHTML = `
+                 <div class="popup-content">
+                     <div class="popup-header">
+                         <h3>Feature Under Development</h3>
+                         <button class="popup-close" onclick="closeNotImplementedPopup()">&times;</button>
+                     </div>
+                     <div class="popup-body">
+                         <p><strong>${feature}</strong> is currently under development and will be available in a future update.</p>
+                         <p>Thank you for your patience!</p>
+                     </div>
+                     <div class="popup-footer">
+                         <button class="btn btn-primary" onclick="closeNotImplementedPopup()">OK</button>
+                     </div>
+                 </div>
+             `;
+             
+             // Add CSS styles
+             const style = document.createElement('style');
+             style.textContent = `
+                 .popup-overlay {
+                     position: fixed;
+                     top: 0;
+                     left: 0;
+                     width: 100%;
+                     height: 100%;
+                     background: rgba(0, 0, 0, 0.5);
+                     display: flex;
+                     justify-content: center;
+                     align-items: center;
+                     z-index: 10000;
+                 }
+                 .popup-content {
+                     background: white;
+                     border-radius: 8px;
+                     max-width: 400px;
+                     width: 90%;
+                     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+                 }
+                 .popup-header {
+                     padding: 20px 20px 0;
+                     display: flex;
+                     justify-content: space-between;
+                     align-items: center;
+                 }
+                 .popup-header h3 {
+                     margin: 0;
+                     color: #1f2937;
+                 }
+                 .popup-close {
+                     background: none;
+                     border: none;
+                     font-size: 24px;
+                     cursor: pointer;
+                     color: #6b7280;
+                 }
+                 .popup-body {
+                     padding: 20px;
+                 }
+                 .popup-body p {
+                     margin: 0 0 10px;
+                     color: #4b5563;
+                 }
+                 .popup-footer {
+                     padding: 0 20px 20px;
+                     text-align: right;
+                 }
+                 .popup-footer .btn {
+                     padding: 8px 16px;
+                     border: none;
+                     border-radius: 4px;
+                     cursor: pointer;
+                 }
+                 .popup-footer .btn-primary {
+                     background: #3b82f6;
+                     color: white;
+                 }
+             `;
+             
+             document.head.appendChild(style);
+             document.body.appendChild(overlay);
+         }
+         
+         function closeNotImplementedPopup() {
+             const overlay = document.querySelector('.popup-overlay');
+             if (overlay) {
+                 overlay.remove();
+             }
+         }
+        
+        function showForgotPassword() {
+            alert('Forgot password functionality would be implemented here');
+        }
+        
+        // Check if user is already logged in
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,2615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Working Plan - Travel Expense Manager</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+     <link href="style.css" rel="stylesheet">
+     <link rel="manifest" href="manifest.json">
+     <meta name="theme-color" content="#2563eb">
+     <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item active">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <div class="mwp-container">
+            <!-- Page Header -->
+            <section class="page-header">
+                <h1><i class="fas fa-calendar-alt"></i> Monthly Working Plan</h1>
+                <p>Manage your monthly working plans</p>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="action-buttons">
+                <a href="mwp-new.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Create New MWP
+                </a>
+                <div class="btn-split" id="uploadSplit">
+                    <button class="btn btn-secondary" id="btnUploadMain">
+                        <i class="fas fa-upload"></i> Upload
+                    </button>
+                    <button class="btn btn-secondary caret" id="btnUploadCaret" aria-haspopup="menu" aria-expanded="false">
+                        ▾
+                    </button>
+                    <ul class="upload-menu" role="menu">
+                        <li role="menuitem" onclick="uploadMWP()">Upload MWP (.xlsx/.csv)</li>
+                        <li role="menuitem" onclick="downloadTemplate()">Download Template</li>
+                        <li role="menuitem" onclick="downloadSample()">Download Sample</li>
+                    </ul>
+                </div>
+                <button class="btn btn-outline" onclick="bulkConvertAll()" aria-label="Convert all approved MWPs to trips">
+                    <i class="fas fa-exchange-alt"></i> Convert All
+                </button>
+                <button class="btn btn-outline" onclick="bulkArchive()" aria-label="Archive approved MWPs from past months" title="Archive approved MWPs (only available for past months)">
+                    <i class="fas fa-archive"></i> Archive
+                </button>
+                <div class="btn-split" id="exportSplit">
+                    <button class="btn btn-outline" id="btnExportMain" onclick="bulkExport('pdf')">
+                        <i class="fas fa-file-export"></i> Export
+                    </button>
+                    <button class="btn btn-outline caret" id="btnExportCaret" aria-haspopup="menu" aria-expanded="false">
+                        ▾
+                    </button>
+                    <ul class="export-menu" role="menu">
+                        <li role="menuitem" onclick="showExportModal()"><i class="fas fa-cog"></i> Export Options...</li>
+                        <li role="menuitem" onclick="bulkExport('pdf', 'summary')"><i class="fas fa-file-pdf"></i> Quick PDF Export</li>
+                        <li role="menuitem" onclick="bulkExport('excel', 'summary')"><i class="fas fa-file-excel"></i> Quick Excel Export</li>
+                        <li role="menuitem" onclick="bulkExport('json', 'detail')"><i class="fas fa-file-code"></i> Quick JSON Export</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- MWP List -->
+            <section class="mwp-list">
+                <div class="list-header">
+                    <div class="header-left">
+                        <h3>MWP List</h3>
+                        <div class="currency-info">
+                            <span class="base-currency">Base: USD</span>
+                            <button class="currency-toggle" onclick="toggleCurrency()" title="Toggle currency conversion">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="filter-controls">
+                        <div class="saved-views">
+                            <select class="filter-select" id="savedViews" onchange="applySavedView()">
+                                <option value="">Saved Views</option>
+                            </select>
+                            <button class="btn-icon" onclick="saveCurrentView()" title="Save current filter combination" aria-label="Save current view">
+                                <i class="fas fa-save"></i>
+                            </button>
+                        </div>
+                        <select class="filter-select" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="approved">Approved</option>
+                            <option value="changes-requested">Changes Requested</option>
+                            <option value="archived">Archived</option>
+                        </select>
+                        <div class="period-picker">
+                            <select class="period-select" id="periodFilter">
+                                <option value="2024-01-2024-12">Jan - Dec 2024</option>
+                                <option value="2024-01-2024-03">Q1 2024 (Jan-Mar)</option>
+                                <option value="2024-04-2024-06">Q2 2024 (Apr-Jun)</option>
+                                <option value="2024-07-2024-09">Q3 2024 (Jul-Sep)</option>
+                                <option value="2024-10-2024-12">Q4 2024 (Oct-Dec)</option>
+                                <option value="2023-01-2023-12">Jan - Dec 2023</option>
+                                <option value="custom">Custom Period...</option>
+                            </select>
+                            <div class="custom-period" id="customPeriod" style="display: none;">
+                                <input type="month" class="month-picker" id="startMonth" value="2024-01">
+                                <span>to</span>
+                                <input type="month" class="month-picker" id="endMonth" value="2024-12">
+                            </div>
+                        </div>
+                        <input type="text" class="search-input" id="searchFilter" placeholder="Search destination..." title="Search by destination">
+                        <button class="sort-toggle" onclick="toggleSort()" title="Toggle sort order">
+                            <i class="fas fa-sort-amount-down" id="sortIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mwp-cards">
+                    <!-- MWP Card 1 -->
+                    <div class="mwp-card" data-status="approved" data-month="2024-02" data-est="8500" data-act="7250">
+                        <div class="mwp-header">
+                            <div class="mwp-title">
+                                <h4>MWP February 2024</h4>
+                                <span class="mwp-period">1–29 Feb 2024 • Total trips: <span class="clickable-trips" onclick="showTripList('feb-2024')">5</span></span>
+                            </div>
+                            <div class="mwp-actions">
+                                <div class="mwp-status approved">
+                                    <i class="fas fa-check-circle"></i>
+                                    Approved ✓
+                                    <span class="attachment-indicator" title="Has attachments">
+                                        <i class="fas fa-paperclip"></i> 3
+                                    </span>
+                                </div>
+                                <div class="card-menu">
+                                    <button class="menu-trigger" onclick="showCardMenu(event, 'approved')" aria-label="More actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mwp-content">
+                            <div class="budget-section">
+                                <div class="budget-info">
+                                    <span class="budget-label">Est. $8,500 — Actual $7,250 <span class="usage-percent">(85%)</span></span>
+                                    <span class="budget-badge under-budget">Under Budget</span>
+                                </div>
+                                <div class="budget-progress">
+                                    <div class="mwp-progress"><span></span></div>
+                                    <div class="budget-chip under-budget-chip">
+                                        <i class="fas fa-check"></i> Under budget
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mwp-destinations">
+                                <span class="destination-tag clickable" onclick="filterByCity('Jakarta')">Jakarta</span>
+                                <span class="destination-tag clickable" onclick="filterByCity('Surabaya')">Surabaya</span>
+                                <span class="destination-tag clickable" onclick="filterByCity('Bandung')">Bandung</span>
+                                <span class="destination-tag clickable" onclick="showMoreCities(['Medan', 'Palembang'])">+2 others</span>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" onclick="createTripFromMWP('feb-2024')" title="Create trip from this MWP" aria-label="Create trip from MWP">
+                                    <i class="fas fa-plane"></i> Create Trip
+                                </button>
+                                <button class="quick-action-btn" onclick="convertAllTrips('feb-2024')" title="Convert all approved trips" aria-label="Convert all trips to expense reports">
+                                    <i class="fas fa-exchange-alt"></i> Convert All
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mwp-footer">
+                            <div class="action-log">
+                                <button class="view-log-btn" onclick="showAuditLog('feb-2024')" title="View audit log">
+                                    <i class="fas fa-history"></i> View log
+                                </button>
+                                <span class="last-action">Approved by Finance Manager • 2 days ago</span>
+                            </div>
+                            <button class="view-details-btn" onclick="viewMWPDetails('feb-2024')">
+                                View details ▸
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MWP Card 2 -->
+                    <div class="mwp-card" data-status="pending" data-month="2024-03" data-est="6200" data-act="0">
+                        <div class="mwp-header">
+                            <div class="mwp-title">
+                                <h4>MWP March 2024</h4>
+                                <span class="mwp-period">1–31 Mar 2024 • Total trips: <span class="clickable-trips" onclick="showTripList('mar-2024')">3</span></span>
+                            </div>
+                            <div class="mwp-actions">
+                                <div class="mwp-status pending">
+                                    <i class="fas fa-clock"></i>
+                                    Pending Review ⏳
+                                    <div class="sla-deadline urgent" title="Review deadline approaching">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        Due in 18h
+                                    </div>
+                                </div>
+                                <div class="card-menu">
+                                    <button class="menu-trigger" onclick="showCardMenu(event, 'pending')" aria-label="More actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mwp-content">
+                            <div class="budget-section">
+                                <div class="budget-info">
+                                    <span class="budget-label">Est. $6,200 — Actual $0 <span class="usage-percent">(0%)</span></span>
+                                    <span class="budget-badge pending-badge">Pending</span>
+                                </div>
+                                <div class="budget-progress">
+                                    <div class="mwp-progress"><span></span></div>
+                                    <div class="budget-chip pending-chip">
+                                        <i class="fas fa-clock"></i> Pending
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mwp-destinations">
+                                <span class="destination-tag clickable" onclick="filterByCity('Yogyakarta')">Yogyakarta</span>
+                                <span class="destination-tag clickable" onclick="filterByCity('Semarang')">Semarang</span>
+                                <span class="destination-tag clickable" onclick="filterByCity('Solo')">Solo</span>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" onclick="createTripFromMWP('mar-2024')" title="Create trip from this MWP" aria-label="Create trip from MWP">
+                                    <i class="fas fa-plane"></i> Create Trip
+                                </button>
+                                <button class="quick-action-btn" onclick="recallMWP('mar-2024')" title="Recall submission">
+                                    <i class="fas fa-undo"></i> Recall
+                                </button>
+                            </div>
+
+                            <!-- Manager Actions for Pending Review -->
+                            <div class="manager-actions" id="managerActions-mar-2024">
+                                <div class="manager-actions-header">
+                                    <h4>Manager Review</h4>
+                                    <span class="review-deadline">Review by: Mar 25, 2024</span>
+                                </div>
+                                <div class="manager-buttons">
+                                    <button class="manager-btn approve-btn" onclick="approveMWP('mar-2024')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="manager-btn changes-btn btn-request-changes" data-mwp-id="mar-2024">
+                                        <i class="fas fa-edit"></i> Request Changes
+                                    </button>
+                                    <!-- Force deterministic open to avoid binding/timing issues -->
+                                    <button class="manager-btn reject-btn btn-reject" data-mwp-id="mar-2024" onclick="forceOpenReject(this.dataset.mwpId)">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mwp-footer">
+                            <div class="action-log">
+                                <i class="fas fa-clock"></i>
+                                Created 15 Feb • Submitted 18 Feb
+                            </div>
+                            <button class="view-details-btn" onclick="viewMWPDetails('mar-2024')">
+                                View details ▸
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MWP Card 3 -->
+                    <div class="mwp-card" data-status="draft" data-month="2024-04" data-est="4800" data-act="0">
+                        <div class="mwp-header">
+                            <div class="mwp-title">
+                                <h4>MWP April 2024</h4>
+                                <span class="mwp-period">1–30 Apr 2024 • Total trips: <span class="clickable-trips" onclick="showTripList('apr-2024')">2</span></span>
+                            </div>
+                            <div class="mwp-actions">
+                                <div class="mwp-status draft">
+                                    <i class="fas fa-edit"></i>
+                                    Draft ✏️
+                                </div>
+                                <div class="card-menu">
+                                    <button class="menu-trigger" onclick="showCardMenu(event, 'draft')" aria-label="More actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mwp-content">
+                            <div class="budget-section">
+                                <div class="budget-info">
+                                    <span class="budget-label">Est. $4,800 — Actual $0 <span class="usage-percent">(0%)</span></span>
+                                    <span class="budget-badge draft-badge">Draft</span>
+                                </div>
+                                <div class="budget-progress">
+                                    <div class="mwp-progress"><span></span></div>
+                                    <div class="budget-chip draft-chip">
+                                        <i class="fas fa-edit"></i> Draft
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mwp-destinations">
+                                <span class="destination-tag clickable" onclick="filterByCity('Bali')">Bali</span>
+                                <span class="destination-tag clickable" onclick="filterByCity('Lombok')">Lombok</span>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" onclick="createTripFromMWP('apr-2024')" title="Create trip from this MWP" aria-label="Create trip from MWP">
+                                    <i class="fas fa-plane"></i> Create Trip
+                                </button>
+                                <button class="quick-action-btn primary" onclick="submitForApproval('apr-2024')" title="Submit for approval">
+                                    <i class="fas fa-paper-plane"></i> Submit for Approval
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mwp-footer">
+                            <div class="action-log">
+                                <i class="fas fa-clock"></i>
+                                Created 20 Feb • Last modified 22 Feb
+                            </div>
+                            <button class="view-details-btn" onclick="viewMWPDetails('apr-2024')">
+                                View details ▸
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MWP Card 4 - Changes Requested -->
+                    <div class="mwp-card" data-status="changes-requested" data-month="2024-05" data-est="5400" data-act="0">
+                        <div class="mwp-header">
+                            <div class="mwp-title">
+                                <h4>MWP May 2024</h4>
+                                <span class="mwp-period">1–31 May 2024 • Total trips: <span class="clickable-trips" onclick="showTripList('may-2024')">4</span></span>
+                            </div>
+                            <div class="mwp-actions">
+                                <div class="mwp-status changes-requested">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Changes Requested
+                                    <span class="comment-indicator" onclick="showComments('may-2024')" title="View all comments">
+                                        <i class="fas fa-comment"></i> 2
+                                    </span>
+                                </div>
+                                <div class="card-menu">
+                                    <button class="menu-trigger" onclick="showCardMenu(event, 'changes-requested')" aria-label="More actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mwp-content">
+                            <!-- Reviewer Comments -->
+                            <div class="reviewer-comments">
+                                <div class="comment-snippet">
+                                    <i class="fas fa-user-circle comment-avatar"></i>
+                                    <div class="comment-content">
+                                        <span class="comment-text">"Please provide more detailed justification for Makassar trips and reduce accommodation budget..."</span>
+                                        <button class="view-all-comments" onclick="showComments('may-2024')">
+                                            View all (2) <i class="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="budget-section">
+                                <div class="budget-info">
+                                    <span class="budget-label">Est. $5,400 — Actual $0 <span class="usage-percent">(0%)</span></span>
+                                    <span class="budget-badge changes-badge">Needs Revision</span>
+                                </div>
+                                <div class="budget-progress">
+                                    <div class="mwp-progress"><span></span></div>
+                                    <div class="budget-chip changes-chip">
+                                        <i class="fas fa-exclamation-triangle"></i> Needs revision
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mwp-destinations">
+                                <span class="destination-tag clickable" onclick="filterByCity('Makassar')">Makassar</span>
+                                <span class="destination-tag clickable" onclick="filterByCity('Manado')">Manado</span>
+                                <span class="destination-tag clickable" onclick="showMoreCities(['Kendari', 'Palu'])">+2 others</span>
+                            </div>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" onclick="createTripFromMWP('may-2024')" title="Create trip from this MWP" aria-label="Create trip from MWP">
+                                    <i class="fas fa-plane"></i> Create Trip
+                                </button>
+                                <button class="quick-action-btn warning" onclick="editMWP('may-2024')" title="Edit and resubmit">
+                                    <i class="fas fa-edit"></i> Edit & Resubmit
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mwp-footer">
+                            <div class="action-log">
+                                <i class="fas fa-clock"></i>
+                                Created 25 Mar • Submitted 28 Mar • Changes requested 2 Apr
+                            </div>
+                            <button class="view-details-btn" onclick="viewMWPDetails('may-2024')">
+                                View details ▸
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Over Budget Example -->
+            <div class="mwp-card expanded" data-status="approved" data-date="2024-01-15" data-est="8500" data-act="9750">
+                <div class="mwp-header">
+                    <div class="mwp-period">
+                        <h3>January 2024</h3>
+                        <p class="trip-count">Total <a href="#" onclick="showTripDetails('jan-2024')">18 trips</a></p>
+                    </div>
+                    <div class="mwp-actions">
+                        <span class="status-badge approved">Approved</span>
+                        <button class="card-menu-trigger" onclick="showCardMenu(event, 'jan-2024-menu')" aria-label="More actions">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mwp-content">
+                    <div class="budget-section">
+                        <div class="budget-info">
+                            <div class="budget-label">Est $8,500 — Actual $9,750 (115%)</div>
+                            <span class="usage-percentage over-budget">Over budget</span>
+                        </div>
+                        <div class="mwp-progress" style="--pct: 115%">
+                            <span></span>
+                        </div>
+                        <div class="budget-chip over-budget-chip">
+                            <i class="fas fa-exclamation-triangle"></i> Over budget
+                        </div>
+                    </div>
+
+                    <div class="summary-grid">
+                        <div class="cell">
+                            <span class="stat-label">Destinations</span>
+                            <span class="stat-value">5</span>
+                        </div>
+                        <div class="cell">
+                            <span class="stat-label">Employees</span>
+                            <span class="stat-value">12</span>
+                        </div>
+                        <div class="cell">
+                            <span class="stat-label">Avg/Trip</span>
+                            <span class="stat-value">$542</span>
+                        </div>
+                        <div class="cell">
+                            <span class="stat-label">Total Budget</span>
+                            <span class="stat-value">$9,750</span>
+                        </div>
+                    </div>
+
+                    <div class="mwp-destinations">
+                        <span class="destination-tag" onclick="showTripDetails('jan-2024', 'jakarta')">Jakarta (8)</span>
+                        <span class="destination-tag" onclick="showTripDetails('jan-2024', 'surabaya')">Surabaya (4)</span>
+                        <span class="destination-tag" onclick="showTripDetails('jan-2024', 'bandung')">Bandung (3)</span>
+                        <span class="destination-tag" onclick="showTripDetails('jan-2024', 'medan')">Medan (2)</span>
+                        <span class="destination-tag" onclick="showTripDetails('jan-2024', 'bali')">Bali (1)</span>
+                    </div>
+
+                    <div class="quick-actions">
+                        <button class="quick-action-btn primary" onclick="convertAllTrips('jan-2024')">
+                            <i class="fas fa-exchange-alt"></i> Convert All
+                        </button>
+                        <button class="quick-action-btn" onclick="exportMWP('jan-2024')">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="quick-action-btn" onclick="archiveMWP('jan-2024')" title="Archive MWP (only available for past months)" aria-label="Archive MWP for January 2024">
+                            <i class="fas fa-archive"></i> Archive
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mwp-footer">
+                    <div class="action-log">
+                        <div class="log-item">
+                            <i class="fas fa-info-circle text-info"></i>
+                            <span>Approved by Finance Manager • 2 days ago</span>
+                        </div>
+                    </div>
+                    <button class="view-details-btn" onclick="viewMWPDetails('jan-2024')">
+                        View details <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            </div>
+        </div>
+        
+        <!-- KPI Summary -->
+        <div class="kpi-container">
+            <section class="kpi-section">
+                <h3>KPI Summary</h3>
+                <div class="kpi-grid">
+                    <div class="kpi-card clickable" onclick="showReportPage('total-mwp')">
+                        <div class="summary-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h4>Total MWP</h4>
+                            <span class="summary-number">12</span>
+                            <span class="summary-period">This year</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card clickable" onclick="showReportPage('approval-ratio')">
+                        <div class="summary-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h4>Approval Ratio</h4>
+                            <span class="summary-number">75%</span>
+                            <span class="summary-period">9 of 12 approved</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card clickable" onclick="showReportPage('total-estimated')">
+                        <div class="summary-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h4>Total Estimated</h4>
+                            <span class="summary-number">$24.9K</span>
+                            <span class="summary-period">This year</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card clickable" onclick="showReportPage('total-realized')">
+                        <div class="summary-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h4>Total Realized</h4>
+                            <span class="summary-number">$7.25K</span>
+                            <span class="summary-period">29.1% realized</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card clickable" onclick="showReportPage('avg-approval-time')">
+                        <div class="summary-icon">
+                            <i class="fas fa-stopwatch"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h4>Avg Approval Time</h4>
+                            <span class="summary-number">3.2</span>
+                            <span class="summary-period">Days</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card clickable" onclick="showReportPage('over-budget-ratio')">
+                        <div class="summary-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="summary-content">
+                            <h4>% Over Budget</h4>
+                            <span class="summary-number">25%</span>
+                            <span class="summary-period">3 of 12 MWPs</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Request Changes Modal -->
+    <div class="modal" id="rc-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="rc-title">
+        <div class="modal__backdrop" data-close="true"></div>
+        <div class="modal__dialog" role="document">
+            <header class="modal__header">
+                <h3 id="rc-title">Request Changes</h3>
+                <button class="modal__close" aria-label="Close" data-close="true">×</button>
+            </header>
+
+            <div class="modal__body">
+                <div class="form-row">
+                    <label for="rc-reason">Reason <span class="req">*</span></label>
+                    <textarea id="rc-reason" rows="5" placeholder="Explain what must be changed and why…"></textarea>
+                    <div class="muted">
+                        <span id="rc-count">0</span>/300 min chars
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label for="rc-due">Due date</label>
+                        <input id="rc-due" type="date">
+                    </div>
+                    <div class="form-row">
+                        <label for="rc-mention">Notify</label>
+                        <input id="rc-mention" type="text" placeholder="@owner @finance">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <label for="rc-files">Attachments</label>
+                    <input id="rc-files" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+                    <div id="rc-filelist" class="filelist"></div>
+                </div>
+
+                <div class="banner warn" id="rc-warn" hidden>Please write at least 300 characters.</div>
+            </div>
+
+            <footer class="modal__footer">
+                <button class="btn ghost" data-close="true">Cancel</button>
+                <button class="btn primary" id="rc-submit" disabled>Send Request</button>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function viewMWP(url) {
+            window.location.href = url;
+        }
+        
+        function showNotImplementedPopup(feature) {
+            alert(feature + ' feature is not implemented yet!');
+        }
+
+        // Initialize upload/download functionality
+        function initializeUploadDownload() {
+            const uploadSplit = document.getElementById('uploadSplit');
+            const uploadCaret = document.getElementById('btnUploadCaret');
+            const uploadMenu = uploadSplit.querySelector('.upload-menu');
+
+            // Toggle upload menu
+            uploadCaret.addEventListener('click', function(e) {
+                e.stopPropagation();
+                uploadMenu.classList.toggle('show');
+                uploadCaret.setAttribute('aria-expanded', uploadMenu.classList.contains('show'));
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!uploadSplit.contains(e.target)) {
+                    uploadMenu.classList.remove('show');
+                    uploadCaret.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Close menu on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    uploadMenu.classList.remove('show');
+                    uploadCaret.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        function uploadMWP() {
+            const menuEl = document.querySelector('.upload-menu');
+            if (menuEl?.classList) {
+                menuEl.classList.remove('show');
+            }
+            showNotImplementedPopup('Upload MWP functionality');
+        }
+
+        function downloadTemplate() {
+            const menuEl = document.querySelector('.upload-menu');
+            if (menuEl?.classList) {
+                menuEl.classList.remove('show');
+            }
+            showNotImplementedPopup('Download Template functionality');
+        }
+
+        function downloadSample() {
+            const menuEl = document.querySelector('.upload-menu');
+            if (menuEl?.classList) {
+                menuEl.classList.remove('show');
+            }
+            showNotImplementedPopup('Download Sample functionality');
+        }
+
+        // Enhanced filtering
+        function filterMWP(status) {
+            const cards = document.querySelectorAll('.mwp-card');
+            cards.forEach(card => {
+                if (status === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const cardStatus = card.getAttribute('data-status');
+                    if (cardStatus === status) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function initializeFilters() {
+            const statusFilter = document.getElementById('statusFilter');
+            const searchFilter = document.getElementById('searchFilter');
+
+            // Add null checks to prevent errors
+            if (!statusFilter || !searchFilter) {
+                console.warn('Filter elements not found');
+                return;
+            }
+
+            // Status filter
+            statusFilter.addEventListener('change', function() {
+                filterMWPCards();
+                localStorage.setItem('mwpStatusFilter', this.value);
+            });
+
+            // Search filter
+            searchFilter.addEventListener('input', function() {
+                filterMWPCards();
+                localStorage.setItem('mwpSearchFilter', this.value);
+            });
+
+            // Load saved filters
+            const savedStatus = localStorage.getItem('mwpStatusFilter');
+            const savedSearch = localStorage.getItem('mwpSearchFilter');
+            if (savedStatus) {
+                statusFilter.value = savedStatus;
+            }
+            if (savedSearch) {
+                searchFilter.value = savedSearch;
+            }
+            
+            // Apply initial filters
+            filterMWPCards();
+        }
+
+        function filterByMonth(month) {
+            const cards = document.querySelectorAll('.mwp-card');
+            cards.forEach(card => {
+                if (!month) {
+                    card.style.display = 'block';
+                } else {
+                    const cardMonth = card.getAttribute('data-month');
+                    if (cardMonth === month) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function searchDestinations(query) {
+            const cards = document.querySelectorAll('.mwp-card');
+            cards.forEach(card => {
+                const destinations = card.querySelectorAll('.destination-tag');
+                let hasMatch = false;
+                destinations.forEach(dest => {
+                    if (dest.textContent.toLowerCase().includes(query.toLowerCase())) {
+                        hasMatch = true;
+                    }
+                });
+                card.style.display = hasMatch || !query ? 'block' : 'none';
+            });
+        }
+
+        let sortAscending = true;
+        function toggleSort() {
+            const cards = Array.from(document.querySelectorAll('.mwp-card'));
+            const container = document.querySelector('.mwp-cards');
+            const sortIcon = document.getElementById('sortIcon');
+            
+            cards.sort((a, b) => {
+                const dateA = new Date(a.getAttribute('data-month'));
+                const dateB = new Date(b.getAttribute('data-month'));
+                return sortAscending ? dateA - dateB : dateB - dateA;
+            });
+            
+            sortAscending = !sortAscending;
+            sortIcon.className = sortAscending ? 'fas fa-sort-amount-up' : 'fas fa-sort-amount-down';
+            
+            cards.forEach(card => container.appendChild(card));
+        }
+
+        function toggleCurrency() {
+            showNotImplementedPopup('Currency conversion functionality');
+        }
+
+        // MWP Card interaction functions
+        function showTripList(mwpId) {
+            showNotImplementedPopup('Trip list for ' + mwpId);
+        }
+
+        function showCardMenu(event, status) {
+            event.stopPropagation();
+            showNotImplementedPopup('Context menu for ' + status + ' MWP');
+        }
+
+        function convertAllTrips(mwpId) {
+            showNotImplementedPopup('Convert all trips for ' + mwpId);
+        }
+
+        function createTripFromMWP(mwpId) {
+            // Redirect to travel new page with MWP prefill
+            window.location.href = 'travel-new.html?from=mwp&mwpId=' + mwpId;
+        }
+
+        function recallMWP(mwpId) {
+            showNotImplementedPopup('Recall MWP ' + mwpId);
+        }
+
+        function submitForApproval(mwpId) {
+            showNotImplementedPopup('Submit MWP ' + mwpId + ' for approval');
+        }
+
+        function editMWP(mwpId) {
+            showNotImplementedPopup('Edit MWP ' + mwpId);
+        }
+
+        function viewMWPDetails(mwpId) {
+            showNotImplementedPopup('View details for MWP ' + mwpId);
+        }
+
+        function filterByCity(city) {
+            const searchFilter = document.getElementById('searchFilter');
+            searchFilter.value = city;
+            searchDestinations(city);
+        }
+
+        function showMoreCities(cities) {
+            showNotImplementedPopup('Show more cities: ' + cities.join(', '));
+        }
+
+        function showReportPage(reportType) {
+            showNotImplementedPopup('Show report: ' + reportType);
+        }
+
+        // Initialize all functionality when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeUploadDownload();
+            initializeExportDropdown();
+            initializeFilters();
+            initializePeriodPicker();
+            initializeManagerActions();
+            loadFilterState();
+        });
+
+        // Period Picker Functions
+        function initializePeriodPicker() {
+            const periodFilter = document.getElementById('periodFilter');
+            const customPeriod = document.getElementById('customPeriod');
+            
+            periodFilter.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    customPeriod.style.display = 'flex';
+                } else {
+                    customPeriod.style.display = 'none';
+                    savePeriodState();
+                    filterMWPCards();
+                }
+            });
+            
+            // Handle custom period changes
+            document.getElementById('startMonth').addEventListener('change', savePeriodState);
+            document.getElementById('endMonth').addEventListener('change', savePeriodState);
+        }
+
+        function savePeriodState() {
+            const periodFilter = document.getElementById('periodFilter');
+            const startMonth = document.getElementById('startMonth');
+            const endMonth = document.getElementById('endMonth');
+            
+            const periodState = {
+                selected: periodFilter.value,
+                startMonth: startMonth.value,
+                endMonth: endMonth.value
+            };
+            
+            localStorage.setItem('mwpPeriodFilter', JSON.stringify(periodState));
+            updateKPISummary();
+            filterMWPCards();
+        }
+
+        function loadFilterState() {
+            // Load period filter state
+            const savedPeriod = localStorage.getItem('mwpPeriodFilter');
+            if (savedPeriod) {
+                const periodState = JSON.parse(savedPeriod);
+                document.getElementById('periodFilter').value = periodState.selected;
+                document.getElementById('startMonth').value = periodState.startMonth;
+                document.getElementById('endMonth').value = periodState.endMonth;
+                
+                if (periodState.selected === 'custom') {
+                    document.getElementById('customPeriod').style.display = 'flex';
+                }
+            }
+            
+            // Load other filter states
+            const savedStatus = localStorage.getItem('mwpStatusFilter');
+            if (savedStatus) {
+                document.getElementById('statusFilter').value = savedStatus;
+            }
+            
+            const savedSearch = localStorage.getItem('mwpSearchFilter');
+            if (savedSearch) {
+                document.getElementById('searchFilter').value = savedSearch;
+            }
+        }
+
+        // Manager Actions Functions
+        function initializeManagerActions() {
+            // Show manager actions only for pending status cards
+            const pendingCards = document.querySelectorAll('[data-status="pending"]');
+            pendingCards.forEach(card => {
+                const managerActions = card.querySelector('.manager-actions');
+                if (managerActions) {
+                    managerActions.style.display = 'block';
+                }
+            });
+        }
+
+        let currentManagerAction = null;
+        let currentMWPId = null;
+
+        function approveMWP(mwpId) {
+            // Direct approval without comment
+            showNotification('MWP approved successfully', 'success');
+            updateMWPStatus(mwpId, 'approved');
+        }
+
+        function requestChanges(mwpId) {
+            currentManagerAction = 'request-changes';
+            currentMWPId = mwpId;
+            showCommentModal('Request Changes', 'Request Changes');
+        }
+
+        function rejectMWP(mwpId) {
+            currentManagerAction = 'reject';
+            currentMWPId = mwpId;
+            showCommentModal('Reject MWP', 'Reject');
+        }
+
+        function showCommentModal(title, actionText) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('confirmActionBtn').textContent = actionText;
+            
+            // Reset form
+            document.getElementById('commentText').value = '';
+            document.getElementById('dueDate').value = '';
+            document.getElementById('mentionReviewer').value = '';
+            document.getElementById('attachments').value = '';
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('confirmActionBtn').disabled = true;
+            
+            // Show modal
+            const modal = document.getElementById('commentModal');
+            modal.style.display = 'flex';
+            
+            // Auto-focus on textarea with slight delay for smooth transition
+            setTimeout(() => {
+                document.getElementById('commentText').focus();
+            }, 100);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+            
+            // Setup focus trap
+            setupFocusTrap();
+        }
+
+        function closeCommentModal() {
+            document.getElementById('commentModal').style.display = 'none';
+            document.body.style.overflow = '';
+            currentManagerAction = null;
+            currentMWPId = null;
+            
+            // Remove focus trap
+            removeFocusTrap();
+        }
+        
+        function closeCommentModalOnBackdrop(event) {
+            if (event.target === event.currentTarget) {
+                closeCommentModal();
+            }
+        }
+
+        function insertTemplate(template) {
+            const textarea = document.getElementById('commentText');
+            textarea.value = template;
+            textarea.focus();
+            updateCharCounter();
+            validateForm();
+        }
+        
+        function updateCharCounter() {
+            const textarea = document.getElementById('commentText');
+            const charCount = document.getElementById('charCount');
+            const currentLength = textarea.value.length;
+            
+            charCount.textContent = currentLength;
+            
+            // Update styling based on character count
+            const counter = charCount.parentElement;
+            counter.classList.remove('char-warning', 'char-error');
+            
+            if (currentLength < 10) {
+                counter.classList.add('char-error');
+            } else if (currentLength > 450) {
+                counter.classList.add('char-warning');
+            }
+        }
+        
+        function validateForm() {
+            const comment = document.getElementById('commentText').value.trim();
+            const confirmBtn = document.getElementById('confirmActionBtn');
+            
+            // Enable confirm button only if comment meets minimum requirements
+            confirmBtn.disabled = comment.length < 10;
+        }
+        
+        function setupFocusTrap() {
+            const modal = document.getElementById('commentModal');
+            const focusableElements = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            
+            function handleTabKey(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            lastElement.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            firstElement.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+                
+                if (e.key === 'Escape') {
+                    closeCommentModal();
+                }
+            }
+            
+            modal.addEventListener('keydown', handleTabKey);
+            modal._focusTrapHandler = handleTabKey;
+        }
+        
+        function removeFocusTrap() {
+            const modal = document.getElementById('commentModal');
+            if (modal._focusTrapHandler) {
+                modal.removeEventListener('keydown', modal._focusTrapHandler);
+                delete modal._focusTrapHandler;
+            }
+        }
+        
+        function handleFileUpload() {
+            const fileInput = document.getElementById('attachments');
+            const fileList = document.getElementById('fileList');
+            
+            fileList.innerHTML = '';
+            
+            Array.from(fileInput.files).forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <i class="fas fa-file"></i>
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">(${(file.size / 1024).toFixed(1)} KB)</span>
+                    <button type="button" class="remove-file" onclick="removeFile(${index})" aria-label="Remove ${file.name}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+        
+        function removeFile(index) {
+            const fileInput = document.getElementById('attachments');
+            const dt = new DataTransfer();
+            
+            Array.from(fileInput.files).forEach((file, i) => {
+                if (i !== index) dt.items.add(file);
+            });
+            
+            fileInput.files = dt.files;
+            handleFileUpload();
+        }
+
+        function confirmManagerAction() {
+            const comment = document.getElementById('commentText').value.trim();
+            const dueDate = document.getElementById('dueDate').value;
+            const mentionReviewer = document.getElementById('mentionReviewer').value;
+            const attachments = document.getElementById('attachments').files;
+            
+            if (comment.length < 10) {
+                showNotification('Comment must be at least 10 characters long', 'error');
+                return;
+            }
+            
+            // Prepare action data
+            const actionData = {
+                comment,
+                dueDate,
+                mentionReviewer,
+                attachments: Array.from(attachments).map(f => f.name),
+                timestamp: new Date().toISOString()
+            };
+            
+            if (currentManagerAction === 'request-changes') {
+                updateMWPStatus(currentMWPId, 'changes-requested', actionData);
+                showNotification('Changes requested successfully', 'warning');
+            } else if (currentManagerAction === 'reject') {
+                updateMWPStatus(currentMWPId, 'rejected', actionData);
+                showNotification('MWP rejected', 'error');
+            }
+            
+            closeCommentModal();
+        }
+
+        // Unified updateMWPStatus to support both data-month and data-mwp-id selectors
+        function updateMWPStatus(mwpId, newStatus, comment = '') {
+            let card = document.querySelector(`[data-month*="${mwpId}"]`);
+            if (!card) {
+                card = document.querySelector(`[data-mwp-id="${mwpId}"]`);
+            }
+            if (card) {
+                card.setAttribute('data-status', newStatus);
+                const statusBadge = card.querySelector('.mwp-status');
+                if (statusBadge) {
+                    statusBadge.className = `mwp-status ${newStatus}`;
+                    statusBadge.innerHTML = `<i class="fas fa-${getStatusIcon(newStatus)}"></i> ${getStatusText(newStatus)}`;
+                }
+                const managerActions = card.querySelector('.manager-actions');
+                if (managerActions) {
+                    managerActions.style.display = 'none';
+                }
+                if (comment) {
+                    addActionLog(card, newStatus, comment);
+                }
+            }
+            updateKPISummary();
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'approved': 'Approved ✓',
+                'pending': 'Pending Review ⏳',
+                'draft': 'Draft ✏️',
+                'changes-requested': 'Changes Requested',
+                'rejected': 'Rejected'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusIcon(status) {
+            const iconMap = {
+                'approved': 'check-circle',
+                'pending': 'clock',
+                'draft': 'edit',
+                'changes-requested': 'exclamation-triangle',
+                'rejected': 'times-circle'
+            };
+            return iconMap[status] || 'circle';
+        }
+
+        function addActionLog(card, status, comment) {
+            const actionLog = card.querySelector('.action-log');
+            if (actionLog) {
+                const logItem = document.createElement('div');
+                logItem.className = 'log-item';
+                logItem.innerHTML = `
+                    <i class="fas fa-comment text-warning"></i>
+                    <span>${getStatusText(status)}: ${comment} • just now</span>
+                `;
+                actionLog.appendChild(logItem);
+            }
+        }
+
+        // Trip Details Functions
+        function showTripDetails(mwpId, destination = null) {
+            const trips = getTripData(mwpId, destination);
+            showTripModal(trips, mwpId, destination);
+        }
+
+        function getTripData(mwpId, destination) {
+            // Mock trip data - in real app, this would come from API
+            const allTrips = {
+                'mar-2024': [
+                    { id: 1, employee: 'John Doe', destination: 'Jakarta', date: '2024-03-05', status: 'approved', estimate: 850 },
+                    { id: 2, employee: 'Jane Smith', destination: 'Surabaya', date: '2024-03-12', status: 'pending', estimate: 650 },
+                    { id: 3, employee: 'Bob Wilson', destination: 'Jakarta', date: '2024-03-18', status: 'draft', estimate: 900 }
+                ],
+                'jan-2024': [
+                    { id: 4, employee: 'Alice Brown', destination: 'Jakarta', date: '2024-01-08', status: 'approved', estimate: 780 },
+                    { id: 5, employee: 'Charlie Davis', destination: 'Bandung', date: '2024-01-15', status: 'approved', estimate: 420 }
+                ]
+            };
+            
+            let trips = allTrips[mwpId] || [];
+            
+            if (destination) {
+                trips = trips.filter(trip => trip.destination.toLowerCase().includes(destination.toLowerCase()));
+            }
+            
+            return trips;
+        }
+
+        function showTripModal(trips, mwpId, destination) {
+            const title = destination ? `Trips to ${destination}` : `All trips for ${mwpId}`;
+            
+            let modalHTML = `
+                <div class="modal-overlay" id="tripModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 700px;">
+                        <div class="modal-header">
+                            <h3>${title}</h3>
+                            <button class="modal-close" onclick="closeTripModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="trip-list">
+            `;
+            
+            trips.forEach(trip => {
+                const isApproved = trip.status === 'approved';
+                const convertButton = isApproved ? 
+                    `<button class="quick-action-btn" onclick="convertTrip(${trip.id}, '${mwpId}')" title="Convert trip to expense report" aria-label="Convert ${trip.employee}'s trip to ${trip.destination} to expense report">
+                        <i class="fas fa-exchange-alt"></i> Convert
+                    </button>` :
+                    `<button class="quick-action-btn" disabled title="Only approved trips can be converted" aria-label="Convert not available - trip not approved">
+                        <i class="fas fa-exchange-alt"></i> Convert
+                    </button>`;
+                
+                modalHTML += `
+                    <div class="trip-item">
+                        <div class="trip-info">
+                            <div class="trip-employee">${trip.employee}</div>
+                            <div class="trip-details">${trip.destination} • ${trip.date}</div>
+                        </div>
+                        <div class="trip-status">
+                            <span class="status-badge ${trip.status}">${getStatusText(trip.status)}</span>
+                            <span class="trip-estimate">$${trip.estimate}</span>
+                        </div>
+                        <div class="trip-actions">
+                            ${convertButton}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            modalHTML += `
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-secondary" onclick="closeTripModal()">Close</button>
+                            <button class="btn-primary" onclick="convertAllTripsInModal()">Convert All</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeTripModal() {
+            const modal = document.getElementById('tripModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function convertTrip(tripId, mwpId) {
+            if (confirm(`Convert this trip to individual expense report?`)) {
+                showNotification(`Converting trip ${tripId} from MWP ${mwpId}...`, 'info');
+                setTimeout(() => {
+                    showNotification(`Trip ${tripId} successfully converted to expense report!`, 'success');
+                    // In real app, would update trip status and refresh modal
+                }, 1500);
+            }
+        }
+
+        function convertAllTripsInModal() {
+            showNotification('All trips converted to expense reports', 'success');
+            closeTripModal();
+        }
+
+        // Update KPI Summary based on filters
+        function updateKPISummary() {
+            // Mock implementation - in real app, this would recalculate based on filtered data
+            const cards = document.querySelectorAll('.mwp-card');
+            const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+            
+            // Update summary numbers based on visible cards
+            const totalMWP = visibleCards.length;
+            const approvedCards = visibleCards.filter(card => card.getAttribute('data-status') === 'approved');
+            const approvalRatio = totalMWP > 0 ? Math.round((approvedCards.length / totalMWP) * 100) : 0;
+            
+            // Update KPI cards
+            const summaryCards = document.querySelectorAll('.summary-card');
+            if (summaryCards[0]) summaryCards[0].querySelector('.summary-number').textContent = totalMWP;
+            if (summaryCards[1]) summaryCards[1].querySelector('.summary-number').textContent = `${approvalRatio}%`;
+        }
+
+        // Enhanced filtering with period support
+        function filterMWPCards() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchInput = document.getElementById('searchFilter').value.toLowerCase();
+            const periodFilter = document.getElementById('periodFilter').value;
+            const startMonth = document.getElementById('startMonth').value;
+            const endMonth = document.getElementById('endMonth').value;
+            
+            const cards = document.querySelectorAll('.mwp-card');
+            
+            cards.forEach(card => {
+                const status = card.getAttribute('data-status');
+                const month = card.getAttribute('data-month');
+                const text = card.textContent.toLowerCase();
+                
+                let showCard = true;
+                
+                // Status filter
+                if (statusFilter !== 'all' && status !== statusFilter) {
+                    showCard = false;
+                }
+                
+                // Search filter
+                if (searchInput && !text.includes(searchInput)) {
+                    showCard = false;
+                }
+                
+                // Period filter
+                if (periodFilter !== '2024-01-2024-12' && month) {
+                    if (periodFilter === 'custom') {
+                        if (month < startMonth || month > endMonth) {
+                            showCard = false;
+                        }
+                    } else {
+                        const [startPeriod, endPeriod] = periodFilter.split('-');
+                        const periodStart = startPeriod + '-' + endPeriod.split('-')[1];
+                        const periodEnd = endPeriod;
+                        if (month < periodStart || month > periodEnd) {
+                            showCard = false;
+                        }
+                    }
+                }
+                
+                card.style.display = showCard ? 'block' : 'none';
+            });
+            
+            updateKPISummary();
+        }
+
+        // Bulk Actions
+        function exportMWP(mwpId) {
+            showNotification(`Exporting MWP ${mwpId}...`, 'info');
+            // Mock export functionality
+            setTimeout(() => {
+                showNotification(`MWP ${mwpId} exported successfully`, 'success');
+            }, 1500);
+        }
+
+        function archiveMWP(mwpId) {
+            // Check if MWP is from past month
+            if (!isPastMonth(mwpId)) {
+                showNotification('Archive is only available for past months', 'warning');
+                return;
+            }
+            
+            if (confirm(`Are you sure you want to archive MWP ${mwpId}? Archived MWPs become read-only and cannot be modified.`)) {
+                showNotification(`MWP ${mwpId} archived`, 'success');
+                // Hide the card or update its status
+                const card = document.querySelector(`[data-month*="${mwpId}"]`);
+                if (card) {
+                    card.style.opacity = '0.5';
+                    card.setAttribute('data-status', 'archived');
+                }
+            }
+        }
+        
+        // Helper function to check if MWP is from past month
+        function isPastMonth(mwpId) {
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11
+            
+            // Extract year and month from mwpId (format: 'jan-2024', 'feb-2024', etc.)
+            const monthNames = {
+                'jan': 1, 'feb': 2, 'mar': 3, 'apr': 4, 'may': 5, 'jun': 6,
+                'jul': 7, 'aug': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dec': 12
+            };
+            
+            const parts = mwpId.split('-');
+            if (parts.length !== 2) return false;
+            
+            const mwpMonth = monthNames[parts[0].toLowerCase()];
+            const mwpYear = parseInt(parts[1]);
+            
+            if (!mwpMonth || !mwpYear) return false;
+            
+            // Check if MWP is from past month
+            if (mwpYear < currentYear) return true;
+            if (mwpYear === currentYear && mwpMonth < currentMonth) return true;
+            
+            return false;
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${getNotificationIcon(type)}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                'success': 'check-circle',
+                'error': 'exclamation-circle',
+                'warning': 'exclamation-triangle',
+                'info': 'info-circle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        // Bulk Actions
+        function bulkConvertAll() {
+            const approvedMWPs = mockMWPData.filter(mwp => mwp.status === 'approved');
+            if (approvedMWPs.length === 0) {
+                showNotification('No approved MWPs found to convert', 'warning');
+                return;
+            }
+            
+            if (confirm(`Convert all trips from ${approvedMWPs.length} approved MWPs to individual trip requests?`)) {
+                showNotification(`Converting ${approvedMWPs.length} approved MWPs to trips...`, 'info');
+                
+                setTimeout(() => {
+                    showNotification(`Successfully converted ${approvedMWPs.length} MWPs to individual trips`, 'success');
+                }, 2000);
+            }
+        }
+
+        function bulkArchive() {
+            const approvedMWPs = mockMWPData.filter(mwp => mwp.status === 'approved');
+            if (approvedMWPs.length === 0) {
+                showNotification('No approved MWPs found to archive', 'warning');
+                return;
+            }
+            
+            // Filter only past month MWPs
+            const pastMonthMWPs = approvedMWPs.filter(mwp => isPastMonth(mwp.id));
+            if (pastMonthMWPs.length === 0) {
+                showNotification('Archive is only available for approved MWPs from past months', 'warning');
+                return;
+            }
+            
+            if (confirm(`Archive ${pastMonthMWPs.length} approved MWPs from past months? This will move them to archived status and make them read-only.`)) {
+                showNotification(`Archiving ${pastMonthMWPs.length} MWPs...`, 'info');
+                
+                setTimeout(() => {
+                    // Update status to archived
+                    pastMonthMWPs.forEach(mwp => mwp.status = 'archived');
+                    renderMWPCards();
+                    updateKPISummary();
+                    showNotification(`Successfully archived ${pastMonthMWPs.length} MWPs`, 'success');
+                }, 1500);
+            }
+        }
+
+        function bulkExport(format, level = 'summary') {
+            const filteredMWPs = getFilteredMWPs();
+            if (filteredMWPs.length === 0) {
+                showNotification('No MWPs found to export', 'warning');
+                return;
+            }
+            
+            const levelText = level === 'detail' ? 'Detailed' : 'Summary';
+            showNotification(`Exporting ${filteredMWPs.length} MWPs as ${format.toUpperCase()} (${levelText})...`, 'info');
+            
+            setTimeout(() => {
+                showNotification(`Successfully exported ${filteredMWPs.length} MWPs as ${format.toUpperCase()} ${levelText}`, 'success');
+                // In real app, would generate file based on format and level
+                if (level === 'detail') {
+                    console.log('Detailed export includes: trip breakdowns, employee details, expense categories');
+                } else {
+                    console.log('Summary export includes: totals, status, basic metrics only');
+                }
+            }, 2000);
+        }
+        
+        function showExportModal() {
+            const modalHTML = `
+                <div class="modal-overlay" id="exportModal" style="display: flex;">
+                    <div class="modal-content" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h3>Export Options</h3>
+                            <button class="modal-close" onclick="closeExportModal()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="export-options">
+                                <div class="option-group">
+                                    <label>Format:</label>
+                                    <div class="radio-group">
+                                        <label><input type="radio" name="format" value="pdf" checked> <i class="fas fa-file-pdf"></i> PDF</label>
+                                        <label><input type="radio" name="format" value="excel"> <i class="fas fa-file-excel"></i> Excel</label>
+                                        <label><input type="radio" name="format" value="json"> <i class="fas fa-file-code"></i> JSON</label>
+                                    </div>
+                                </div>
+                                <div class="option-group">
+                                    <label>Detail Level:</label>
+                                    <div class="radio-group">
+                                        <label><input type="radio" name="level" value="summary" checked> Summary (Totals only)</label>
+                                        <label><input type="radio" name="level" value="detail"> Detailed (Include trips & expenses)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-secondary" onclick="closeExportModal()">Cancel</button>
+                            <button class="btn-primary" onclick="executeExport()">Export</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+        
+        function closeExportModal() {
+            const modal = document.getElementById('exportModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        function executeExport() {
+            const format = document.querySelector('input[name="format"]:checked').value;
+            const level = document.querySelector('input[name="level"]:checked').value;
+            
+            closeExportModal();
+            bulkExport(format, level);
+        }
+
+        // Export dropdown functions
+        function toggleExportDropdown() {
+            const dropdown = document.getElementById('exportDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        function closeExportDropdown() {
+            const dropdown = document.getElementById('exportDropdown');
+            dropdown.classList.remove('show');
+        }
+
+        // Initialize export dropdown functionality
+        function initializeExportDropdown() {
+            const exportSplit = document.getElementById('exportSplit');
+            if (!exportSplit) return;
+            
+            const exportCaret = document.getElementById('btnExportCaret');
+            const exportMenu = exportSplit.querySelector('.export-menu');
+
+            // Toggle export menu
+            if (exportCaret) {
+                exportCaret.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (!exportMenu || !exportMenu.classList) return;
+                    exportMenu.classList.toggle('show');
+                    exportCaret.setAttribute('aria-expanded', exportMenu.classList.contains('show'));
+                });
+            }
+
+            // Close export menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!exportSplit.contains(e.target)) {
+                    if (exportMenu?.classList) exportMenu.classList.remove('show');
+                    if (exportCaret) exportCaret.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Close export menu when clicking menu items
+            if (exportMenu) {
+                exportMenu.addEventListener('click', function() {
+                    if (exportMenu.classList) exportMenu.classList.remove('show');
+                    if (exportCaret) exportCaret.setAttribute('aria-expanded', 'false');
+                });
+            }
+        }
+
+        // Close export dropdown when clicking outside (legacy support)
+        document.addEventListener('click', function(event) {
+            const exportContainer = event.target.closest('.split-button-container');
+            if (!exportContainer) {
+                try { closeExportDropdown(); } catch(e) { /* ignore */ }
+            }
+        });
+
+        // Helper function to get filtered MWPs
+        function getFilteredMWPs() {
+            // Guard against undefined mockMWPData or missing inputs
+            const data = Array.isArray(window.mockMWPData) ? window.mockMWPData : [];
+            const statusFilterEl = document.getElementById('statusFilter');
+            const searchInputEl = document.getElementById('searchInput');
+            const statusVal = statusFilterEl ? statusFilterEl.value : 'all';
+            const searchTerm = (searchInputEl ? searchInputEl.value : '').toLowerCase();
+
+            return data.filter(mwp => {
+                const matchesStatus = statusVal === 'all' || mwp.status === statusVal;
+                const matchesSearch = searchTerm === '' ||
+                    (mwp.period && mwp.period.toLowerCase().includes(searchTerm)) ||
+                    (Array.isArray(mwp.destinations) && mwp.destinations.some(dest => dest.toLowerCase().includes(searchTerm)));
+                return matchesStatus && matchesSearch;
+            });
+        }
+    </script>
+    
+    <style>
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #dee2e6;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .list-header h3 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+        }
+        
+        .mwp-cards {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .mwp-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .mwp-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .mwp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .mwp-title h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .mwp-period {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .mwp-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .mwp-status.approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .mwp-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .mwp-status.draft {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .mwp-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-label {
+            display: block;
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .mwp-destinations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .destination-tag {
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .mwp-footer {
+            display: flex;
+            justify-content: space-between;
+            color: #666;
+            font-size: 0.8rem;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .summary-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .summary-icon i {
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+        
+        .summary-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .summary-number {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+        
+        .summary-period {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .list-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .mwp-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .mwp-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .mwp-footer {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+    
+    <script>
+        // New JavaScript functions for production-ready features
+        // Global guard: avoid runtime crashes on missing elements by safely querying
+        
+        // Show comments modal
+        function showComments(mwpId) {
+            alert(`Showing all comments for MWP ${mwpId}`);
+            // In real implementation, this would open a modal with all comments
+        }
+        
+        // Apply saved view
+        function applySavedView(view) {
+            if (!view) return;
+            
+            const statusFilter = document.getElementById('statusFilter');
+            const periodFilter = document.getElementById('periodFilter');
+            const searchInput = document.getElementById('searchInput');
+            
+            // Apply predefined filters based on saved view
+            switch(view) {
+                case 'this-year':
+                    statusFilter.value = 'all';
+                    periodFilter.value = 'full-year';
+                    searchInput.value = '';
+                    break;
+                case 'my-pending':
+                    statusFilter.value = 'pending-review';
+                    periodFilter.value = 'full-year';
+                    searchInput.value = '';
+                    break;
+                case 'approved-only':
+                    statusFilter.value = 'approved';
+                    periodFilter.value = 'full-year';
+                    searchInput.value = '';
+                    break;
+                case 'bandung-trips':
+                    statusFilter.value = 'all';
+                    periodFilter.value = 'full-year';
+                    searchInput.value = 'Bandung';
+                    break;
+                case 'over-budget':
+                    statusFilter.value = 'all';
+                    periodFilter.value = 'full-year';
+                    searchInput.value = '';
+                    // Additional logic to filter over-budget items
+                    break;
+            }
+            
+            // Save to localStorage
+            const filterState = {
+                status: statusFilter.value,
+                period: periodFilter.value,
+                search: searchInput.value,
+                savedView: view
+            };
+            localStorage.setItem('mwpFilterState', JSON.stringify(filterState));
+            
+            // Apply filters
+            applyFilters();
+            showNotification(`Applied saved view: ${view.replace('-', ' ').toUpperCase()}`, 'success');
+        }
+        
+        // Load saved filter state on page load
+         function loadSavedFilters() {
+             const savedState = localStorage.getItem('mwpFilterState');
+             if (savedState) {
+                 const state = JSON.parse(savedState);
+                 const statusFilter = document.getElementById('statusFilter');
+                 const periodFilter = document.getElementById('periodFilter');
+                 const searchInput = document.getElementById('searchInput');
+                 const savedViews = document.getElementById('savedViews');
+                 
+                 if (statusFilter) statusFilter.value = state.status || 'all';
+                 if (periodFilter) periodFilter.value = state.period || 'full-year';
+                 if (searchInput) searchInput.value = state.search || '';
+                 if (savedViews && state.savedView) {
+                     savedViews.value = state.savedView;
+                 }
+                 applyFilters();
+             }
+         }
+        
+        // View audit log
+        function viewAuditLog(mwpId) {
+            alert(`Showing audit log for MWP ${mwpId}`);
+            // In real implementation, this would show detailed audit trail
+        }
+        
+        // Convert individual trip
+        function convertTrip(tripId, mwpId) {
+            if (confirm(`Convert this trip to individual trip request?`)) {
+                showNotification(`Converting trip ${tripId} from MWP ${mwpId}...`, 'info');
+                setTimeout(() => {
+                    showNotification(`Trip ${tripId} successfully converted!`, 'success');
+                }, 1500);
+            }
+        }
+        
+        // Upload with validation
+        function uploadMWP() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.xlsx,.csv';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    showNotification(`Uploading ${file.name}...`, 'info');
+                    // Simulate upload and validation
+                    setTimeout(() => {
+                        showValidationResults(file.name);
+                    }, 2000);
+                }
+            };
+            input.click();
+        }
+        
+        function showValidationResults(filename) {
+            const hasExisting = Math.random() > 0.5; // Simulate existing MWP check
+            
+            if (hasExisting) {
+                if (confirm(`MWP for this period already exists. Do you want to merge with existing data? (Cancel to overwrite)`)) {
+                    showNotification(`Merging ${filename} with existing MWP...`, 'info');
+                } else {
+                    showNotification(`Overwriting existing MWP with ${filename}...`, 'warning');
+                }
+            } else {
+                showNotification(`${filename} uploaded successfully! All rows validated.`, 'success');
+            }
+        }
+        
+        // Download template/sample
+        function downloadTemplate() {
+            showNotification('Downloading MWP template...', 'info');
+            // In real implementation, this would download the actual template
+        }
+        
+        function downloadSample() {
+            showNotification('Downloading sample MWP data...', 'info');
+            // In real implementation, this would download sample data
+        }
+        
+        // Debounced search
+        let searchTimeout;
+        function debounceSearch(searchTerm) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                applyFilters();
+            }, 300);
+        }
+        
+        // Update search input to use debounce
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    debounceSearch(e.target.value);
+                });
+            }
+            
+            // Load saved filters on page load
+            loadSavedFilters();
+        });
+        
+        // Show city trips modal
+        function showCityTrips(city, period) {
+            alert(`Showing all trips to ${city} for ${period}`);
+            // In real implementation, this would show a modal with trip details
+        }
+        
+        // Export with format options
+        function exportMWP(format) {
+            const selectedFormat = format || 'excel';
+            showNotification(`Exporting MWP data as ${selectedFormat.toUpperCase()}...`, 'info');
+            setTimeout(() => {
+                showNotification(`Export completed! File downloaded.`, 'success');
+            }, 1500);
+        }
+        
+        // Archive MWP (only for approved past month)
+        function archiveMWP(mwpId) {
+            if (confirm('Archive this MWP? Archived items become read-only.')) {
+                showNotification(`Archiving MWP ${mwpId}...`, 'info');
+                setTimeout(() => {
+                    showNotification(`MWP ${mwpId} archived successfully!`, 'success');
+                    // Update UI to show archived state
+                    const card = document.querySelector(`[data-mwp-id="${mwpId}"]`);
+                    if (card) {
+                        card.style.opacity = '0.7';
+                        card.querySelector('.mwp-status').textContent = 'Archived 📁';
+                    }
+                }, 1000);
+            }
+        }
+        
+        // Manager actions with validation
+        
+
+        
+        // Duplicate updateMWPStatus removed; unified version above will be used
+        
+        // Undo functionality with toast
+        function showUndoToast(action, mwpId) {
+            const toast = document.createElement('div');
+            toast.className = 'undo-toast';
+            toast.innerHTML = `
+                <span>${action} completed</span>
+                <button onclick="undoAction('${action}', '${mwpId}')" class="undo-btn">UNDO</button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 8000);
+        }
+        
+        function undoAction(action, mwpId) {
+             showNotification(`${action} undone for MWP ${mwpId}`, 'info');
+             document.querySelector('.undo-toast')?.remove();
+         }
+         
+         // Progress bar utility function
+         function setMWPProgress(cardEl, estimated, actual){
+             const track = cardEl.querySelector('.mwp-progress');
+             if(!track) return;
+             const pct = estimated > 0 ? Math.round((actual/estimated)*100) : 0;
+         
+             // kelas warna
+             track.classList.remove('ok','warn','over','empty');
+             if(actual === 0) track.classList.add('empty');
+             else if(pct < 80) track.classList.add('ok');
+             else if(pct <= 100) track.classList.add('warn');
+             else track.classList.add('over');
+         
+             track.style.setProperty('--pct', Math.min(pct, 130) + '%'); // clamp 130% biar ga overflow
+             
+             // label
+             let label = track.querySelector('.pct-label');
+             if(!label){ label = document.createElement('div'); label.className='pct-label'; track.appendChild(label); }
+             label.textContent = (actual===0 ? '0%' : pct + '%');
+             
+             // tooltip
+             track.title = `Est. $${estimated.toLocaleString()} • Actual $${actual.toLocaleString()} (${pct}%)`;
+         }
+         
+         // Initialize progress bars for all cards
+         function initializeProgressBars() {
+             document.querySelectorAll('.mwp-card').forEach(card=>{
+                 const est = Number(card.dataset.est || 0);
+                 const act = Number(card.dataset.act || 0);
+                 setMWPProgress(card, est, act);
+             });
+         }
+         
+         // Saved Views Management
+         function saveCurrentView() {
+             const statusFilter = document.getElementById('statusFilter')?.value || 'all';
+             const periodFilter = document.getElementById('periodFilter')?.value || '2024-01-2024-12';
+             const searchInput = document.getElementById('searchFilter')?.value || '';
+             
+             const viewName = prompt('Enter name for this saved view:');
+             if (!viewName || !viewName.trim()) return;
+             
+             const savedViews = JSON.parse(localStorage.getItem('mwp_saved_views') || '{}');
+             savedViews[viewName.trim()] = {
+                 status: statusFilter,
+                 period: periodFilter,
+                 search: searchInput,
+                 created: new Date().toISOString()
+             };
+             
+             localStorage.setItem('mwp_saved_views', JSON.stringify(savedViews));
+             loadSavedViews();
+             showNotification(`View "${viewName}" saved successfully`, 'success');
+         }
+         
+         function loadSavedViews() {
+             const savedViews = JSON.parse(localStorage.getItem('mwp_saved_views') || '{}');
+             const select = document.getElementById('savedViews');
+             if (!select) return;
+             
+             // Clear existing options except first
+             select.innerHTML = '<option value="">Saved Views</option>';
+             
+             Object.keys(savedViews).forEach(viewName => {
+                 const option = document.createElement('option');
+                 option.value = viewName;
+                 option.textContent = viewName;
+                 select.appendChild(option);
+             });
+         }
+         
+         function applySavedView() {
+             const select = document.getElementById('savedViews');
+             const viewName = select?.value;
+             if (!viewName) return;
+             
+             const savedViews = JSON.parse(localStorage.getItem('mwp_saved_views') || '{}');
+             const view = savedViews[viewName];
+             if (!view) return;
+             
+             // Apply filters
+             const statusFilter = document.getElementById('statusFilter');
+             const periodFilter = document.getElementById('periodFilter');
+             const searchInput = document.getElementById('searchFilter');
+             
+             if (statusFilter) statusFilter.value = view.status;
+             if (periodFilter) periodFilter.value = view.period;
+             if (searchInput) searchInput.value = view.search;
+             
+             // Trigger filter update
+             filterMWPCards();
+         }
+         
+         // Manager SLA Countdown
+         function updateSLACountdowns() {
+             document.querySelectorAll('.sla-deadline').forEach(element => {
+                 const dueText = element.textContent.match(/Due in (\d+)h/);
+                 if (dueText) {
+                     let hours = parseInt(dueText[1]);
+                     hours = Math.max(0, hours - 1); // Simulate countdown
+                     
+                     element.innerHTML = `<i class="fas fa-exclamation-circle"></i> Due in ${hours}h`;
+                     
+                     // Update styling based on urgency
+                     element.classList.remove('urgent', 'overdue');
+                     if (hours <= 0) {
+                         element.classList.add('overdue');
+                         element.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Overdue';
+                     } else if (hours <= 6) {
+                         element.classList.add('urgent');
+                     }
+                 }
+             });
+         }
+         
+         // Enhanced KPI Update with Filter Support
+         function updateKPISummary() {
+             const cards = document.querySelectorAll('.mwp-card');
+             const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+             
+             // Calculate metrics from visible cards
+             const totalMWP = visibleCards.length;
+             const approvedCards = visibleCards.filter(card => card.getAttribute('data-status') === 'approved');
+             const approvalRatio = totalMWP > 0 ? Math.round((approvedCards.length / totalMWP) * 100) : 0;
+             
+             // Calculate budget metrics
+             let totalEstimated = 0, totalActual = 0, overBudgetCount = 0;
+             visibleCards.forEach(card => {
+                 const est = parseFloat(card.dataset.est || 0);
+                 const act = parseFloat(card.dataset.act || 0);
+                 totalEstimated += est;
+                 totalActual += act;
+                 if (act > est && est > 0) overBudgetCount++;
+             });
+             
+             const overBudgetRatio = totalMWP > 0 ? Math.round((overBudgetCount / totalMWP) * 100) : 0;
+             
+             // Update KPI cards
+             const kpiCards = document.querySelectorAll('.kpi-card');
+             if (kpiCards[0]) kpiCards[0].querySelector('.summary-number').textContent = totalMWP;
+             if (kpiCards[1]) kpiCards[1].querySelector('.summary-number').textContent = `${approvalRatio}%`;
+             if (kpiCards[2]) kpiCards[2].querySelector('.summary-number').textContent = `$${(totalEstimated/1000).toFixed(1)}K`;
+             if (kpiCards[3]) kpiCards[3].querySelector('.summary-number').textContent = `$${(totalActual/1000).toFixed(1)}K`;
+             if (kpiCards[5]) kpiCards[5].querySelector('.summary-number').textContent = `${overBudgetRatio}%`;
+         }
+         
+         // Update DOMContentLoaded to include all initializations
+         document.addEventListener('DOMContentLoaded', function() {
+             const searchInput = document.getElementById('searchInput');
+             if (searchInput) {
+                 searchInput.addEventListener('input', function(e) {
+                     debounceSearch(e.target.value);
+                 });
+             }
+             
+             // Load saved filters and views on page load
+             loadSavedFilters();
+             loadSavedViews();
+             
+             // Initialize progress bars
+             initializeProgressBars();
+             
+             // Start SLA countdown timer
+             setInterval(updateSLACountdowns, 60000); // Update every minute
+             updateSLACountdowns(); // Initial update
+         });
+
+         // Helpers
+         const $ = (sel, el=document) => el.querySelector(sel);
+         const $$ = (sel, el=document) => [...el.querySelectorAll(sel)];
+
+         const rcModal   = $('#rc-modal');
+         const rcReason  = $('#rc-reason');
+         const rcCount   = $('#rc-count');
+         const rcWarn    = $('#rc-warn');
+         const rcSubmit  = $('#rc-submit');
+         const rcFiles   = $('#rc-files');
+         const rcFileList= $('#rc-filelist');
+         const rcDue     = $('#rc-due');
+         const rcMention = $('#rc-mention');
+         const RC_MIN = 300;
+
+         // Launch from any "Request Changes" button
+         document.querySelectorAll('.btn-request-changes').forEach(btn=>{
+           btn.addEventListener('click', () => openRCModal(btn.dataset.mwpId));
+         });
+
+         function openRCModal(mwpId){
+           rcModal.dataset.mwpId = mwpId;
+           rcModal.setAttribute('aria-hidden','false');
+           document.body.style.overflow = 'hidden'; // prevent background scroll
+           rcReason.value = ''; rcCount.textContent = '0';
+           rcFiles.value = ''; rcFileList.innerHTML = '';
+           rcWarn.hidden = true; rcSubmit.disabled = true;
+           setTimeout(()=> rcReason.focus(), 0);
+         }
+
+         // Close
+         rcModal.addEventListener('click', (e)=>{
+           if(e.target.dataset.close === 'true') closeRC();
+         });
+         document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && rcModal.getAttribute('aria-hidden')==='false') closeRC(); });
+         function closeRC(){
+           rcModal.setAttribute('aria-hidden','true');
+           document.body.style.overflow = '';
+         }
+
+         // Validate + counter
+         rcReason.addEventListener('input', ()=>{
+           const n = rcReason.value.trim().length;
+           rcCount.textContent = n;
+           const ok = n >= RC_MIN;
+           rcSubmit.disabled = !ok;
+           rcWarn.hidden = ok;
+         });
+
+         // Files preview
+         rcFiles.addEventListener('change', ()=>{
+           rcFileList.innerHTML = '';
+           [...rcFiles.files].slice(0,5).forEach(f=>{
+             const pill = document.createElement('span');
+             pill.className = 'pill';
+             pill.textContent = f.name;
+             rcFileList.appendChild(pill);
+           });
+         });
+
+         // Submit
+         rcSubmit.addEventListener('click', async ()=>{
+           const payload = {
+             mwp_id: rcModal.dataset.mwpId,
+             reason: rcReason.value.trim(),
+             due_date: rcDue.value || null,
+             notify: rcMention.value.trim(),
+             // files: rcFiles.files // kirim via FormData di implementasi nyata
+           };
+           // TODO: call API
+           // await api.post('/mwp/:id/request-changes', payload);
+           toast('Request sent to owner');
+           closeRC();
+         });
+
+         // Toast function (if not exists)
+         function toast(message) {
+           // Simple toast implementation
+           const toastEl = document.createElement('div');
+           toastEl.textContent = message;
+           toastEl.style.cssText = 'position:fixed;top:20px;right:20px;background:#4f46e5;color:white;padding:12px 16px;border-radius:8px;z-index:9999';
+           document.body.appendChild(toastEl);
+           setTimeout(() => toastEl.remove(), 3000);
+         }
+
+         // Reject Modal functionality (with null checks)
+         // Hoist variables to window to make openRejectModal accessible from inline onclick fallback
+         const rejectModal   = $('#reject-modal');
+         const rejectReason  = $('#reject-reason');
+         const rejectCount   = $('#reject-count');
+         const rejectWarn    = $('#reject-warn');
+         const rejectSubmit  = $('#reject-submit');
+         const rejectFiles   = $('#reject-files');
+         const rejectFileList= $('#reject-filelist');
+         const rejectDue     = $('#reject-due');
+         const rejectMention = $('#reject-mention');
+         window.rejectModal = rejectModal;
+         window.rejectReason = rejectReason;
+         window.rejectCount = rejectCount;
+         window.rejectWarn = rejectWarn;
+         window.rejectSubmit = rejectSubmit;
+         window.rejectFiles = rejectFiles;
+         window.rejectFileList = rejectFileList;
+         window.rejectDue = rejectDue;
+         window.rejectMention = rejectMention;
+
+         // Make Reject modal initialization resilient and always bind if present
+         const REJECT_MIN = 10;
+
+         // Deterministic global opener to avoid any binding/timing issues
+         window.forceOpenReject = function(mwpId){
+           const m = document.getElementById('reject-modal');
+           if (!m) { console.error('[MWP] reject-modal missing'); return; }
+           m.dataset.mwpId = mwpId || '';
+           m.style.display = 'flex';
+           m.setAttribute('aria-hidden','false');
+           document.body.style.overflow = 'hidden';
+           const t = document.getElementById('reject-reason');
+           const c = document.getElementById('reject-count');
+           const f = document.getElementById('reject-files');
+           const fl= document.getElementById('reject-filelist');
+           const w = document.getElementById('reject-warn');
+           const b = document.getElementById('reject-submit');
+           if (t) t.value = '';
+           if (c) c.textContent = '0';
+           if (f) f.value = '';
+           if (fl) fl.innerHTML = '';
+           if (w) w.hidden = true;
+           if (b) b.disabled = true;
+           setTimeout(()=> t && t.focus(), 0);
+           console.info('[MWP] Reject modal opened for', mwpId);
+         };
+
+         function bindRejectHandlers() {
+           if (!(rejectModal && rejectReason && rejectCount && rejectWarn && rejectSubmit)) {
+             return;
+           }
+
+           // Launch from any "Reject" button
+           document.querySelectorAll('.btn-reject').forEach(btn=>{
+             btn.addEventListener('click', () => openRejectModal(btn.dataset.mwpId));
+           });
+
+           // Expose globally so inline fallback can invoke it
+           window.openRejectModal = function(mwpId){
+             // Re-query fresh elements to avoid stale references
+             const modal = document.getElementById('reject-modal');
+             const t = document.getElementById('reject-reason');
+             const c = document.getElementById('reject-count');
+             const f = document.getElementById('reject-files');
+             const fl= document.getElementById('reject-filelist');
+             const w = document.getElementById('reject-warn');
+             const b = document.getElementById('reject-submit');
+             if (!modal) return;
+             modal.dataset.mwpId = mwpId || '';
+             // Ensure visible
+             modal.style.display = 'flex';
+             modal.setAttribute('aria-hidden','false');
+             document.body.style.overflow = 'hidden';
+             if (t) t.value = '';
+             if (c) c.textContent = '0';
+             if (f) f.value = '';
+             if (fl) fl.innerHTML = '';
+             if (w) w.hidden = true;
+             if (b) b.disabled = true;
+             setTimeout(()=> t && t.focus(), 0);
+             console.info('[MWP] Reject modal opened (openRejectModal) for', mwpId);
+           }
+
+           // Close reject modal (robust: direct listeners + delegation)
+           function closeReject(){
+             // Re-query modal to ensure reference is valid
+             const modal = document.getElementById('reject-modal');
+             if (!modal) return;
+             modal.setAttribute('aria-hidden','true');
+             modal.style.display = 'none';
+             document.body.style.overflow = '';
+           }
+           window.closeReject = closeReject;
+
+           // Direct element bindings to avoid delegation edge-cases
+           const backdropEl = rejectModal?.querySelector('.modal__backdrop');
+           const closeBtnEl = rejectModal?.querySelector('.modal__close');
+           const cancelBtnEl = rejectModal?.querySelector('.modal__footer [data-close="true"]');
+
+           backdropEl && backdropEl.addEventListener('click', closeReject);
+           closeBtnEl && closeBtnEl.addEventListener('click', closeReject);
+           cancelBtnEl && cancelBtnEl.addEventListener('click', closeReject);
+
+           // Fallback: delegation inside modal (in case DOM changes)
+           rejectModal.addEventListener('click', (e)=>{
+             const closeEl = e.target.closest('[data-close="true"]');
+             if (closeEl) return closeReject();
+             // If someone clicks empty area inside overlay (if any), also close
+             if (e.target === rejectModal) return closeReject();
+           });
+
+           // ESC to close
+           document.addEventListener('keydown', (e)=>{
+             const modal = document.getElementById('reject-modal');
+             if(e.key === 'Escape' && modal && modal.getAttribute('aria-hidden')==='false') {
+               closeReject();
+             }
+           });
+
+           // Validate + counter for reject
+           rejectReason.addEventListener('input', ()=>{
+             const n = rejectReason.value.trim().length;
+             rejectCount.textContent = n;
+             const ok = n >= REJECT_MIN;
+             rejectSubmit.disabled = !ok;
+             rejectWarn.hidden = ok;
+           });
+
+           // Files preview for reject
+           if (rejectFiles && rejectFileList) {
+             rejectFiles.addEventListener('change', ()=>{
+               rejectFileList.innerHTML = '';
+               [...rejectFiles.files].slice(0,5).forEach(f=>{
+                 const pill = document.createElement('span');
+                 pill.className = 'pill';
+                 pill.textContent = f.name;
+                 rejectFileList.appendChild(pill);
+               });
+             });
+           }
+
+           // Submit reject
+           rejectSubmit.addEventListener('click', async ()=>{
+             const payload = {
+               mwp_id: rejectModal.dataset.mwpId,
+               reason: rejectReason.value.trim(),
+               due_date: rejectDue ? (rejectDue.value || null) : null,
+               notify: rejectMention ? rejectMention.value.trim() : '',
+               // files: rejectFiles?.files
+             };
+             // TODO: call API
+             // await api.post('/mwp/:id/reject', payload);
+             toast('MWP rejected successfully');
+             closeReject();
+           });
+         }
+
+         // Ensure handlers are bound after DOM is ready
+         if (document.readyState === 'loading') {
+           document.addEventListener('DOMContentLoaded', bindRejectHandlers);
+         } else {
+           bindRejectHandlers();
+         }
+     </script>
+
+<!-- Duplicate RC modal removed to avoid ID conflicts -->
+
+<!-- Reject Modal -->
+<div class="modal" id="reject-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="reject-title" style="display:none; z-index:10000; align-items:center; justify-content:center;">
+  <div class="modal__backdrop" data-close="true" style="z-index:10000;"></div>
+  <div class="modal__dialog" role="document" style="z-index:10001; max-width:520px; width:92vw; max-height:85vh; overflow:auto; border-radius:12px;">
+    <header class="modal__header">
+      <h3 id="reject-title">Reject MWP</h3>
+      <button class="modal__close" aria-label="Close" data-close="true">×</button>
+    </header>
+
+    <div class="modal__body">
+      <div class="form-row">
+        <label for="reject-reason">Reason <span class="req">*</span></label>
+        <textarea id="reject-reason" rows="5" placeholder="Explain why this MWP is being rejected…"></textarea>
+        <div class="muted">
+          <span id="reject-count">0</span> / min 10 chars
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-row">
+          <label for="reject-due">Due date</label>
+          <input id="reject-due" type="date">
+        </div>
+        <div class="form-row">
+          <label for="reject-mention">Notify</label>
+          <input id="reject-mention" type="text" placeholder="@owner @finance">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="reject-files">Attachments</label>
+        <input id="reject-files" type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+        <div id="reject-filelist" class="filelist"></div>
+      </div>
+
+      <div class="banner warn" id="reject-warn" hidden>Please write at least 300 characters.</div>
+    </div>
+
+    <footer class="modal__footer">
+      <button class="btn ghost" data-close="true">Cancel</button>
+      <button class="btn primary" id="reject-submit" disabled>Reject MWP</button>
+    </footer>
+  </div>
+</div>
+
+</body>
+</html>

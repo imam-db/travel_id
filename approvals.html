@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approvals - Travel Expense Manager</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="approvals.html" class="nav-item active">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <section class="page-header">
+                <h1><i class="fas fa-check-circle"></i> Approval Center</h1>
+                <p>Manage MWP and expense report approvals</p>
+            </section>
+
+            <!-- Approval Stats -->
+            <section class="approval-stats">
+                <div class="stats-grid">
+                    <div class="stat-card urgent">
+                        <div class="stat-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Urgent</h4>
+                            <span class="stat-number">3</span>
+                            <span class="stat-period">Needs immediate approval</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card pending">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Pending</h4>
+                            <span class="stat-number">8</span>
+                            <span class="stat-period">Awaiting review</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card approved">
+                        <div class="stat-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4>Approved</h4>
+                            <span class="stat-number">15</span>
+                            <span class="stat-period">This month</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filter Tabs -->
+            <section class="filter-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="showTab('all')">
+                        <i class="fas fa-list"></i> All (11)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('mwp')">
+                        <i class="fas fa-calendar-alt"></i> MWP (4)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('expense')">
+                        <i class="fas fa-receipt"></i> Expenses (7)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('urgent')">
+                        <i class="fas fa-exclamation-triangle"></i> Urgent (3)
+                    </button>
+                </div>
+                
+                <!-- Sorting Options -->
+                <div class="sort-controls">
+                    <div class="custom-dropdown" id="sortDropdown">
+                        <div class="dropdown-selected" onclick="toggleDropdown('sortDropdown')">
+                            <span id="sortSelected">Oldest First</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-options">
+                            <div class="dropdown-option" data-value="oldest" onclick="selectSort('oldest', 'Oldest First')">Oldest First</div>
+                            <div class="dropdown-option" data-value="sla" onclick="selectSort('sla', 'SLA Soonest')">SLA Soonest</div>
+                            <div class="dropdown-option" data-value="amount" onclick="selectSort('amount', 'Highest Amount')">Highest Amount</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Saved Views -->
+                    <div class="saved-views">
+                        <div class="custom-dropdown" id="viewsDropdown">
+                            <div class="dropdown-selected" onclick="toggleDropdown('viewsDropdown')">
+                                <span id="viewSelected">My Queues</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="dropdown-options">
+                                <div class="dropdown-option" data-value="my-queues" onclick="selectView('my-queues', 'My Queues')">My Queues</div>
+                                <div class="dropdown-option" data-value="urgent-week" onclick="selectView('urgent-week', 'Urgent this week')">Urgent this week</div>
+                                <div class="dropdown-option" data-value="mwp-only" onclick="selectView('mwp-only', 'MWP only')">MWP only</div>
+                                <div class="dropdown-option" data-value="high-amount" onclick="selectView('high-amount', '> $1k')"> > $1k</div>
+                                <div class="dropdown-option" data-value="overdue" onclick="selectView('overdue', 'Overdue items')">Overdue items</div>
+                            </div>
+                        </div>
+                        <button class="btn-create-view" onclick="createCustomView()">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Batch Actions Bar -->
+            <div id="batchActionsBar" class="batch-actions-bar sticky" style="display: none;">
+                <div class="batch-info">
+                    <span id="selectedCount">0</span> items selected
+                </div>
+                <div class="batch-buttons">
+                    <button class="btn btn-batch-approve" onclick="batchApprove()">
+                        <i class="fas fa-check"></i> Approve
+                    </button>
+                    <button class="btn btn-batch-changes" onclick="batchRequestChanges()">
+                        <i class="fas fa-edit"></i> Request Changes
+                    </button>
+                    <button class="btn btn-batch-reject" onclick="batchReject()">
+                        <i class="fas fa-times"></i> Reject
+                    </button>
+                    <button class="btn btn-batch-assign" onclick="batchAssign()">
+                        <i class="fas fa-user-plus"></i> Assign
+                    </button>
+                    <button class="btn btn-batch-snooze" onclick="batchSnooze()">
+                        <i class="fas fa-clock"></i> Snooze
+                    </button>
+                </div>
+                <button class="btn-close-batch" onclick="clearSelection()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Approval Items -->
+            <section class="approval-list">
+                <div class="approval-cards">
+                    <!-- MWP Approval 1 -->
+                    <div class="approval-card mwp urgent" data-type="mwp" data-id="mwp-001" data-submitted="2024-02-19T16:45:00" data-sla="12" data-amount="2500">
+                        <div class="card-checkbox">
+                            <input type="checkbox" class="approval-checkbox" onchange="toggleSelection(this)" onclick="event.stopPropagation()">
+                        </div>
+                        <div class="approval-header" onclick="viewApproval('approval-detail.html')">
+                            <div class="employee-info">
+                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
+                                <div class="employee-details">
+                                    <span class="name">Sarah Johnson</span>
+                                    <span class="department">Marketing Department</span>
+                                </div>
+                            </div>
+                            <div class="header-right">
+                                <div class="amount">$8,500</div>
+                                <div class="priority-badge urgent">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Urgent
+                                </div>
+                                <div class="sla-badge overdue">
+                                    Overdue 1d
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-content">
+                            <div class="content-header">
+                                <h4>Monthly Working Plan - Maret 2024</h4>
+                                <div class="assignee-chip">
+                                    <i class="fas fa-user"></i>
+                                    <span>You</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Budget Delta & Trip Summary -->
+                            <div class="budget-summary">
+                                <div class="budget-delta positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+$500 vs Budget</span>
+                                </div>
+                                <div class="trip-types">
+                                    <span class="trip-type"><i class="fas fa-plane"></i> 2 Flights</span>
+                                    <span class="trip-type"><i class="fas fa-bed"></i> 3 Hotels</span>
+                                    <span class="trip-type"><i class="fas fa-train"></i> 1 Train</span>
+                                </div>
+                            </div>
+                            
+                            <div class="approval-details">
+                                <div class="detail-row">
+                                    <span class="label">Period:</span>
+                                    <span class="value">1-31 March 2024</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Total Trips:</span>
+                                    <span class="value">5 trips</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Estimated Budget:</span>
+                                    <span class="value budget">$8,500</span>
+                                </div>
+                            </div>
+                            
+                            <div class="trip-summary">
+                                <div class="trip-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Jakarta → Surabaya (5-7 Mar)</span>
+                                </div>
+                                <div class="trip-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Jakarta → Bandung (12-13 Mar)</span>
+                                </div>
+                                <div class="trip-item">
+                                    <i class="fas fa-plus"></i>
+                                    <span>+3 other trips</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Preview Attachments -->
+                            <div class="attachments-preview">
+                                <div class="attachment-thumbnail" onclick="previewAttachment('itinerary-1')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>Itinerary.pdf</span>
+                                </div>
+                                <div class="attachment-thumbnail" onclick="previewAttachment('budget-1')">
+                                    <i class="fas fa-file-excel"></i>
+                                    <span>Budget.xlsx</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-footer">
+                            <div class="submission-timestamp">
+                                <i class="fas fa-clock"></i>
+                                <span>Submitted • 28 Feb 16:45</span>
+                            </div>
+                            <div class="comment-count" onclick="showComments('mwp-001')">
+                                <i class="fas fa-comment"></i>
+                                <span>3</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-actions">
+                            <button class="btn btn-approve" onclick="approveItem('mwp-001')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-request-changes" onclick="requestChanges('mwp-001')">
+                                <i class="fas fa-edit"></i> Request Changes
+                            </button>
+                            <button class="btn btn-reject" onclick="rejectItem('mwp-001')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn btn-assign" onclick="assignItem('mwp-001')">
+                                <i class="fas fa-user-plus"></i> Assign
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Expense Approval 1 -->
+                    <div class="approval-card expense urgent" data-type="expense" data-id="exp-001" data-submitted="2024-02-18T14:30:00" data-sla="24" data-amount="1250">
+                        <div class="card-checkbox">
+                            <input type="checkbox" class="approval-checkbox" onchange="toggleSelection(this)" onclick="event.stopPropagation()">
+                        </div>
+                        <div class="approval-header" onclick="viewApproval('approval-detail.html')">
+                            <div class="employee-info">
+                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
+                                <div class="employee-details">
+                                    <span class="name">Michael Chen</span>
+                                    <span class="department">Sales Department</span>
+                                </div>
+                            </div>
+                            <div class="header-right">
+                                <div class="amount">$3,250</div>
+                                <div class="priority-badge urgent">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    Urgent
+                                </div>
+                                <div class="sla-badge due-soon">
+                                    Due in 12h
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-content">
+                            <div class="content-header">
+                                <h4>Expense Report - Jakarta Business Trip</h4>
+                                <div class="assignee-chip">
+                                    <i class="fas fa-user"></i>
+                                    <span>You</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Policy Flags & Receipt Meter -->
+                            <div class="policy-summary">
+                                <div class="policy-flags">
+                                    <div class="policy-flag warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Over per-diem</span>
+                                    </div>
+                                    <div class="policy-flag error">
+                                        <i class="fas fa-times-circle"></i>
+                                        <span>No receipt</span>
+                                    </div>
+                                    <div class="policy-flag warning">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        <span>Over cat budget $120</span>
+                                    </div>
+                                </div>
+                                <div class="receipt-meter" onclick="showReceiptDetails('exp-001')">
+                                    <div class="meter-label">Receipts</div>
+                                    <div class="meter-bar">
+                                        <div class="meter-fill" style="width: 75%"></div>
+                                    </div>
+                                    <div class="meter-text">6/8</div>
+                                </div>
+                            </div>
+                            
+                            <div class="approval-details">
+                                <div class="detail-row">
+                                    <span class="label">Report ID:</span>
+                                    <span class="value">#EXP-2024-015</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Trip Period:</span>
+                                    <span class="value">25-27 Feb 2024</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Total Amount:</span>
+                                    <span class="value budget">$3,250</span>
+                                </div>
+                            </div>
+                            
+                            <div class="expense-breakdown">
+                                <div class="expense-item">
+                                    <span class="category">Transportation</span>
+                                    <span class="amount">$1,500</span>
+                                </div>
+                                <div class="expense-item">
+                                    <span class="category">Accommodation</span>
+                                    <span class="amount">$1,200</span>
+                                </div>
+                                <div class="expense-item">
+                                    <span class="category">Meals</span>
+                                    <span class="amount">$550</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Receipt Thumbnails -->
+                            <div class="receipts-preview">
+                                <div class="receipt-thumbnail" onclick="previewReceipt('receipt-1')">
+                                    <img src="https://via.placeholder.com/60x80/f0f0f0/666?text=Receipt" alt="Receipt">
+                                </div>
+                                <div class="receipt-thumbnail" onclick="previewReceipt('receipt-2')">
+                                    <img src="https://via.placeholder.com/60x80/f0f0f0/666?text=Receipt" alt="Receipt">
+                                </div>
+                                <div class="receipt-thumbnail" onclick="previewReceipt('receipt-3')">
+                                    <img src="https://via.placeholder.com/60x80/f0f0f0/666?text=Receipt" alt="Receipt">
+                                </div>
+                                <div class="receipt-more" onclick="showAllReceipts('exp-001')">
+                                    <span>+5 more</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-footer">
+                            <div class="submission-timestamp">
+                                <i class="fas fa-clock"></i>
+                                <span>Submitted • 28 Feb 16:45</span>
+                            </div>
+                            <div class="comment-count" onclick="showComments('exp-001')">
+                                <i class="fas fa-comment"></i>
+                                <span>1</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-actions">
+                            <button class="btn btn-approve" onclick="approveItem('exp-001')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-request-changes" onclick="requestChanges('exp-001')">
+                                <i class="fas fa-edit"></i> Request Changes
+                            </button>
+                            <button class="btn btn-reject" onclick="rejectItem('exp-001')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn btn-assign" onclick="assignItem('exp-001')">
+                                <i class="fas fa-user-plus"></i> Assign
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MWP Approval 2 -->
+                    <div class="approval-card mwp" data-type="mwp" data-id="mwp-002" data-submitted="2024-02-17T10:15:00" data-sla="48" data-amount="1800" onclick="viewApproval('approval-detail.html')">
+                        <div class="approval-header">
+                            <div class="approval-type">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>MWP Approval</span>
+                            </div>
+                            <div class="priority-badge normal">
+                                <i class="fas fa-clock"></i>
+                                Normal
+                            </div>
+                        </div>
+                        
+                        <div class="approval-content">
+                            <h4>Monthly Working Plan - April 2024</h4>
+                            <div class="submitter-info">
+                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
+                                <div class="submitter-details">
+                                    <span class="name">David Wilson</span>
+                                    <span class="department">Operations Department</span>
+                                </div>
+                            </div>
+                            
+                            <div class="approval-details">
+                                <div class="detail-row">
+                                    <span class="label">Period:</span>
+                                    <span class="value">1-30 April 2024</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Total Trips:</span>
+                                    <span class="value">3 trips</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Estimated Budget:</span>
+                                    <span class="value budget">$5,200</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-footer">
+                            <div class="submission-info">
+                                <i class="fas fa-clock"></i>
+                                <span>Submitted: 1 Mar 2024, 09:15</span>
+                            </div>
+                            <div class="deadline-info normal">
+                                <i class="fas fa-calendar"></i>
+                                <span>Deadline: 5 Mar 2024</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-actions">
+                            <button class="btn btn-approve" onclick="showNotImplementedPopup('Approve MWP')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-reject" onclick="showNotImplementedPopup('Reject MWP')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn btn-comment" onclick="showNotImplementedPopup('Add Comment')">
+                                <i class="fas fa-comment"></i> Comment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Expense Approval 2 -->
+                    <div class="approval-card expense" data-type="expense" data-id="exp-002" data-submitted="2024-02-16T09:20:00" data-sla="72" data-amount="850" onclick="viewApproval('approval-detail.html')">
+                        <div class="approval-header">
+                            <div class="approval-type">
+                                <i class="fas fa-receipt"></i>
+                                <span>Expense Approval</span>
+                            </div>
+                            <div class="priority-badge normal">
+                                <i class="fas fa-clock"></i>
+                                Normal
+                            </div>
+                        </div>
+                        
+                        <div class="approval-content">
+                            <h4>Expense Report - Surabaya Training</h4>
+                            <div class="submitter-info">
+                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
+                                <div class="submitter-details">
+                                    <span class="name">Lisa Anderson</span>
+                                    <span class="department">HR Department</span>
+                                </div>
+                            </div>
+                            
+                            <div class="approval-details">
+                                <div class="detail-row">
+                                    <span class="label">Report ID:</span>
+                                    <span class="value">#EXP-2024-016</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Trip Period:</span>
+                                    <span class="value">28 Feb - 1 Mar 2024</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="label">Total Amount:</span>
+                                    <span class="value budget">$2,100</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-footer">
+                            <div class="submission-info">
+                                <i class="fas fa-clock"></i>
+                                <span>Submitted: 2 Mar 2024, 11:20</span>
+                            </div>
+                            <div class="deadline-info normal">
+                                <i class="fas fa-calendar"></i>
+                                <span>Deadline: 7 Mar 2024</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-actions">
+                            <button class="btn btn-approve" onclick="showNotImplementedPopup('Approve Expense')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-reject" onclick="showNotImplementedPopup('Reject Expense')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn btn-comment" onclick="showNotImplementedPopup('Add Comment')">
+                                <i class="fas fa-comment"></i> Comment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function showTab(tabType) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            const cards = document.querySelectorAll('.approval-card');
+            cards.forEach(card => {
+                if (tabType === 'all') {
+                    card.style.display = 'block';
+                } else if (tabType === 'urgent') {
+                    card.style.display = card.classList.contains('urgent') ? 'block' : 'none';
+                } else {
+                    card.style.display = card.getAttribute('data-type') === tabType ? 'block' : 'none';
+                }
+            });
+        }
+        
+        function viewApproval(url) {
+            window.location.href = url;
+        }
+        
+        function approveItem(event, itemId) {
+            event.stopPropagation();
+            if (confirm('Are you sure you want to approve this item?')) {
+                alert(`Item ${itemId} has been approved!`);
+                // Here you would typically make an API call
+            }
+        }
+        
+        function rejectItem(event, itemId) {
+            event.stopPropagation();
+            const reason = prompt('Enter rejection reason:');
+            if (reason) {
+                alert(`Item ${itemId} has been rejected with reason: ${reason}`);
+                // Here you would typically make an API call
+            }
+        }
+        
+        function addComment(event, itemId) {
+            event.stopPropagation();
+            const comment = prompt('Enter your comment:');
+            if (comment) {
+                alert(`Comment has been added for item ${itemId}`);
+                // Here you would typically make an API call
+            }
+        }
+        
+        function showNotImplementedPopup(action) {
+            alert(`${action} feature is not yet implemented. This is a demo version.`);
+        }
+    </script>
+    
+    <style>
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .page-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .page-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .approval-stats {
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-card.urgent {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .stat-card.pending {
+            border-left: 4px solid #ffc107;
+        }
+        
+        .stat-card.approved {
+            border-left: 4px solid #28a745;
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-card.urgent .stat-icon {
+            background: #f8d7da;
+        }
+        
+        .stat-card.urgent .stat-icon i {
+            color: #dc3545;
+        }
+        
+        .stat-card.pending .stat-icon {
+            background: #fff3cd;
+        }
+        
+        .stat-card.pending .stat-icon i {
+            color: #ffc107;
+        }
+        
+        .stat-card.approved .stat-icon {
+            background: #d4edda;
+        }
+        
+        .stat-card.approved .stat-icon i {
+            color: #28a745;
+        }
+        
+        .stat-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .stat-number {
+            display: block;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+        
+        .stat-period {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .filter-tabs {
+            margin-bottom: 30px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .tab-btn:hover {
+            background: #f8f9fa;
+        }
+        
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .approval-cards {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .approval-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .approval-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .approval-card.urgent {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .approval-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .approval-type {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .priority-badge.urgent {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        
+        .priority-badge.normal {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .approval-content h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .submitter-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+        
+        .submitter-details .name {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        .submitter-details .department {
+            color: #666;
+            font-size: 0.8rem;
+        }
+        
+        .approval-details {
+            margin-bottom: 15px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .detail-row .label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .detail-row .value {
+            color: #333;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .detail-row .value.budget {
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .trip-summary, .expense-breakdown {
+            margin-bottom: 15px;
+        }
+        
+        .trip-item, .expense-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .expense-item {
+            justify-content: space-between;
+        }
+        
+        .expense-item .amount {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .attachments-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .approval-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+            font-size: 0.8rem;
+        }
+        
+        .submission-info, .deadline-info {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+        }
+        
+        .deadline-info.urgent {
+            color: #dc3545;
+        }
+        
+        .approval-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-approve:hover {
+            background: #218838;
+        }
+        
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-reject:hover {
+            background: #c82333;
+        }
+        
+        .btn-comment {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-comment:hover {
+            background: #5a6268;
+        }
+        
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .approval-footer {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            
+            .approval-actions {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                gap: 2px;
+            }
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group textarea,
+        .form-group input[type="date"],
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .comment-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .btn-request-changes {
+            background: #f39c12;
+            color: white;
+        }
+        
+        .btn-request-changes:hover {
+            background: #e67e22;
+        }
+        
+        /* Side Panel Styles */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .side-panel[style*="block"] {
+            transform: translateX(0);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            background: #f8f9fa;
+        }
+        
+        .panel-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .panel-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .panel-content {
+            padding: 20px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+        
+        .preview-loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .preview-loading i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast-success {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .toast-error {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .toast-warning {
+            border-left: 4px solid #f39c12;
+        }
+        
+        .toast-info {
+            border-left: 4px solid #3498db;
+        }
+        
+        .toast i {
+            font-size: 16px;
+        }
+        
+        .toast-success i {
+            color: #27ae60;
+        }
+        
+        .toast-error i {
+            color: #e74c3c;
+        }
+        
+        .toast-warning i {
+            color: #f39c12;
+        }
+        
+        .toast-info i {
+            color: #3498db;
+        }
+        
+        /* Batch Results */
+        .batch-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .result-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .result-item.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .result-item.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .result-item i {
+            font-size: 18px;
+        }
+        
+        /* Card Focus and Selection */
+        .approval-card.focused {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+        
+        .approval-card.selected {
+            background: #f8f9ff;
+            border-color: #007bff;
+        }
+        
+        .approval-card.changes-requested {
+            border-left: 4px solid #f39c12;
+        }
+        
+        /* Custom Dropdown Styles */
+        .custom-dropdown {
+            position: relative;
+            display: inline-block;
+            min-width: 150px;
+        }
+        
+        .dropdown-selected {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .dropdown-selected:hover {
+            border-color: #007bff;
+        }
+        
+        .dropdown-selected i {
+            transition: transform 0.2s ease;
+        }
+        
+        .custom-dropdown.open .dropdown-selected i {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .custom-dropdown.open .dropdown-options {
+            display: block;
+        }
+        
+        .dropdown-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .dropdown-option:hover {
+            background: #f8f9fa;
+        }
+        
+        .dropdown-option.selected {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        /* Sticky Batch Bar */
+        .batch-actions-bar.sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Concurrency Guard Styles */
+        .approval-card.processing {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .approval-card.already-processed {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+        }
+        
+        .already-processed-badge {
+            background: #6c757d;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .approval-card.processing {
+            position: relative;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .approval-card.processing::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+            z-index: 5;
+        }
+        
+        .approval-card.processing::before {
+            content: 'Processing...';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            z-index: 10;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .side-panel {
+                width: 100%;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .toast {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100%);
+            }
+            
+            .toast.show {
+                transform: translateY(0);
+            }
+            
+            .custom-dropdown {
+                min-width: 120px;
+            }
+            
+            .sort-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+    
+    <!-- Request Changes Modal -->
+    <div id="requestChangesModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Request Changes</h3>
+                <button class="modal-close" onclick="closeRequestChangesModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Comment (Required)</label>
+                    <textarea id="changeComment" placeholder="Please specify what changes are needed..." rows="4" required></textarea>
+                    <div class="comment-counter">
+                        <span id="commentCount">0</span>/500 characters
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="changeDueDate" required>
+                </div>
+                <div class="form-group">
+                    <label>Attachments (Optional)</label>
+                    <input type="file" id="changeAttachments" multiple>
+                </div>
+                <div class="form-group">
+                    <label>Mention Users</label>
+                    <input type="text" id="mentionUsers" placeholder="@username">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeRequestChangesModal()">Cancel</button>
+                <button class="btn btn-request-changes" onclick="submitRequestChanges()">Request Changes</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Side Panel for Previews -->
+    <div id="previewPanel" class="side-panel" style="display: none;">
+        <div class="panel-header">
+            <h3 id="previewTitle">Preview</h3>
+            <button class="panel-close" onclick="closePreviewPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="panel-content" id="previewContent">
+            <!-- Preview content will be loaded here -->
+        </div>
+    </div>
+    
+    <!-- Batch Results Modal -->
+    <div id="batchResultsModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Batch Action Results</h3>
+                <button class="modal-close" onclick="closeBatchResultsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="batchResults">
+                    <!-- Results will be populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeBatchResultsModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedItems = new Set();
+        let currentPage = 1;
+        let autoAdvanceEnabled = true;
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            switch(e.key.toLowerCase()) {
+                case 'j':
+                    navigateNext();
+                    break;
+                case 'k':
+                    navigatePrev();
+                    break;
+                case 'a':
+                    if (getCurrentItem()) approveItem(getCurrentItem().dataset.id);
+                    break;
+                case 'c':
+                    if (getCurrentItem()) requestChanges(getCurrentItem().dataset.id);
+                    break;
+                case 'r':
+                    if (getCurrentItem()) rejectItem(getCurrentItem().dataset.id);
+                    break;
+                case 'x':
+                    if (getCurrentItem()) toggleItemSelection(getCurrentItem());
+                    break;
+            }
+        });
+        
+        function toggleSelection(checkbox) {
+            const card = checkbox.closest('.approval-card');
+            const itemId = card.dataset.id;
+            
+            if (checkbox.checked) {
+                selectedItems.add(itemId);
+                card.classList.add('selected');
+            } else {
+                selectedItems.delete(itemId);
+                card.classList.remove('selected');
+            }
+            
+            updateBatchActionsBar();
+        }
+        
+        function updateBatchActionsBar() {
+            const batchBar = document.getElementById('batchActionsBar');
+            const selectedCount = document.getElementById('selectedCount');
+            
+            selectedCount.textContent = selectedItems.size;
+            
+            if (selectedItems.size > 0) {
+                batchBar.style.display = 'flex';
+            } else {
+                batchBar.style.display = 'none';
+            }
+        }
+        
+        function clearSelection() {
+            selectedItems.clear();
+            document.querySelectorAll('.approval-checkbox').forEach(cb => {
+                cb.checked = false;
+                cb.closest('.approval-card').classList.remove('selected');
+            });
+            updateBatchActionsBar();
+        }
+        
+        // Batch Actions
+        function batchApprove() {
+            if (selectedItems.size === 0) return;
+            
+            const results = {
+                approved: Array.from(selectedItems),
+                failed: []
+            };
+            
+            showBatchResults(results, 'approve');
+            clearSelection();
+        }
+        
+        function batchRequestChanges() {
+            if (selectedItems.size === 0) return;
+            // Open modal for batch request changes
+            document.getElementById('requestChangesModal').style.display = 'flex';
+        }
+        
+        function batchReject() {
+            if (selectedItems.size === 0) return;
+            
+            const results = {
+                rejected: Array.from(selectedItems),
+                failed: []
+            };
+            
+            showBatchResults(results, 'reject');
+            clearSelection();
+        }
+        
+        function batchAssign() {
+            if (selectedItems.size === 0) return;
+            // Show assign modal
+            alert('Assign functionality - would show user picker modal');
+        }
+        
+        function batchSnooze() {
+            if (selectedItems.size === 0) return;
+            // Show snooze modal
+            alert('Snooze functionality - would show date/time picker modal');
+        }
+        
+        function showBatchResults(results, action) {
+            const modal = document.getElementById('batchResultsModal');
+            const resultsDiv = document.getElementById('batchResults');
+            
+            let html = `<div class="batch-summary">`;
+            
+            if (results.approved) {
+                html += `<div class="result-item success">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${results.approved.length} items approved successfully</span>
+                </div>`;
+            }
+            
+            if (results.rejected) {
+                html += `<div class="result-item success">
+                    <i class="fas fa-times-circle"></i>
+                    <span>${results.rejected.length} items rejected successfully</span>
+                </div>`;
+            }
+            
+            if (results.failed && results.failed.length > 0) {
+                html += `<div class="result-item error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>${results.failed.length} items failed to process</span>
+                </div>`;
+            }
+            
+            html += `</div>`;
+            
+            resultsDiv.innerHTML = html;
+            modal.style.display = 'flex';
+        }
+        
+        // Individual Actions
+        function approveItem(itemId) {
+            if (checkConcurrency(itemId)) {
+                return; // Stop if already processed
+            }
+            
+            const card = document.querySelector(`[data-id="${itemId}"]`);
+            card.classList.add('processing');
+            
+            // Simulate API call
+            setTimeout(() => {
+                showToast(`Item ${itemId} approved successfully`, 'success');
+                if (autoAdvanceEnabled) {
+                    navigateNext();
+                }
+                card.remove();
+            }, 500);
+        }
+        
+        function requestChanges(itemId) {
+            document.getElementById('requestChangesModal').style.display = 'flex';
+            document.getElementById('requestChangesModal').dataset.itemId = itemId;
+        }
+        
+        function rejectItem(itemId) {
+            if (checkConcurrency(itemId)) {
+                return; // Stop if already processed
+            }
+            
+            const card = document.querySelector(`[data-id="${itemId}"]`);
+            card.classList.add('processing');
+            
+            // Simulate API call
+            setTimeout(() => {
+                showToast(`Item ${itemId} rejected`, 'error');
+                if (autoAdvanceEnabled) {
+                    navigateNext();
+                }
+                card.remove();
+            }, 500);
+        }
+        
+        function assignItem(itemId) {
+            alert(`Assign item ${itemId} - would show user picker`);
+        }
+        
+        // Request Changes Modal
+        function closeRequestChangesModal() {
+            document.getElementById('requestChangesModal').style.display = 'none';
+        }
+        
+        function submitRequestChanges() {
+            const comment = document.getElementById('changeComment').value;
+            const dueDate = document.getElementById('changeDueDate').value;
+            
+            if (!comment.trim()) {
+                alert('Comment is required');
+                return;
+            }
+            
+            if (!dueDate) {
+                alert('Due date is required');
+                return;
+            }
+            
+            const itemId = document.getElementById('requestChangesModal').dataset.itemId;
+            
+            // Simulate API call
+            setTimeout(() => {
+                showToast(`Changes requested for item ${itemId}`, 'warning');
+                closeRequestChangesModal();
+                
+                // Update card status
+                const card = document.querySelector(`[data-id="${itemId}"]`);
+                if (card) {
+                    card.classList.add('changes-requested');
+                }
+            }, 500);
+        }
+        
+        // Comment counter
+        document.getElementById('changeComment').addEventListener('input', function() {
+            const count = this.value.length;
+            document.getElementById('commentCount').textContent = count;
+            
+            if (count > 500) {
+                this.value = this.value.substring(0, 500);
+                document.getElementById('commentCount').textContent = 500;
+            }
+        });
+        
+        // Preview Functions
+        function previewAttachment(attachmentId) {
+            const panel = document.getElementById('previewPanel');
+            const title = document.getElementById('previewTitle');
+            const content = document.getElementById('previewContent');
+            
+            title.textContent = 'Attachment Preview';
+            content.innerHTML = `
+                <div class="preview-loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading attachment...</p>
+                </div>
+            `;
+            
+            panel.style.display = 'block';
+            
+            // Simulate loading
+            setTimeout(() => {
+                content.innerHTML = `
+                    <div class="attachment-preview">
+                        <embed src="https://via.placeholder.com/400x600/f0f0f0/666?text=PDF+Preview" 
+                               type="application/pdf" width="100%" height="500px">
+                    </div>
+                `;
+            }, 1000);
+        }
+        
+        function previewReceipt(receiptId) {
+            const panel = document.getElementById('previewPanel');
+            const title = document.getElementById('previewTitle');
+            const content = document.getElementById('previewContent');
+            
+            title.textContent = 'Receipt Preview';
+            content.innerHTML = `
+                <div class="receipt-preview">
+                    <img src="https://via.placeholder.com/400x600/f0f0f0/666?text=Receipt+Image" 
+                         alt="Receipt" style="width: 100%; max-width: 400px;">
+                </div>
+            `;
+            
+            panel.style.display = 'block';
+        }
+        
+        function closePreviewPanel() {
+            document.getElementById('previewPanel').style.display = 'none';
+        }
+        
+        function closeBatchResultsModal() {
+            document.getElementById('batchResultsModal').style.display = 'none';
+        }
+        
+        // Navigation
+        function navigateNext() {
+            const cards = document.querySelectorAll('.approval-card');
+            const current = document.querySelector('.approval-card.focused');
+            let nextIndex = 0;
+            
+            if (current) {
+                const currentIndex = Array.from(cards).indexOf(current);
+                nextIndex = (currentIndex + 1) % cards.length;
+                current.classList.remove('focused');
+            }
+            
+            cards[nextIndex].classList.add('focused');
+            cards[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function navigatePrev() {
+            const cards = document.querySelectorAll('.approval-card');
+            const current = document.querySelector('.approval-card.focused');
+            let prevIndex = cards.length - 1;
+            
+            if (current) {
+                const currentIndex = Array.from(cards).indexOf(current);
+                prevIndex = currentIndex > 0 ? currentIndex - 1 : cards.length - 1;
+                current.classList.remove('focused');
+            }
+            
+            cards[prevIndex].classList.add('focused');
+            cards[prevIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function getCurrentItem() {
+            return document.querySelector('.approval-card.focused');
+        }
+        
+        function toggleItemSelection(card) {
+            const checkbox = card.querySelector('.approval-checkbox');
+            checkbox.checked = !checkbox.checked;
+            toggleSelection(checkbox);
+        }
+        
+        // Utility Functions
+        function showToast(message, type = 'info') {
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+        
+        function showComments(itemId) {
+            alert(`Show comments for item ${itemId}`);
+        }
+        
+        function showReceiptDetails(itemId) {
+            alert(`Show receipt details for item ${itemId}`);
+        }
+        
+        function showAllReceipts(itemId) {
+            alert(`Show all receipts for item ${itemId}`);
+        }
+        
+        // Tab and Filter Functions
+        function showTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter cards
+            const cards = document.querySelectorAll('.approval-card');
+            cards.forEach(card => {
+                if (tabName === 'all' || card.classList.contains(tabName)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function sortApprovals(sortBy) {
+            const container = document.querySelector('.approval-cards');
+            const cards = Array.from(container.querySelectorAll('.approval-card'));
+            
+            cards.sort((a, b) => {
+                switch(sortBy) {
+                    case 'oldest':
+                        return new Date(a.dataset.submitted) - new Date(b.dataset.submitted);
+                    case 'sla':
+                        return a.dataset.sla - b.dataset.sla;
+                    case 'amount':
+                        return parseFloat(b.dataset.amount) - parseFloat(a.dataset.amount);
+                    default:
+                        return 0;
+                }
+            });
+            
+            cards.forEach(card => container.appendChild(card));
+        }
+        
+        function loadSavedView(viewName) {
+            if (!viewName) return;
+            
+            // Simulate loading saved view
+            console.log(`Loading saved view: ${viewName}`);
+        }
+        
+        function createCustomView() {
+            alert('Create custom view - would show modal with filter options');
+        }
+        
+        // Custom Dropdown Functions
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const isOpen = dropdown.classList.contains('open');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.custom-dropdown').forEach(dd => {
+                dd.classList.remove('open');
+            });
+            
+            // Toggle current dropdown
+            if (!isOpen) {
+                dropdown.classList.add('open');
+            }
+        }
+        
+        function selectSort(value, text) {
+            document.getElementById('sortSelected').textContent = text;
+            document.getElementById('sortDropdown').classList.remove('open');
+            
+            // Update selected option
+            document.querySelectorAll('#sortDropdown .dropdown-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`#sortDropdown [data-value="${value}"]`).classList.add('selected');
+            
+            // Save to localStorage
+            localStorage.setItem('approvals_sort', value);
+            
+            // Apply sorting
+            sortApprovals(value);
+        }
+        
+        function selectView(value, text) {
+            document.getElementById('viewSelected').textContent = text;
+            document.getElementById('viewsDropdown').classList.remove('open');
+            
+            // Update selected option
+            document.querySelectorAll('#viewsDropdown .dropdown-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector(`#viewsDropdown [data-value="${value}"]`).classList.add('selected');
+            
+            // Save to localStorage
+            localStorage.setItem('approvals_view', value);
+            
+            // Apply view
+            loadSavedView(value);
+        }
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.custom-dropdown')) {
+                document.querySelectorAll('.custom-dropdown').forEach(dd => {
+                    dd.classList.remove('open');
+                });
+            }
+        });
+        
+        // Concurrency Guard
+        function checkConcurrency(itemId) {
+            // Simulate checking if item was already processed
+            const randomCheck = Math.random() < 0.1; // 10% chance of concurrency conflict
+            
+            if (randomCheck) {
+                const processors = ['Alice', 'Bob', 'Carol', 'David'];
+                const processor = processors[Math.floor(Math.random() * processors.length)];
+                const timeAgo = Math.floor(Math.random() * 10) + 1;
+                
+                showToast(`Already approved by ${processor} ${timeAgo}m ago`, 'warning');
+                
+                // Mark card as already processed
+                const card = document.querySelector(`[data-id="${itemId}"]`);
+                if (card) {
+                    card.classList.add('already-processed');
+                    const header = card.querySelector('.approval-header');
+                    if (header && !header.querySelector('.already-processed-badge')) {
+                        const badge = document.createElement('span');
+                        badge.className = 'already-processed-badge';
+                        badge.textContent = `Processed by ${processor}`;
+                        header.appendChild(badge);
+                    }
+                }
+                
+                return true; // Concurrency conflict detected
+            }
+            
+            return false; // No conflict
+        }
+        
+
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set first card as focused
+            const firstCard = document.querySelector('.approval-card');
+            if (firstCard) {
+                firstCard.classList.add('focused');
+            }
+            
+            // Restore saved preferences
+            const savedSort = localStorage.getItem('approvals_sort');
+            if (savedSort) {
+                const sortOption = document.querySelector(`#sortDropdown [data-value="${savedSort}"]`);
+                if (sortOption) {
+                    selectSort(savedSort, sortOption.textContent);
+                }
+            }
+            
+            const savedView = localStorage.getItem('approvals_view');
+            if (savedView) {
+                const viewOption = document.querySelector(`#viewsDropdown [data-value="${savedView}"]`);
+                if (viewOption) {
+                    selectView(savedView, viewOption.textContent);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

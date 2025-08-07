@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Bookings - Travel Expense Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item active">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+            <span class="nav-badge warning" id="badge-expenses" data-count="3" title="3 violations found">3</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+            <span class="nav-badge" id="badge-approvals" data-count="5" title="5 approvals pending">5</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <nav class="breadcrumbs">
+                    <span class="breadcrumb-item">Travel</span>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item current">Bookings</span>
+                </nav>
+                
+                <!-- Page Header -->
+                <section class="page-header">
+                    <h1><i class="fas fa-plane"></i> Travel Bookings</h1>
+                    <p>Manage your travel bookings and requests</p>
+                </section>
+            
+            <!-- Traveloka Connection Status -->
+            <div class="connection-status">
+                <div class="status-indicator connected">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Traveloka Connected</span>
+                </div>
+                <button class="reconnect-btn" style="display: none;" onclick="reconnectTraveloka()">
+                    <i class="fas fa-sync"></i> Reconnect
+                </button>
+            </div>
+
+            <section class="kpi-section">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3>Total Bookings</h3>
+                            <span class="kpi-number">12</span>
+                            <span class="kpi-period">This month</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card pending">
+                        <div class="kpi-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3>Pending Approval</h3>
+                            <span class="kpi-number">3</span>
+                            <span class="kpi-period">Needs review</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card cost">
+                        <div class="kpi-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3>Est. Cost</h3>
+                            <span class="kpi-number">$8,450</span>
+                            <span class="kpi-period">This month</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Filter Bar -->
+            <section class="filter-section">
+                <div class="filter-header">
+                    <div class="saved-views">
+                        <button class="view-btn active" data-view="all">All</button>
+                        <button class="view-btn" data-view="this-month">This month</button>
+                        <button class="view-btn" data-view="pending">Pending only</button>
+                        <button class="view-btn" data-view="traveloka">Traveloka only</button>
+                    </div>
+                    <button class="btn-primary new-trip-btn" onclick="window.location.href='travel-new.html'">
+                        <i class="fas fa-plus"></i> New Trip
+                    </button>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="draft">Draft</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="canceled">Canceled</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Period</label>
+                        <select id="periodFilter" class="filter-select">
+                            <option value="this-month">This month</option>
+                            <option value="custom">Custom range</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Source</label>
+                        <select id="sourceFilter" class="filter-select">
+                            <option value="all">All</option>
+                            <option value="traveloka">Traveloka</option>
+                            <option value="manual">Manual</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group search-group">
+                        <label>Search</label>
+                        <input type="text" id="searchFilter" class="search-input" placeholder="PNR, city, vendor...">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Sort</label>
+                        <select id="sortFilter" class="filter-select">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                            <option value="soonest">Soonest</option>
+                            <option value="highest-cost">Highest cost</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Travel Bookings List -->
+            <section class="bookings-section">
+                <div class="bookings-list" id="bookingsList">
+                    <!-- Booking Card 1 -->
+                    <div class="booking-card" data-status="confirmed" data-source="traveloka">
+                        <div class="booking-header">
+                            <div class="booking-title">
+                                <h3>Jakarta → Surabaya</h3>
+                                <span class="source-badge traveloka">Traveloka</span>
+                            </div>
+                            <div class="booking-cost">
+                                <span class="cost-amount">$465</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-meta">
+                            <div class="trip-info">
+                                <span class="trip-period">Mar 5-12, 2024 • 7 nights</span>
+                                <div class="route-chips">
+                                    <span class="route-chip">CGK–SUB</span>
+                                    <span class="route-chip">SUB–BDO</span>
+                                </div>
+                                <span class="cabin-info">Economy • Deluxe Room</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-status">
+                            <div class="status-info">
+                                <span class="status-badge confirmed">Confirmed</span>
+                                <div class="policy-flags">
+                                    <span class="policy-flag warning"><i class="fas fa-exclamation-triangle"></i> Over budget</span>
+                                </div>
+                            </div>
+                            <div class="sla-info">
+                                <span class="sla-chip ok">On time</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-actions">
+                            <button class="btn-primary" onclick="viewBooking('BK-2024-001')">View</button>
+                            <button class="btn-secondary" onclick="convertToExpense('BK-2024-001')">Convert to Expense</button>
+                            <div class="dropdown">
+                                <button class="btn-ghost dropdown-toggle">⋯</button>
+                                <div class="dropdown-menu">
+                                    <a href="#" onclick="editBooking('BK-2024-001')">Edit</a>
+                                    <a href="#" onclick="cancelBooking('BK-2024-001')">Cancel</a>
+                                    <a href="#" onclick="duplicateBooking('BK-2024-001')">Duplicate</a>
+                                    <a href="#" onclick="exportPDF('BK-2024-001')">Export PDF</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-footer">
+                            <span class="timeline-item">Created Mar 1</span>
+                            <span class="timeline-divider">•</span>
+                            <span class="timeline-item">Submitted Mar 2</span>
+                            <span class="timeline-divider">•</span>
+                            <span class="timeline-item">Approved Mar 3</span>
+                        </div>
+                    </div>
+
+                    <!-- Booking Card 2 -->
+                    <div class="booking-card" data-status="pending" data-source="manual">
+                        <div class="booking-header">
+                            <div class="booking-title">
+                                <h3>Bandung Business Trip</h3>
+                                <span class="source-badge manual">Manual</span>
+                            </div>
+                            <div class="booking-cost">
+                                <span class="cost-amount">$320</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-meta">
+                            <div class="trip-info">
+                                <span class="trip-period">Mar 15-17, 2024 • 2 nights</span>
+                                <div class="route-chips">
+                                    <span class="route-chip">CGK–BDO</span>
+                                </div>
+                                <span class="cabin-info">Economy • Standard Room</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-status">
+                            <div class="status-info">
+                                <span class="status-badge pending">Pending Approval</span>
+                                <div class="policy-flags">
+                                    <span class="policy-flag ok"><i class="fas fa-check-circle"></i> Policy compliant</span>
+                                </div>
+                            </div>
+                            <div class="sla-info">
+                                <span class="sla-chip urgent">Due in 12h</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-actions">
+                            <button class="btn-primary" onclick="viewBooking('BK-2024-002')">View</button>
+                            <button class="btn-secondary" disabled>Convert to Expense</button>
+                            <div class="dropdown">
+                                <button class="btn-ghost dropdown-toggle">⋯</button>
+                                <div class="dropdown-menu">
+                                    <a href="#" onclick="editBooking('BK-2024-002')">Edit</a>
+                                    <a href="#" onclick="recallBooking('BK-2024-002')">Recall</a>
+                                    <a href="#" onclick="duplicateBooking('BK-2024-002')">Duplicate</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-footer">
+                            <span class="timeline-item">Created Mar 10</span>
+                            <span class="timeline-divider">•</span>
+                            <span class="timeline-item">Submitted Mar 11</span>
+                        </div>
+                    </div>
+
+                    <!-- Booking Card 3 -->
+                    <div class="booking-card" data-status="draft" data-source="traveloka">
+                        <div class="booking-header">
+                            <div class="booking-title">
+                                <h3>Singapore Conference</h3>
+                                <span class="source-badge traveloka">Traveloka</span>
+                            </div>
+                            <div class="booking-cost">
+                                <span class="cost-amount">$1,250</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-meta">
+                            <div class="trip-info">
+                                <span class="trip-period">Apr 20-25, 2024 • 5 nights</span>
+                                <div class="route-chips">
+                                    <span class="route-chip">CGK–SIN</span>
+                                </div>
+                                <span class="cabin-info">Business • Executive Suite</span>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-status">
+                            <div class="status-info">
+                                <span class="status-badge draft">Draft</span>
+                                <div class="policy-flags">
+                                    <span class="policy-flag error"><i class="fas fa-times-circle"></i> Class violation</span>
+                                    <span class="policy-flag warning"><i class="fas fa-exclamation-triangle"></i> Over budget</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-actions">
+                            <button class="btn-primary" onclick="viewBooking('BK-2024-003')">View</button>
+                            <button class="btn-secondary" disabled>Convert to Expense</button>
+                            <div class="dropdown">
+                                <button class="btn-ghost dropdown-toggle">⋯</button>
+                                <div class="dropdown-menu">
+                                    <a href="#" onclick="editBooking('BK-2024-003')">Edit</a>
+                                    <a href="#" onclick="submitForApproval('BK-2024-003')">Submit for Approval</a>
+                                    <a href="#" onclick="duplicateBooking('BK-2024-003')">Duplicate</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="booking-footer">
+                            <span class="timeline-item">Created Mar 18</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-illustration">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h3>No travel bookings yet</h3>
+                    <p>Create your first trip booking to get started</p>
+                    <button class="btn-primary" onclick="window.location.href='travel-new.html'">
+                        <i class="fas fa-plus"></i> New Trip
+                    </button>
+                </div>
+            </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Travel-specific functions
+        function viewBooking(bookingId) {
+            window.location.href = `travel-detail.html?id=${bookingId}`;
+        }
+        
+        function convertToExpense(bookingId) {
+            showConvertToExpenseModal(bookingId);
+        }
+        
+        function editBooking(bookingId) {
+            window.location.href = `travel-edit.html?id=${bookingId}`;
+        }
+        
+        function cancelBooking(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                showNotification(`Booking ${bookingId} cancelled`, 'success');
+                // In real app, would make API call
+            }
+        }
+        
+        function recallBooking(bookingId) {
+            if (confirm('Recall this booking from approval?')) {
+                showNotification(`Booking ${bookingId} recalled`, 'info');
+                // Update status to draft
+            }
+        }
+        
+        function duplicateBooking(bookingId) {
+            showNotification('Creating duplicate booking...', 'info');
+            setTimeout(() => {
+                window.location.href = `travel-new.html?duplicate=${bookingId}`;
+            }, 1000);
+        }
+        
+        function exportPDF(bookingId) {
+            showNotification('Generating PDF...', 'info');
+            // Simulate PDF generation
+        }
+        
+        function submitForApproval(bookingId) {
+            if (confirm('Submit this booking for approval?')) {
+                showNotification(`Booking ${bookingId} submitted for approval`, 'success');
+                // Update status to pending
+            }
+        }
+        
+        function showConvertToExpenseModal(bookingId) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Convert to Expense</h3>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Report</label>
+                            <select class="form-control">
+                                <option>Create new report</option>
+                                <option>Add to existing draft</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Items to include</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" checked> Flight (CGK-SUB) - $300</label>
+                                <label><input type="checkbox" checked> Hotel (Grand Surabaya) - $165</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><input type="checkbox" checked> Attach e-ticket as receipt</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea class="form-control" placeholder="Additional notes..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cancel</button>
+                        <button class="btn-primary" onclick="processConversion('${bookingId}')">Convert</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function processConversion(bookingId) {
+            showNotification('Converting booking to expense...', 'info');
+            setTimeout(() => {
+                showNotification('Booking converted successfully!', 'success');
+                document.querySelector('.modal-overlay').remove();
+                // Redirect to expense report
+                setTimeout(() => {
+                    window.location.href = 'expenses.html';
+                }, 1500);
+            }, 2000);
+        }
+        
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Saved views
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    applyFilter(this.dataset.view);
+                });
+            });
+            
+            // Filter controls
+            document.querySelectorAll('.filter-select, .search-input').forEach(control => {
+                control.addEventListener('change', applyFilters);
+                control.addEventListener('input', applyFilters);
+            });
+            
+            // Dropdown toggles
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dropdown = this.parentElement;
+                    dropdown.classList.toggle('active');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            });
+        });
+        
+        function applyFilter(view) {
+            const cards = document.querySelectorAll('.booking-card');
+            
+            cards.forEach(card => {
+                let show = true;
+                
+                switch(view) {
+                    case 'this-month':
+                        // Show only current month bookings
+                        show = card.querySelector('.trip-period').textContent.includes('Mar');
+                        break;
+                    case 'pending':
+                        show = card.dataset.status === 'pending';
+                        break;
+                    case 'traveloka':
+                        show = card.dataset.source === 'traveloka';
+                        break;
+                    default:
+                        show = true;
+                }
+                
+                card.style.display = show ? 'block' : 'none';
+            });
+            
+            updateEmptyState();
+        }
+        
+        function applyFilters() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sourceFilter = document.getElementById('sourceFilter').value;
+            const searchTerm = document.getElementById('searchFilter').value.toLowerCase();
+            const cards = document.querySelectorAll('.booking-card');
+            
+            cards.forEach(card => {
+                let show = true;
+                
+                // Status filter
+                if (statusFilter !== 'all' && card.dataset.status !== statusFilter) {
+                    show = false;
+                }
+                
+                // Source filter
+                if (sourceFilter !== 'all' && card.dataset.source !== sourceFilter) {
+                    show = false;
+                }
+                
+                // Search filter
+                if (searchTerm && !card.textContent.toLowerCase().includes(searchTerm)) {
+                    show = false;
+                }
+                
+                card.style.display = show ? 'block' : 'none';
+            });
+            
+            updateEmptyState();
+        }
+        
+        function updateEmptyState() {
+            const visibleCards = document.querySelectorAll('.booking-card[style*="block"], .booking-card:not([style*="none"])');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (visibleCards.length === 0) {
+                emptyState.style.display = 'block';
+            } else {
+                emptyState.style.display = 'none';
+            }
+        }
+    </script>
+    
+    <style>
+        /* Breadcrumbs */
+        .breadcrumbs {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .breadcrumb-item {
+            color: #6b7280;
+        }
+        
+        .breadcrumb-item.current {
+            color: #111827;
+            font-weight: 500;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: #d1d5db;
+        }
+        
+        /* Travel-specific styles */
+        .kpi-section {
+            margin-bottom: 2rem;
+        }
+        
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .kpi-card.pending {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .kpi-card.cost {
+            border-left: 4px solid #10b981;
+        }
+        
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+        
+        .kpi-content h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .kpi-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            display: block;
+        }
+        
+        .kpi-period {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .saved-views {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .view-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .view-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .view-btn:hover:not(.active) {
+            background: #f9fafb;
+        }
+        
+        .new-trip-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .filter-select, .search-input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .search-group {
+            grid-column: span 2;
+        }
+        
+        .bookings-section {
+            margin-bottom: 2rem;
+        }
+        
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+        
+        .booking-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .booking-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .booking-title h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #111827;
+        }
+        
+        .source-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .source-badge.traveloka {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .source-badge.manual {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .booking-cost {
+            text-align: right;
+        }
+        
+        .cost-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .booking-meta {
+            margin-bottom: 1rem;
+        }
+        
+        .trip-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .trip-period {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .route-chips {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .route-chip {
+            padding: 0.25rem 0.5rem;
+            background: #f3f4f6;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .cabin-info {
+            font-size: 0.85rem;
+            color: #9ca3af;
+        }
+        
+        .booking-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-badge.draft {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .policy-flags {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .policy-flag {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .policy-flag.ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .policy-flag.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .policy-flag.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .sla-chip {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .sla-chip.ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .sla-chip.urgent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .booking-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 150px;
+            z-index: 10;
+            display: none;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .dropdown-menu a:hover {
+            background: #f9fafb;
+        }
+        
+        .booking-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        .timeline-divider {
+            color: #d1d5db;
+        }
+        
+        /* Connection Status */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .status-indicator.connected {
+            color: #059669;
+        }
+        
+        .status-indicator.disconnected {
+            color: #dc2626;
+        }
+        
+        .reconnect-btn {
+            background: #0ea5e9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .reconnect-btn:hover {
+            background: #0284c7;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .empty-illustration {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
+        }
+        
+        .empty-state h3 {
+            margin: 0 0 0.5rem 0;
+            color: #374151;
+        }
+        
+        .empty-state p {
+            margin: 0 0 1.5rem 0;
+            color: #6b7280;
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .filter-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .saved-views {
+                justify-content: center;
+            }
+            
+            .filter-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-group {
+                grid-column: span 1;
+            }
+            
+            .booking-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+            }
+            
+            .booking-actions {
+                flex-wrap: wrap;
+            }
+            
+            .booking-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.25rem;
+            }
+            
+            .timeline-divider {
+                display: none;
+            }
+        }
+    </style>
+</body>
+</html>

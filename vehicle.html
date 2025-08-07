@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle & Mileage - Travel Expense Manager</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1><i class="fas fa-car"></i> Vehicle & Mileage</h1>
+            <p>Manage your vehicles and track your trips</p>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Vehicle Selection -->
+        <section class="vehicle-selection">
+            <div class="section-header">
+                <h3>My Vehicles</h3>
+                <button class="btn-add" onclick="addVehicle()">
+                    <i class="fas fa-plus"></i> Add Vehicle
+                </button>
+            </div>
+            <div class="vehicle-cards">
+                <div class="vehicle-card active" data-vehicle="B1234ABC">
+                    <div class="vehicle-info">
+                        <h4>Honda Civic</h4>
+                        <p class="plate-number">B 1234 ABC</p>
+                        <span class="fuel-type">Gasoline</span>
+                    </div>
+                    <div class="vehicle-stats">
+                        <div class="stat">
+                            <span class="label">This Month</span>
+                            <span class="value">1,250 km</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Avg. Consumption</span>
+                            <span class="value">12.5 km/L</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="vehicle-card" data-vehicle="B5678DEF">
+                    <div class="vehicle-info">
+                        <h4>Toyota Avanza</h4>
+                        <p class="plate-number">B 5678 DEF</p>
+                        <span class="fuel-type">Gasoline</span>
+                    </div>
+                    <div class="vehicle-stats">
+                        <div class="stat">
+                            <span class="label">This Month</span>
+                            <span class="value">850 km</span>
+                        </div>
+                        <div class="stat">
+                            <span class="label">Avg. Consumption</span>
+                            <span class="value">14.2 km/L</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <button class="action-btn primary" onclick="addMileageLog()">
+                <i class="fas fa-plus"></i>
+                Add Mileage Log
+            </button>
+            <button class="action-btn secondary" onclick="viewCalendar()">
+                <i class="fas fa-calendar"></i>
+                Calendar View
+            </button>
+            <button class="action-btn secondary" onclick="exportData()">
+                <i class="fas fa-download"></i>
+                Export Data
+            </button>
+        </section>
+
+        <!-- Monthly Summary -->
+        <section class="monthly-summary">
+            <h3>January 2024 Summary</h3>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-icon">
+                        <i class="fas fa-road"></i>
+                    </div>
+                    <div class="summary-data">
+                        <span class="value">2,100 km</span>
+                        <span class="label">Total Distance</span>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon">
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <div class="summary-data">
+                        <span class="value">165 L</span>
+                        <span class="label">Fuel Consumed</span>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon">
+                        <i class="fas fa-money-bill"></i>
+                    </div>
+                    <div class="summary-data">
+                        <span class="value">$2,145</span>
+                        <span class="label">Total Cost</span>
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="summary-data">
+                        <span class="value">12.7 km/L</span>
+                        <span class="label">Avg. Efficiency</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-controls">
+                <select class="filter-select">
+                    <option value="current">Current Month</option>
+                    <option value="last3">Last 3 Months</option>
+                    <option value="last6">Last 6 Months</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+                <input type="search" class="search-input" placeholder="Search by location...">
+            </div>
+        </section>
+
+        <!-- Mileage Logs -->
+        <section class="mileage-logs">
+            <h3>Recent Mileage Logs</h3>
+            
+            <div class="log-card">
+                <div class="log-header">
+                    <div class="log-date">
+                        <span class="day">25</span>
+                        <span class="month">Jan</span>
+                    </div>
+                    <div class="log-info">
+                        <h4>Jakarta - Bandung</h4>
+                        <p class="vehicle">Honda Civic (B 1234 ABC)</p>
+                    </div>
+                    <div class="log-distance">
+                        <span class="distance">180 km</span>
+                    </div>
+                </div>
+                <div class="log-details">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Start Odometer:</span>
+                            <span class="value">45,320 km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">End Odometer:</span>
+                            <span class="value">45,500 km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fuel Added:</span>
+                            <span class="value">15 L @ $13.5/L</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fuel Cost:</span>
+                            <span class="value">$202.5</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Parking:</span>
+                            <span class="value">$25</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Toll:</span>
+                            <span class="value">$45</span>
+                        </div>
+                    </div>
+                    <div class="efficiency-indicator">
+                        <span class="efficiency-label">Fuel Efficiency:</span>
+                        <span class="efficiency-value good">12.0 km/L</span>
+                        <span class="efficiency-status">✓ Normal</span>
+                    </div>
+                </div>
+                <div class="log-actions">
+                    <button class="btn-action edit" onclick="editLog('LOG-001')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn-action delete" onclick="deleteLog('LOG-001')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <button class="btn-action receipt" onclick="viewReceipts('LOG-001')">
+                        <i class="fas fa-receipt"></i> Receipts
+                    </button>
+                </div>
+            </div>
+
+            <div class="log-card">
+                <div class="log-header">
+                    <div class="log-date">
+                        <span class="day">23</span>
+                        <span class="month">Jan</span>
+                    </div>
+                    <div class="log-info">
+                        <h4>Client Visit - Bekasi</h4>
+                        <p class="vehicle">Honda Civic (B 1234 ABC)</p>
+                    </div>
+                    <div class="log-distance">
+                        <span class="distance">65 km</span>
+                    </div>
+                </div>
+                <div class="log-details">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Start Odometer:</span>
+                            <span class="value">45,255 km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">End Odometer:</span>
+                            <span class="value">45,320 km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fuel Added:</span>
+                            <span class="value">8 L @ $13.5/L</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fuel Cost:</span>
+                            <span class="value">$108</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Parking:</span>
+                            <span class="value">$10</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Toll:</span>
+                            <span class="value">$15</span>
+                        </div>
+                    </div>
+                    <div class="efficiency-indicator">
+                        <span class="efficiency-label">Fuel Efficiency:</span>
+                        <span class="efficiency-value warning">8.1 km/L</span>
+                        <span class="efficiency-status">⚠ Below Average</span>
+                    </div>
+                </div>
+                <div class="log-actions">
+                    <button class="btn-action edit" onclick="editLog('LOG-002')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn-action delete" onclick="deleteLog('LOG-002')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <button class="btn-action receipt" onclick="viewReceipts('LOG-002')">
+                        <i class="fas fa-receipt"></i> Receipts
+                    </button>
+                </div>
+            </div>
+
+            <div class="log-card">
+                <div class="log-header">
+                    <div class="log-date">
+                        <span class="day">20</span>
+                        <span class="month">Jan</span>
+                    </div>
+                    <div class="log-info">
+                        <h4>Office - Home</h4>
+                        <p class="vehicle">Toyota Avanza (B 5678 DEF)</p>
+                    </div>
+                    <div class="log-distance">
+                        <span class="distance">25 km</span>
+                    </div>
+                </div>
+                <div class="log-details">
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <span class="label">Start Odometer:</span>
+                            <span class="value">28,150 km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">End Odometer:</span>
+                            <span class="value">28,175 km</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fuel Added:</span>
+                            <span class="value">0 L</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Fuel Cost:</span>
+                            <span class="value">$0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Parking:</span>
+                            <span class="value">$5</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">Toll:</span>
+                            <span class="value">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="efficiency-indicator">
+                        <span class="efficiency-label">Fuel Efficiency:</span>
+                        <span class="efficiency-value">N/A</span>
+                        <span class="efficiency-status">No fuel added</span>
+                    </div>
+                </div>
+                <div class="log-actions">
+                    <button class="btn-action edit" onclick="editLog('LOG-003')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn-action delete" onclick="deleteLog('LOG-003')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <script src="script.js"></script>
+    <script>
+        // Vehicle & Mileage specific functions
+        function addVehicle() {
+            showNotImplementedPopup('Add Vehicle');
+        }
+
+        function addMileageLog() {
+            showNotImplementedPopup('Add Mileage Log');
+        }
+
+        function viewCalendar() {
+            showNotImplementedPopup('Calendar View');
+        }
+
+        function exportData() {
+            showNotImplementedPopup('Export Data');
+        }
+
+        function editLog(logId) {
+            showNotImplementedPopup(`Edit Log ${logId}`);
+        }
+
+        function deleteLog(logId) {
+            if (confirm(`Delete mileage log ${logId}?`)) {
+                showNotImplementedPopup(`Delete Log ${logId}`);
+            }
+        }
+
+        function viewReceipts(logId) {
+            showNotImplementedPopup(`View Receipts for Log ${logId}`);
+        }
+
+        // Vehicle selection
+        document.querySelectorAll('.vehicle-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('active'));
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                const vehicleId = this.dataset.vehicle;
+                loadVehicleData(vehicleId);
+            });
+        });
+
+        function loadVehicleData(vehicleId) {
+            console.log(`Loading data for vehicle: ${vehicleId}`);
+            // In a real app, this would filter logs by vehicle
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update user info
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                document.querySelector('.user-info span').textContent = `Hello, ${userEmail.split('@')[0]}`;
+            }
+        });
+    </script>
+</body>
+</html>

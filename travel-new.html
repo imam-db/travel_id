@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Trip - Travel Expense Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="mwp.html" class="nav-link">
+                <i class="fas fa-calendar-alt"></i>
+                <span>MWP</span>
+            </a>
+            <a href="travel.html" class="nav-link active">
+                <i class="fas fa-plane"></i>
+                <span>Travel</span>
+            </a>
+            <a href="expenses.html" class="nav-link">
+                <i class="fas fa-receipt"></i>
+                <span>Expenses</span>
+            </a>
+            <a href="approvals.html" class="nav-link">
+                <i class="fas fa-check-circle"></i>
+                <span>Approvals</span>
+            </a>
+            <a href="profile.html" class="nav-link">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <nav class="breadcrumbs">
+                    <a href="travel.html" class="breadcrumb-item">Travel</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item current">New Trip</span>
+                </nav>
+                
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="header-with-back">
+                        <button class="back-btn" onclick="window.location.href='travel.html'">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="header-content">
+                            <h1><i class="fas fa-plus"></i> New Trip</h1>
+                            <p>Create a new travel booking request</p>
+                        </div>
+                    </div>
+                </section>
+            <!-- Trip Chooser -->
+            <section class="trip-chooser" id="tripChooser">
+                <div class="chooser-header">
+                    <h2>How would you like to book your trip?</h2>
+                    <p>Choose the best option for your travel needs</p>
+                </div>
+                
+                <div class="chooser-options">
+                    <!-- Traveloka Option -->
+                    <div class="chooser-card traveloka" onclick="selectBookingMethod('traveloka')">
+                        <div class="card-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Search with Traveloka</h3>
+                            <p>Find and compare flights, hotels, and packages from Traveloka's extensive inventory</p>
+                            <div class="card-features">
+                                <span class="feature-tag"><i class="fas fa-check"></i> Best prices</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Instant booking</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Policy compliance</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual Option -->
+                    <div class="chooser-card manual" onclick="selectBookingMethod('manual')">
+                        <div class="card-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Manual Entry</h3>
+                            <p>Enter trip details manually for bookings made outside the system</p>
+                            <div class="card-features">
+                                <span class="feature-tag"><i class="fas fa-check"></i> Flexible input</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Custom vendors</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Offline bookings</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- From MWP Option -->
+                    <div class="chooser-card mwp" onclick="selectBookingMethod('mwp')">
+                        <div class="card-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>From MWP</h3>
+                            <p>Create trip from your Monthly Work Plan activities</p>
+                            <div class="card-features">
+                                <span class="feature-tag"><i class="fas fa-check"></i> Pre-approved</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Budget allocated</span>
+                                <span class="feature-tag"><i class="fas fa-check"></i> Auto-filled</span>
+                            </div>
+                        </div>
+                        <div class="card-arrow">
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Traveloka Search -->
+            <section class="traveloka-search" id="travelokaSearch" style="display: none;">
+                <div class="search-header">
+                    <button class="back-btn" onclick="showTripChooser()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Search Traveloka</h2>
+                </div>
+                
+                <div class="search-form">
+                    <div class="trip-type-selector">
+                        <button class="trip-type-btn active" data-type="flight">Flight</button>
+                        <button class="trip-type-btn" data-type="hotel">Hotel</button>
+                        <button class="trip-type-btn" data-type="package">Package</button>
+                    </div>
+                    
+                    <!-- Flight Search -->
+                    <div class="search-section flight-search active">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>From</label>
+                                <div class="airport-input">
+                                    <input type="text" id="fromAirport" placeholder="Jakarta (CGK)" value="Jakarta (CGK)">
+                                    <i class="fas fa-plane-departure"></i>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="swap-btn" onclick="swapAirports()">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <label>To</label>
+                                <div class="airport-input">
+                                    <input type="text" id="toAirport" placeholder="Destination">
+                                    <i class="fas fa-plane-arrival"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Departure</label>
+                                <input type="date" id="departureDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Return</label>
+                                <input type="date" id="returnDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Passengers</label>
+                                <select id="passengers">
+                                    <option value="1">1 Adult</option>
+                                    <option value="2">2 Adults</option>
+                                    <option value="3">3 Adults</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Class</label>
+                                <select id="flightClass">
+                                    <option value="economy">Economy</option>
+                                    <option value="premium">Premium Economy</option>
+                                    <option value="business">Business</option>
+                                    <option value="first">First Class</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Trip Type</label>
+                                <select id="tripType">
+                                    <option value="round-trip">Round Trip</option>
+                                    <option value="one-way">One Way</option>
+                                    <option value="multi-city">Multi City</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary search-btn" onclick="searchFlights()">
+                            <i class="fas fa-search"></i> Search Flights
+                        </button>
+                    </div>
+                    
+                    <!-- Hotel Search -->
+                    <div class="search-section hotel-search">
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <label>Destination</label>
+                                <div class="location-input">
+                                    <input type="text" id="hotelDestination" placeholder="City or hotel name">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Check-in</label>
+                                <input type="date" id="checkinDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Check-out</label>
+                                <input type="date" id="checkoutDate">
+                            </div>
+                            <div class="form-group">
+                                <label>Guests</label>
+                                <select id="guests">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-primary search-btn" onclick="searchHotels()">
+                            <i class="fas fa-search"></i> Search Hotels
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Search Results -->
+                <div class="search-results" id="searchResults" style="display: none;">
+                    <div class="results-header">
+                        <h3>Search Results</h3>
+                        <div class="results-filters">
+                            <select class="filter-select">
+                                <option>Sort by: Price (Low to High)</option>
+                                <option>Sort by: Duration</option>
+                                <option>Sort by: Departure Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="results-list" id="resultsList">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Manual Form -->
+            <section class="manual-form" id="manualForm" style="display: none;">
+                <div class="form-header">
+                    <button class="back-btn" onclick="showTripChooser()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Manual Trip Entry</h2>
+                </div>
+                
+                <form class="trip-form" id="tripFormData">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Trip Title *</label>
+                                <input type="text" name="title" placeholder="e.g., Jakarta Business Trip" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Purpose *</label>
+                                <select name="purpose" required>
+                                    <option value="">Select purpose</option>
+                                    <option value="business">Business Meeting</option>
+                                    <option value="training">Training</option>
+                                    <option value="conference">Conference</option>
+                                    <option value="client-visit">Client Visit</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Start Date *</label>
+                                <input type="date" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>End Date *</label>
+                                <input type="date" name="endDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Destination *</label>
+                                <input type="text" name="destination" placeholder="City, Country" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" rows="3" placeholder="Additional trip details..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Flight Details -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Flight Details</h3>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="includeFlightToggle" onchange="toggleFlightSection()">
+                                <span class="slider"></span>
+                                Include flight
+                            </label>
+                        </div>
+                        
+                        <div class="flight-details" id="flightDetails" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Airline</label>
+                                    <input type="text" name="airline" placeholder="e.g., Garuda Indonesia">
+                                </div>
+                                <div class="form-group">
+                                    <label>Flight Number</label>
+                                    <input type="text" name="flightNumber" placeholder="e.g., GA-123">
+                                </div>
+                                <div class="form-group">
+                                    <label>Class</label>
+                                    <select name="flightClass">
+                                        <option value="economy">Economy</option>
+                                        <option value="premium">Premium Economy</option>
+                                        <option value="business">Business</option>
+                                        <option value="first">First Class</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Departure Airport</label>
+                                    <input type="text" name="departureAirport" placeholder="e.g., CGK">
+                                </div>
+                                <div class="form-group">
+                                    <label>Arrival Airport</label>
+                                    <input type="text" name="arrivalAirport" placeholder="e.g., SUB">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cost</label>
+                                    <input type="number" name="flightCost" placeholder="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hotel Details -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Hotel Details</h3>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="includeHotelToggle" onchange="toggleHotelSection()">
+                                <span class="slider"></span>
+                                Include hotel
+                            </label>
+                        </div>
+                        
+                        <div class="hotel-details" id="hotelDetails" style="display: none;">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Hotel Name</label>
+                                    <input type="text" name="hotelName" placeholder="e.g., Grand Surabaya Hotel">
+                                </div>
+                                <div class="form-group">
+                                    <label>Room Type</label>
+                                    <select name="roomType">
+                                        <option value="standard">Standard Room</option>
+                                        <option value="deluxe">Deluxe Room</option>
+                                        <option value="suite">Suite</option>
+                                        <option value="executive">Executive Room</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nights</label>
+                                    <input type="number" name="nights" placeholder="1" min="1">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Check-in Date</label>
+                                    <input type="date" name="checkinDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Check-out Date</label>
+                                    <input type="date" name="checkoutDate">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cost per Night</label>
+                                    <input type="number" name="hotelCostPerNight" placeholder="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Policy Check -->
+                    <div class="form-section">
+                        <h3>Policy Compliance</h3>
+                        <div class="policy-check" id="policyCheck">
+                            <div class="policy-item">
+                                <i class="fas fa-check-circle policy-icon ok"></i>
+                                <span>Trip duration within policy limits</span>
+                            </div>
+                            <div class="policy-item">
+                                <i class="fas fa-exclamation-triangle policy-icon warning"></i>
+                                <span>Flight class may exceed policy (Business class selected)</span>
+                            </div>
+                            <div class="policy-item">
+                                <i class="fas fa-check-circle policy-icon ok"></i>
+                                <span>Hotel rate within per-diem limits</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="saveDraft()">Save as Draft</button>
+                        <button type="submit" class="btn-primary">Submit for Approval</button>
+                    </div>
+                </form>
+            </section>
+            
+            <!-- MWP Selection -->
+            <section class="mwp-selection" id="mwpSelection" style="display: none;">
+                <div class="form-header">
+                    <button class="back-btn" onclick="showTripChooser()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h2>Select from MWP</h2>
+                </div>
+                
+                <div class="mwp-list">
+                    <div class="mwp-item" onclick="selectMWPItem('MWP-2024-001')">
+                        <div class="mwp-content">
+                            <h4>Client Meeting - PT Teknologi Maju</h4>
+                            <p>Quarterly business review and contract renewal discussion</p>
+                            <div class="mwp-meta">
+                                <span class="mwp-date">Mar 15-17, 2024</span>
+                                <span class="mwp-location">Surabaya</span>
+                                <span class="mwp-budget">Budget: $500</span>
+                            </div>
+                        </div>
+                        <div class="mwp-status">
+                            <span class="status-badge approved">Approved</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mwp-item" onclick="selectMWPItem('MWP-2024-002')">
+                        <div class="mwp-content">
+                            <h4>Training - Digital Transformation</h4>
+                            <p>3-day intensive training on digital transformation strategies</p>
+                            <div class="mwp-meta">
+                                <span class="mwp-date">Apr 5-7, 2024</span>
+                                <span class="mwp-location">Bandung</span>
+                                <span class="mwp-budget">Budget: $350</span>
+                            </div>
+                        </div>
+                        <div class="mwp-status">
+                            <span class="status-badge approved">Approved</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mwp-item" onclick="selectMWPItem('MWP-2024-003')">
+                        <div class="mwp-content">
+                            <h4>Conference - Tech Innovation Summit</h4>
+                            <p>Annual technology conference with industry leaders</p>
+                            <div class="mwp-meta">
+                                <span class="mwp-date">May 20-22, 2024</span>
+                                <span class="mwp-location">Singapore</span>
+                                <span class="mwp-budget">Budget: $1,200</span>
+                            </div>
+                        </div>
+                        <div class="mwp-status">
+                            <span class="status-badge approved">Approved</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Trip Basket (Sticky Footer) -->
+    <div class="trip-basket" id="tripBasket" style="display: none;">
+        <div class="basket-content">
+            <div class="basket-summary">
+                <span class="basket-count">2 segments selected</span>
+                <span class="basket-total">Total: $465</span>
+            </div>
+            <button class="btn-primary basket-cta" onclick="createBooking()">
+                Create Booking
+            </button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Trip creation functions
+        function selectBookingMethod(method) {
+            document.getElementById('tripChooser').style.display = 'none';
+            
+            switch(method) {
+                case 'traveloka':
+                    document.getElementById('travelokaSearch').style.display = 'block';
+                    break;
+                case 'manual':
+                    document.getElementById('manualForm').style.display = 'block';
+                    break;
+                case 'mwp':
+                    document.getElementById('mwpSelection').style.display = 'block';
+                    break;
+            }
+        }
+        
+        function showTripChooser() {
+            document.getElementById('tripChooser').style.display = 'block';
+            document.getElementById('travelokaSearch').style.display = 'none';
+            document.getElementById('manualForm').style.display = 'none';
+            document.getElementById('mwpSelection').style.display = 'none';
+        }
+        
+        // Traveloka search functions
+        function swapAirports() {
+            const fromAirport = document.getElementById('fromAirport');
+            const toAirport = document.getElementById('toAirport');
+            const temp = fromAirport.value;
+            fromAirport.value = toAirport.value;
+            toAirport.value = temp;
+        }
+        
+        function searchFlights() {
+            showNotification('Searching flights...', 'info');
+            
+            // Simulate search delay
+            setTimeout(() => {
+                displayFlightResults();
+                document.getElementById('searchResults').style.display = 'block';
+                showNotification('Found 12 flights', 'success');
+            }, 2000);
+        }
+        
+        function searchHotels() {
+            showNotification('Searching hotels...', 'info');
+            
+            // Simulate search delay
+            setTimeout(() => {
+                displayHotelResults();
+                document.getElementById('searchResults').style.display = 'block';
+                showNotification('Found 8 hotels', 'success');
+            }, 2000);
+        }
+        
+        function displayFlightResults() {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = `
+                <div class="result-item flight-result">
+                    <div class="result-header">
+                        <div class="airline-info">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzY2N2VlYSIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HQTwvdGV4dD4KPHN2Zz4K" alt="GA" class="airline-logo">
+                            <div class="airline-details">
+                                <span class="airline-name">Garuda Indonesia</span>
+                                <span class="flight-number">GA-123</span>
+                            </div>
+                        </div>
+                        <div class="flight-price">
+                            <span class="price-amount">$285</span>
+                            <span class="price-type">per person</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="flight-segment">
+                            <div class="time-location">
+                                <span class="time">07:30</span>
+                                <span class="location">CGK</span>
+                            </div>
+                            <div class="flight-duration">
+                                <div class="duration-line"></div>
+                                <span class="duration-text">1h 30m</span>
+                            </div>
+                            <div class="time-location">
+                                <span class="time">09:00</span>
+                                <span class="location">SUB</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flight-info">
+                            <span class="cabin-class">Economy</span>
+                            <span class="baggage">20kg baggage</span>
+                            <span class="policy-status ok">Policy compliant</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="viewFlightDetails('GA-123')">Details</button>
+                        <button class="btn-primary" onclick="selectFlight('GA-123')">Select</button>
+                    </div>
+                </div>
+                
+                <div class="result-item flight-result">
+                    <div class="result-header">
+                        <div class="airline-info">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iI2VmNDQ0NCIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5MSDwvdGV4dD4KPHN2Zz4K" alt="LH" class="airline-logo">
+                            <div class="airline-details">
+                                <span class="airline-name">Lion Air</span>
+                                <span class="flight-number">JT-456</span>
+                            </div>
+                        </div>
+                        <div class="flight-price">
+                            <span class="price-amount">$245</span>
+                            <span class="price-type">per person</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flight-details">
+                        <div class="flight-segment">
+                            <div class="time-location">
+                                <span class="time">14:15</span>
+                                <span class="location">CGK</span>
+                            </div>
+                            <div class="flight-duration">
+                                <div class="duration-line"></div>
+                                <span class="duration-text">1h 25m</span>
+                            </div>
+                            <div class="time-location">
+                                <span class="time">15:40</span>
+                                <span class="location">SUB</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flight-info">
+                            <span class="cabin-class">Economy</span>
+                            <span class="baggage">20kg baggage</span>
+                            <span class="policy-status ok">Policy compliant</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="viewFlightDetails('JT-456')">Details</button>
+                        <button class="btn-primary" onclick="selectFlight('JT-456')">Select</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function displayHotelResults() {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = `
+                <div class="result-item hotel-result">
+                    <div class="hotel-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTIwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjZjNmNGY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNjY3ZWVhIi8+Cjx0ZXh0IHg9IjYwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhvdGVsPC90ZXh0Pgo8L3N2Zz4K" alt="Hotel" class="hotel-photo">
+                    </div>
+                    
+                    <div class="hotel-content">
+                        <div class="hotel-header">
+                            <div class="hotel-info">
+                                <h4>Grand Surabaya Hotel</h4>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★☆</span>
+                                    <span class="rating-score">4.2</span>
+                                </div>
+                                <p class="hotel-location">Tunjungan Plaza Area, Surabaya</p>
+                            </div>
+                            <div class="hotel-price">
+                                <span class="price-amount">$85</span>
+                                <span class="price-type">per night</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-features">
+                            <span class="feature-tag">Free WiFi</span>
+                            <span class="feature-tag">Breakfast included</span>
+                            <span class="feature-tag">Pool</span>
+                            <span class="feature-tag">Gym</span>
+                        </div>
+                        
+                        <div class="policy-info">
+                            <span class="policy-status ok">Within per-diem limit</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="viewHotelDetails('grand-surabaya')">Details</button>
+                        <button class="btn-primary" onclick="selectHotel('grand-surabaya')">Select</button>
+                    </div>
+                </div>
+                
+                <div class="result-item hotel-result">
+                    <div class="hotel-image">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMTIwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjZjNmNGY2Ii8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjgwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjMTBiOTgxIi8+Cjx0ZXh0IHg9IjYwIiB5PSI0NSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkhvdGVsPC90ZXh0Pgo8L3N2Zz4K" alt="Hotel" class="hotel-photo">
+                    </div>
+                    
+                    <div class="hotel-content">
+                        <div class="hotel-header">
+                            <div class="hotel-info">
+                                <h4>Surabaya Plaza Hotel</h4>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★★</span>
+                                    <span class="rating-score">4.6</span>
+                                </div>
+                                <p class="hotel-location">Central Business District, Surabaya</p>
+                            </div>
+                            <div class="hotel-price">
+                                <span class="price-amount">$120</span>
+                                <span class="price-type">per night</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hotel-features">
+                            <span class="feature-tag">Free WiFi</span>
+                            <span class="feature-tag">Executive Lounge</span>
+                            <span class="feature-tag">Spa</span>
+                            <span class="feature-tag">Business Center</span>
+                        </div>
+                        
+                        <div class="policy-info">
+                            <span class="policy-status warning">Exceeds per-diem by $20</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-actions">
+                        <button class="btn-secondary" onclick="viewHotelDetails('surabaya-plaza')">Details</button>
+                        <button class="btn-primary" onclick="selectHotel('surabaya-plaza')">Select</button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        let tripBasket = {
+            flights: [],
+            hotels: [],
+            total: 0
+        };
+        
+        function selectFlight(flightNumber) {
+            // Simulate adding flight to basket
+            const flightData = {
+                id: flightNumber,
+                price: flightNumber === 'GA-123' ? 285 : 245,
+                route: 'CGK-SUB',
+                class: 'Economy',
+                airline: flightNumber === 'GA-123' ? 'Garuda Indonesia' : 'Lion Air'
+            };
+            
+            tripBasket.flights.push(flightData);
+            updateTripBasket();
+            showNotification(`Flight ${flightNumber} added to trip`, 'success', true);
+        }
+        
+        function selectHotel(hotelId) {
+            // Simulate adding hotel to basket
+            const hotelData = {
+                id: hotelId,
+                price: hotelId === 'hotel-1' ? 180 : 150,
+                name: hotelId === 'hotel-1' ? 'Grand Surabaya Hotel' : 'Surabaya Plaza Hotel',
+                nights: 2
+            };
+            
+            tripBasket.hotels.push(hotelData);
+            updateTripBasket();
+            showNotification(`Hotel added to trip`, 'success', true);
+        }
+        
+        function updateTripBasket() {
+            const totalSegments = tripBasket.flights.length + tripBasket.hotels.length;
+            const totalPrice = tripBasket.flights.reduce((sum, f) => sum + f.price, 0) + 
+                             tripBasket.hotels.reduce((sum, h) => sum + h.price, 0);
+            
+            if (totalSegments > 0) {
+                document.getElementById('tripBasket').style.display = 'block';
+                document.querySelector('.basket-count').textContent = `${totalSegments} segments selected`;
+                document.querySelector('.basket-total').textContent = `Total: $${totalPrice}`;
+                tripBasket.total = totalPrice;
+            } else {
+                document.getElementById('tripBasket').style.display = 'none';
+            }
+        }
+        
+        function createBooking() {
+            if (tripBasket.flights.length === 0 && tripBasket.hotels.length === 0) {
+                showNotification('Please select at least one flight or hotel', 'error');
+                return;
+            }
+            
+            showNotification('Creating booking...', 'info');
+            setTimeout(() => {
+                showNotification('Booking created successfully!', 'success');
+                // Redirect to booking detail or travel list
+                setTimeout(() => {
+                    window.location.href = 'travel.html';
+                }, 1500);
+            }, 2000);
+        }
+        
+        // Manual form functions
+        function toggleFlightSection() {
+            const toggle = document.getElementById('includeFlightToggle');
+            const details = document.getElementById('flightDetails');
+            details.style.display = toggle.checked ? 'block' : 'none';
+        }
+        
+        function toggleHotelSection() {
+            const toggle = document.getElementById('includeHotelToggle');
+            const details = document.getElementById('hotelDetails');
+            details.style.display = toggle.checked ? 'block' : 'none';
+        }
+        
+        function saveDraft() {
+            showNotification('Trip saved as draft', 'success');
+            setTimeout(() => {
+                window.location.href = 'travel.html';
+            }, 1500);
+        }
+        
+        function selectMWPItem(mwpId) {
+            showNotification('Loading MWP details...', 'info');
+            setTimeout(() => {
+                window.location.href = `travel-new.html?mwp=${mwpId}`;
+            }, 1000);
+        }
+        
+        function prefillFromMWP(mwpId) {
+            // Show notification that we're loading MWP data
+            showNotification('Loading MWP data...', 'info');
+            
+            // Mock MWP data based on mwpId
+            const mwpData = {
+                'feb-2024': {
+                    purpose: 'Monthly Work Plan - February 2024',
+                    destinations: ['Jakarta', 'Surabaya'],
+                    budget: 8500
+                },
+                'mar-2024': {
+                    purpose: 'Monthly Work Plan - March 2024', 
+                    destinations: ['Yogyakarta', 'Semarang', 'Solo'],
+                    budget: 6200
+                },
+                'apr-2024': {
+                    purpose: 'Monthly Work Plan - April 2024',
+                    destinations: ['Bali', 'Lombok'],
+                    budget: 4800
+                },
+                'may-2024': {
+                    purpose: 'Monthly Work Plan - May 2024',
+                    destinations: ['Makassar', 'Manado'],
+                    budget: 5400
+                }
+            };
+            
+            const data = mwpData[mwpId];
+            if (data) {
+                // Prefill form fields
+                document.getElementById('tripPurpose').value = data.purpose;
+                document.getElementById('destination').value = data.destinations[0];
+                
+                // Show MWP context banner
+                const mwpBanner = document.createElement('div');
+                mwpBanner.className = 'mwp-context-banner';
+                mwpBanner.innerHTML = `
+                    <div class="mwp-info">
+                        <i class="fas fa-link"></i>
+                        <span>Creating trip from <strong>${mwpId.toUpperCase()}</strong></span>
+                        <span class="budget-info">Budget: $${data.budget.toLocaleString()}</span>
+                    </div>
+                    <button onclick="this.parentElement.remove()" class="close-banner">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                
+                // Insert banner at the top of the form
+                const formContainer = document.querySelector('.form-container');
+                formContainer.insertBefore(mwpBanner, formContainer.firstChild);
+                
+                showNotification('MWP data loaded successfully', 'success');
+            }
+        }
+        
+        // Trip type selector
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle MWP prefill from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromMWP = urlParams.get('from') === 'mwp';
+            const mwpId = urlParams.get('mwpId');
+            
+            if (fromMWP && mwpId) {
+                prefillFromMWP(mwpId);
+            }
+            
+            // Trip type buttons
+            document.querySelectorAll('.trip-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.trip-type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const type = this.dataset.type;
+                    document.querySelectorAll('.search-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.querySelector(`.${type}-search`).classList.add('active');
+                });
+            });
+            
+            // Form submission
+            document.getElementById('tripFormData').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showNotification('Submitting trip for approval...', 'info');
+                
+                setTimeout(() => {
+                    showNotification('Trip submitted successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'travel.html';
+                    }, 1500);
+                }, 2000);
+            });
+            
+            // Set default dates
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            document.getElementById('departureDate').value = today.toISOString().split('T')[0];
+            document.getElementById('returnDate').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('checkinDate').value = today.toISOString().split('T')[0];
+            document.getElementById('checkoutDate').value = tomorrow.toISOString().split('T')[0];
+        });
+    </script>
+    
+    <style>
+        /* Breadcrumbs */
+        .breadcrumbs {
+            margin-bottom: 2rem;
+            margin-top: 1.5rem;
+            padding: 0;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .breadcrumb-item {
+            color: #6b7280;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item:hover {
+            color: #4b5563;
+        }
+        
+        .breadcrumb-item.current {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: #9ca3af;
+        }
+        
+        /* Header with back button */
+        .header-with-back {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .header-content h1 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .header-content p {
+            margin: 0;
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        
+        /* New trip specific styles */
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .chooser-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .chooser-header h2 {
+            margin: 0 0 0.5rem 0;
+            color: #111827;
+        }
+        
+        .chooser-header p {
+            margin: 0;
+            color: #6b7280;
+        }
+        
+        .chooser-options {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .chooser-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .chooser-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+        }
+        
+        .chooser-card:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .chooser-card.traveloka .card-icon {
+            background: #667eea;
+        }
+        
+        .chooser-card.manual .card-icon {
+            background: #10b981;
+        }
+        
+        .chooser-card.mwp .card-icon {
+            background: #f59e0b;
+        }
+        
+        .card-content {
+            flex: 1;
+        }
+        
+        .card-content h3 {
+            margin: 0 0 0.5rem 0;
+            color: #111827;
+            font-size: 1.25rem;
+        }
+        
+        .card-content p {
+            margin: 0 0 1rem 0;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        .card-features {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .feature-tag {
+            padding: 0.25rem 0.5rem;
+            background: #f3f4f6;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .feature-tag i {
+            color: #10b981;
+        }
+        
+        .card-arrow {
+            font-size: 1.5rem;
+            color: #d1d5db;
+        }
+        
+        /* Search form styles */
+        .search-header, .form-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .search-header h2, .form-header h2 {
+            margin: 0;
+            color: #111827;
+        }
+        
+        .search-form {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .trip-type-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .trip-type-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: none;
+            color: #6b7280;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .trip-type-btn.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+        
+        .search-section {
+            display: none;
+        }
+        
+        .search-section.active {
+            display: block;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .airport-input, .location-input {
+            position: relative;
+        }
+        
+        .airport-input i, .location-input i {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        
+        .swap-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            align-self: end;
+        }
+        
+        .swap-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        .search-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        /* Results styles */
+        .search-results {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .results-header h3 {
+            margin: 0;
+            color: #111827;
+        }
+        
+        .results-filters {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .result-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .result-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        }
+        
+        /* Flight result styles */
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .airline-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .airline-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+        }
+        
+        .airline-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .airline-name {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .flight-number {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .flight-price {
+            text-align: right;
+        }
+        
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+            display: block;
+        }
+        
+        .price-type {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .flight-details {
+            margin-bottom: 1rem;
+        }
+        
+        .flight-segment {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .time-location {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .time {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .location {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .flight-duration {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .duration-line {
+            width: 100%;
+            height: 2px;
+            background: #d1d5db;
+            position: relative;
+        }
+        
+        .duration-line::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #d1d5db;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .duration-text {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .flight-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .cabin-class, .baggage {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .policy-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .policy-status.ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .policy-status.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: flex-end;
+        }
+        
+        /* Hotel result styles */
+        .hotel-result {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .hotel-image {
+            flex-shrink: 0;
+        }
+        
+        .hotel-photo {
+            width: 120px;
+            height: 80px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+        
+        .hotel-content {
+            flex: 1;
+        }
+        
+        .hotel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .hotel-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #111827;
+        }
+        
+        .hotel-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stars {
+            color: #f59e0b;
+        }
+        
+        .rating-score {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .hotel-location {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .hotel-price {
+            text-align: right;
+        }
+        
+        .hotel-features {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        
+        .policy-info {
+            margin-bottom: 1rem;
+        }
+        
+        /* Manual form styles */
+        .trip-form {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .form-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #111827;
+            font-size: 1.1rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+        
+        .toggle-switch input {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            appearance: none;
+            background: #d1d5db;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        
+        .toggle-switch input:checked {
+            background: #667eea;
+        }
+        
+        .toggle-switch .slider {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .toggle-switch input:checked + .slider {
+            transform: translateX(20px);
+        }
+        
+        .flight-details, .hotel-details {
+            padding-top: 1rem;
+        }
+        
+        .policy-check {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .policy-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 6px;
+        }
+        
+        .policy-icon {
+            font-size: 1.1rem;
+        }
+        
+        .policy-icon.ok {
+            color: #10b981;
+        }
+        
+        .policy-icon.warning {
+            color: #f59e0b;
+        }
+        
+        .policy-icon.error {
+            color: #ef4444;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        /* MWP selection styles */
+        .mwp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .mwp-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mwp-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+        
+        .mwp-content h4 {
+            margin: 0 0 0.5rem 0;
+            color: #111827;
+        }
+        
+        .mwp-content p {
+            margin: 0 0 0.75rem 0;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+        
+        .mwp-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
+        
+        .mwp-date, .mwp-location, .mwp-budget {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .mwp-context-banner {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(33, 150, 243, 0.1);
+        }
+        
+        .mwp-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #1976d2;
+        }
+        
+        .mwp-info i {
+            font-size: 1.2rem;
+        }
+        
+        .budget-info {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .close-banner {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .close-banner:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .chooser-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .card-arrow {
+                display: none;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .hotel-result {
+                flex-direction: column;
+            }
+            
+            .hotel-image {
+                align-self: center;
+            }
+            
+            .flight-segment {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .flight-duration {
+                order: -1;
+                width: 100%;
+            }
+            
+            .duration-line {
+                transform: rotate(90deg);
+                width: 40px;
+                margin: 0.5rem 0;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .mwp-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .mwp-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        
+        /* Trip Basket */
+        .trip-basket {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem;
+        }
+        
+        .basket-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .basket-summary {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .basket-count {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .basket-total {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .basket-cta {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .trip-basket {
+                padding: 0.75rem 1rem;
+            }
+            
+            .basket-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .basket-cta {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .chooser-card {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+            
+            .card-content h3 {
+                font-size: 1.1rem;
+            }
+            
+            .card-content p {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            .card-features {
+                justify-content: center;
+            }
+            
+            .feature-tag {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.4rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .header-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .chooser-card {
+                padding: 1rem;
+            }
+            
+            .card-content h3 {
+                font-size: 1rem;
+            }
+            
+            .card-content p {
+                font-size: 0.85rem;
+            }
+            
+            .card-features {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.25rem;
+            }
+        }
+    </style>
+</body>
+</html>

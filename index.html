@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Expense Manager - Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <div class="quick-actions-desktop">
+                    <button class="action-btn" onclick="showNotImplementedPopup('Add Expense')"><i class="fas fa-plus"></i> Add Expense</button>
+                    <button class="action-btn" onclick="window.location.href='travel-new.html'"><i class="fas fa-plane"></i> New Trip</button>
+                    <button class="action-btn" onclick="showNotImplementedPopup('Create MWP')"><i class="fas fa-calendar-alt"></i> Create MWP</button>
+                    <button class="action-btn" onclick="window.location.href='cash-advance.html'"><i class="fas fa-money-bill"></i> Request Advance</button>
+                    <button class="action-btn" onclick="showNotImplementedPopup('Scan Receipts')"><i class="fas fa-camera"></i> Scan Receipts</button>
+                </div>
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+            <span class="nav-badge warning" id="badge-expenses" data-count="3" title="3 violations found">3</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+            <span class="nav-badge" id="badge-approvals" data-count="5" title="5 approvals pending">5</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <h1>Welcome!</h1>
+                <p>Manage your business travel and expenses with ease</p>
+            </section>
+
+            <!-- Global Filter -->
+            <section class="global-filter">
+                <div class="filter-controls">
+                    <select class="filter-select" id="dateRange">
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                        <option value="last_3_months">Last 3 Months</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                    <button class="filter-toggle" id="currencyToggle" onclick="toggleCurrency()">
+                        <i class="fas fa-exchange-alt"></i> USD
+                    </button>
+                </div>
+            </section>
+
+            <!-- Row 1: Hero Cards -->
+            <section class="hero-row">
+                <div class="card-grid">
+                    <!-- Your Approvals -->
+                    <div class="dashboard-card approvals-card" onclick="window.location.href='approvals.html'">
+                        <div class="card-header">
+                            <h3><i class="fas fa-check-circle"></i> Your Approvals</h3>
+                            <span class="badge pending-badge">3</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="approval-stats">
+                                <span class="stat-item">Pending <strong>3</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="stat-item over-sla">Over SLA <strong>1</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="stat-item">Avg <strong>1.2d</strong></span>
+                            </div>
+                            <button class="cta-button primary">Review now</button>
+                        </div>
+                    </div>
+
+                    <!-- My Reports -->
+                    <div class="dashboard-card reports-card" onclick="window.location.href='expenses.html'">
+                        <div class="card-header">
+                            <h3><i class="fas fa-file-alt"></i> My Reports</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="report-stats">
+                                <span class="stat-item">Draft <strong>2</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="stat-item">Submitted <strong>1</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="stat-item">Approved <strong>0</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="stat-item">Paid <strong>1</strong></span>
+                            </div>
+                            <button class="cta-button secondary" onclick="event.stopPropagation(); showNotImplementedPopup('New Report')">New report</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 2: Budget & Cash Advance -->
+            <section class="budget-row">
+                <div class="card-grid">
+                    <!-- Monthly Budget -->
+                    <div class="dashboard-card budget-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-wallet"></i> Monthly Budget</h3>
+                            <span class="budget-status warning">85% used</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="budget-overview">
+                                <div class="budget-amount">
+                                    <span class="used">$4,250</span>
+                                    <span class="total">of $5,000</span>
+                                </div>
+                                <div class="budget-breakdown">
+                                    <div class="breakdown-bar">
+                                        <div class="bar-segment meals" style="width: 30%" title="Meals: $1,275"></div>
+                                        <div class="bar-segment travel" style="width: 25%" title="Travel: $1,063"></div>
+                                        <div class="bar-segment hotel" style="width: 35%" title="Hotel: $1,488"></div>
+                                        <div class="bar-segment others" style="width: 10%" title="Others: $425"></div>
+                                    </div>
+                                    <div class="breakdown-legend">
+                                        <span class="legend-item"><span class="color-dot meals"></span>Meals</span>
+                                        <span class="legend-item"><span class="color-dot travel"></span>Travel</span>
+                                        <span class="legend-item"><span class="color-dot hotel"></span>Hotel</span>
+                                        <span class="legend-item"><span class="color-dot others"></span>Others</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="cta-button secondary" onclick="showNotImplementedPopup('View Budget Breakdown')">View breakdown</button>
+                        </div>
+                    </div>
+
+                    <!-- Cash Advance & Policy Alerts -->
+                    <div class="side-cards">
+                        <div class="dashboard-card cash-advance-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-money-bill-wave"></i> Cash Advance</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="cash-summary">
+                                    <span class="outstanding" onclick="showNotImplementedPopup('Outstanding Advances')" style="cursor: pointer;">Outstanding $2,000</span>
+                                    <span class="stat-divider">•</span>
+                                    <span class="pending" onclick="showNotImplementedPopup('Pending Approvals')" style="cursor: pointer;">Pending approvals 1</span>
+                                </div>
+                                <button class="cta-button primary" onclick="window.location.href='cash-advance.html'">Request advance</button>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card policy-alerts-card">
+                            <div class="card-header">
+                                <h3><i class="fas fa-exclamation-triangle"></i> Policy Alerts</h3>
+                            </div>
+                            <div class="card-content">
+                                <div class="alert-stats">
+                                    <span class="alert-item" onclick="showNotImplementedPopup('Missing Receipt Details')" style="cursor: pointer;">Missing receipt <strong>2</strong></span>
+                                    <span class="alert-item" onclick="showNotImplementedPopup('Per Diem Details')" style="cursor: pointer;">Over per diem <strong>1</strong></span>
+                                    <span class="alert-item" onclick="showNotImplementedPopup('Budget Details')" style="cursor: pointer;">Over budget <strong>1</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="view-all-activities" onclick="showNotImplementedPopup('View All Activities')">View all activities</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 3: Current Month MWP -->
+            <section class="mwp-row">
+                <div class="dashboard-card mwp-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-alt"></i> Current Month MWP</h3>
+                        <div class="mwp-actions">
+                            <a href="#" onclick="showNotImplementedPopup('View All MWP'); return false;" class="view-all-link">View all</a>
+                            <div class="mwp-header-actions">
+                                <!-- Upload -->
+                                <button class="btn btn-ghost btn-sm" id="btnUpload" title="Upload MWP (XLSX/CSV)" aria-label="Upload MWP file">
+                                    <i class="i-upload"></i><span>Upload</span>
+                                </button>
+                                <input type="file" id="mwpFile" accept=".xlsx,.csv" hidden>
+
+                                <!-- Download (split dropdown) -->
+                                <div class="btn-split" id="btnDownloadGroup">
+                                    <button class="btn btn-ghost btn-sm" id="btnDownloadMain" title="Download templates" aria-label="Download template">
+                                        <i class="i-download"></i><span>Download</span>
+                                    </button>
+                                    <button class="btn btn-ghost btn-sm caret" id="btnDownloadCaret" aria-haspopup="menu" aria-expanded="false" aria-label="Open download options">
+                                        ▾
+                                    </button>
+                                    <ul class="menu" role="menu" aria-labelledby="btnDownloadCaret">
+                                        <li role="menuitem" data-template="travel-plan">Travel Plan (.xlsx)</li>
+                                        <li role="menuitem" data-template="traveloka">Traveloka Mapping (.csv)</li>
+                                        <li role="menuitem" data-template="sample">Sample Filled (.xlsx)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="mwp-status">
+                            <span class="status-item">Draft <strong>2</strong></span>
+                            <span class="stat-divider">•</span>
+                            <span class="status-item">Pending <strong>1</strong></span>
+                            <span class="stat-divider">•</span>
+                            <span class="status-item">Approved <strong>3</strong></span>
+                        </div>
+                        <div class="mwp-upcoming">
+                            <h4>Upcoming Trips</h4>
+                            <div class="trip-item hoverable" onclick="showNotImplementedPopup('MWP Detail: Bandung Trip')" data-status="approved">
+                                <div class="trip-info">
+                                    <div class="trip-title">
+                                        <span class="airport-code">CGK-BDO</span>
+                                        Bandung 13–15 May
+                                        <span class="policy-flag warning" title="Over budget meal: $15 exceeded">Budget meal</span>
+                                    </div>
+                                    <div class="trip-details">Est. $2,500</div>
+                                </div>
+                                <div class="trip-actions">
+                                    <span class="trip-status approved">Approved</span>
+                                    <button class="convert-btn" onclick="event.stopPropagation(); convertSingleTrip('trip-bandung-001')" title="Convert this trip" aria-label="Convert this trip">
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="trip-item hoverable" onclick="showNotImplementedPopup('MWP Detail: Jakarta Trip')" data-status="pending">
+                                <div class="trip-info">
+                                    <div class="trip-title">
+                                        <span class="airport-code">BDO-CGK</span>
+                                        Jakarta 20–22 May
+                                    </div>
+                                    <div class="trip-details">Est. $1,800</div>
+                                </div>
+                                <div class="trip-actions">
+                                    <span class="trip-status pending">Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="cta-button primary" id="convertAllBtn" onclick="convertAllTrips()" title="Convert all approved trips">Convert to Trip</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 4: Recent Activities -->
+            <section class="activities-row">
+                <div class="dashboard-card activities-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history"></i> Recent Activities</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="activity-feed">
+                            <div class="activity-item" data-activity-id="expense-jakarta-001">
+                                <div class="activity-icon expense">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Expense Report Approved • Jakarta Trip • $2,450</div>
+                                    <div class="activity-meta">
+                                        <span class="source-chip traveloka">Traveloka</span>
+                                        <span class="sync-chip synced">Synced</span>
+                                        <span class="activity-time">2h ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="activity-item" data-activity-id="flight-bandung-001">
+                                <div class="activity-icon booking">
+                                    <i class="fas fa-plane"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Flight Booking Confirmed • Bandung Trip • $850</div>
+                                    <div class="activity-meta">
+                                        <span class="source-chip manual">Manual</span>
+                                        <span class="sync-chip failed" onclick="retrySyncActivity('flight-bandung-001')" style="cursor: pointer;" title="Click to retry sync">Failed <i class="fas fa-redo"></i></span>
+                                        <span class="activity-time">4h ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="activity-item" data-activity-id="vehicle-mileage-002">
+                                <div class="activity-icon vehicle">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">Vehicle Mileage Logged • 125 km • $45</div>
+                                    <div class="activity-meta">
+                                        <span class="source-chip manual">Manual</span>
+                                        <span class="sync-chip synced">Synced</span>
+                                        <span class="activity-time">1d ago</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Row 5: This Week's Schedule -->
+            <section class="schedule-row">
+                <div class="dashboard-card schedule-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-calendar-week"></i> This Week's Schedule</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="schedule-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">Mon 13</span>
+                                    <span class="timeline-event">Jakarta • 10:00 AM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">Wed 15</span>
+                                    <span class="timeline-event">Bandung • 2:00 PM</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">Fri 17</span>
+                                    <span class="timeline-event">Return • 9:00 AM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile Quick Actions -->
+             <div class="quick-actions-mobile">
+                 <button class="fab-main" onclick="toggleActionSheet()">
+                     <i class="fas fa-plus"></i>
+                 </button>
+             </div>
+ 
+             <!-- Action Sheet Backdrop -->
+             <div class="action-sheet-backdrop" id="actionSheetBackdrop" onclick="closeActionSheet()"></div>
+             
+             <!-- Action Sheet -->
+             <div class="action-sheet" id="actionSheet">
+                 <div class="action-sheet-header">
+                     <h3>Quick Actions</h3>
+                 </div>
+                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Add Expense');">
+                     <i class="fas fa-plus"></i>
+                     <span>Add Expense</span>
+                 </button>
+                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Create MWP');">
+                     <i class="fas fa-plane"></i>
+                     <span>Create MWP</span>
+                 </button>
+                 <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='cash-advance.html';">
+                     <i class="fas fa-money-bill"></i>
+                     <span>Request Advance</span>
+                 </button>
+                 <button class="action-sheet-item" onclick="closeActionSheet(); showNotImplementedPopup('Scan Receipts');">
+                     <i class="fas fa-camera"></i>
+                     <span>Scan Receipts</span>
+                 </button>
+             </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+             initializeDashboard();
+             loadUserPreferences();
+             initializeBadges();
+             initializeLazyChart();
+             checkConvertButtonState();
+             initializeUploadDownload();
+         });
+
+        // New Upload/Download System
+        function initializeUploadDownload() {
+            const uploadBtn = document.getElementById('btnUpload');
+            const fileInput = document.getElementById('mwpFile');
+            const split = document.getElementById('btnDownloadGroup');
+            const caret = document.getElementById('btnDownloadCaret');
+            const menu = split.querySelector('.menu');
+
+            // Upload flow
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                if (!/\.(xlsx|csv)$/i.test(file.name)) {
+                    return toast('Only .xlsx or .csv files are allowed');
+                }
+
+                // Disable upload button and show progress
+                uploadBtn.disabled = true;
+                uploadBtn.querySelector('span').textContent = 'Uploading…';
+                
+                // Fake progress demo — replace with real upload
+                const bar = ensureInlineProgress(uploadBtn);
+                for (let p = 0; p <= 100; p += 15) {
+                    await sleep(150);
+                    bar.style.width = p + '%';
+                }
+                
+                // Simulate file validation
+                await sleep(500);
+                const validationResult = validateMWPFile(file);
+                
+                if (validationResult.isValid) {
+                    toast('MWP uploaded successfully • Data validated ✓');
+                    showUploadStatus(file.name);
+                } else {
+                    toast('Upload failed • ' + validationResult.errors.join(', '));
+                }
+                
+                // Reset upload button
+                uploadBtn.disabled = false;
+                uploadBtn.querySelector('span').textContent = 'Upload';
+                
+                // Remove progress bar
+                setTimeout(() => {
+                    const progressEl = uploadBtn.closest('.mwp-header-actions').querySelector('.inline-progress');
+                    if (progressEl) progressEl.remove();
+                }, 1000);
+            });
+
+            // Download options
+            caret.addEventListener('click', () => {
+                const open = split.classList.toggle('open');
+                caret.setAttribute('aria-expanded', String(open));
+            });
+            
+            menu.addEventListener('click', (e) => {
+                const li = e.target.closest('li');
+                if (!li) return;
+                const template = li.dataset.template;
+                const templateName = li.textContent.trim();
+                
+                // Trigger download
+                downloadTemplate(template, templateName);
+                toast(`Downloading ${templateName}…`);
+                
+                // Close menu
+                split.classList.remove('open');
+                caret.setAttribute('aria-expanded', 'false');
+            });
+
+            // Close menu on outside click / Esc
+            document.addEventListener('click', (e) => {
+                if (!split.contains(e.target)) {
+                    split.classList.remove('open');
+                    caret.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    split.classList.remove('open');
+                    caret.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+
+        // File validation function
+        function validateMWPFile(file) {
+            // Simulate file validation - replace with actual validation logic
+            const requiredColumns = ['date', 'destination', 'est_cost', 'transport_type'];
+            const errors = [];
+            
+            // Mock validation - in real implementation, parse the file
+            const hasValidStructure = Math.random() > 0.2; // 80% success rate for demo
+            
+            if (!hasValidStructure) {
+                errors.push('Missing required columns: ' + requiredColumns.slice(0, 2).join(', '));
+            }
+            
+            return {
+                isValid: errors.length === 0,
+                errors: errors
+            };
+        }
+
+        // Show upload status
+        function showUploadStatus(filename) {
+            const mwpCard = document.querySelector('.mwp-card');
+            let statusEl = mwpCard.querySelector('.upload-status');
+            
+            if (!statusEl) {
+                statusEl = document.createElement('div');
+                statusEl.className = 'upload-status';
+                mwpCard.style.position = 'relative';
+                mwpCard.appendChild(statusEl);
+            }
+            
+            const now = new Date();
+            const timeStr = now.toLocaleDateString('en-GB', { 
+                day: '2-digit', 
+                month: 'short', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            statusEl.textContent = `Last uploaded: ${timeStr} • by John`;
+        }
+
+        // Enhanced download function
+        function downloadTemplate(template, templateName) {
+            // Simulate download - replace with actual download logic
+            const downloadUrls = {
+                'travel-plan': '#travel-plan-template.xlsx',
+                'traveloka': '#traveloka-mapping.csv',
+                'sample': '#sample-filled.xlsx'
+            };
+            
+            // In real implementation, trigger actual download
+            console.log(`Downloading ${template}: ${downloadUrls[template]}`);
+            
+            // Simulate download completion
+            setTimeout(() => {
+                toast(`${templateName} downloaded successfully`);
+            }, 1500);
+        }
+
+        // Helper functions
+        function toast(msg) {
+            const el = document.createElement('div');
+            el.className = 'toast';
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 2200);
+        }
+
+        function ensureInlineProgress(anchorBtn) {
+            let wrap = anchorBtn.closest('.mwp-header-actions').querySelector('.inline-progress');
+            if (!wrap) {
+                wrap = document.createElement('div');
+                wrap.className = 'inline-progress';
+                const span = document.createElement('span');
+                wrap.appendChild(span);
+                anchorBtn.closest('.mwp-header-actions').appendChild(wrap);
+            }
+            return wrap.firstElementChild;
+        }
+
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        function initializeDashboard() {
+            // Initialize filter listeners
+            const dateRange = document.getElementById('dateRange');
+            if (dateRange) {
+                dateRange.addEventListener('change', function() {
+                    refreshDashboardData();
+                    saveUserPreferences();
+                });
+            }
+        }
+
+        function toggleCurrency() {
+            const toggle = document.getElementById('currencyToggle');
+            const currentCurrency = toggle.textContent.trim();
+            
+            if (currentCurrency.includes('USD')) {
+                toggle.innerHTML = '<i class="fas fa-exchange-alt"></i> IDR';
+                showNotImplementedPopup('Currency switched to IDR');
+            } else {
+                toggle.innerHTML = '<i class="fas fa-exchange-alt"></i> USD';
+                showNotImplementedPopup('Currency switched to USD');
+            }
+            saveUserPreferences();
+        }
+
+        function refreshDashboardData() {
+            // Simulate data refresh with loading state
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach(card => {
+                card.style.opacity = '0.7';
+            });
+            
+            setTimeout(() => {
+                cards.forEach(card => {
+                    card.style.opacity = '1';
+                });
+                showNotImplementedPopup('Dashboard data refreshed');
+            }, 500);
+        }
+
+        function toggleActionSheet() {
+             const actionSheet = document.getElementById('actionSheet');
+             const backdrop = document.getElementById('actionSheetBackdrop');
+             const fabMain = document.querySelector('.fab-main');
+             
+             actionSheet.classList.add('active');
+             backdrop.classList.add('active');
+             fabMain.classList.add('active');
+             document.body.style.overflow = 'hidden';
+         }
+ 
+         function closeActionSheet() {
+             const actionSheet = document.getElementById('actionSheet');
+             const backdrop = document.getElementById('actionSheetBackdrop');
+             const fabMain = document.querySelector('.fab-main');
+             
+             actionSheet.classList.remove('active');
+             backdrop.classList.remove('active');
+             fabMain.classList.remove('active');
+             document.body.style.overflow = '';
+         }
+
+        // Badge management functions
+        function updateBadge(badgeId, count) {
+            const badge = document.getElementById(badgeId);
+            if (!badge) return;
+            
+            badge.textContent = count;
+            badge.dataset.count = count;
+            badge.classList.toggle('hidden', count === 0);
+            
+            // Update title for accessibility
+            const badgeType = badgeId.replace('badge-', '');
+            const titles = {
+                'approvals': `${count} approvals pending`,
+                'expenses': `${count} violations found`,
+                'reports': `${count} reports pending`
+            };
+            badge.setAttribute('title', titles[badgeType] || `${count} items`);
+        }
+        
+        // Toast notification system (unified with new system)
+        function showToast(message, type = 'info', duration = 3000) {
+            toast(message);
+        }
+        
+        // LocalStorage persistence
+        function saveUserPreferences() {
+            const currency = document.getElementById('currencyToggle').textContent.includes('USD') ? 'USD' : 'IDR';
+            const dateRange = document.getElementById('dateRange').value;
+            
+            localStorage.setItem('travel_currency', currency);
+            localStorage.setItem('travel_date_range', dateRange);
+        }
+        
+        function loadUserPreferences() {
+            const savedCurrency = localStorage.getItem('travel_currency');
+            const savedDateRange = localStorage.getItem('travel_date_range');
+            
+            if (savedCurrency && savedCurrency !== 'USD') {
+                const toggle = document.getElementById('currencyToggle');
+                toggle.innerHTML = '<i class="fas fa-exchange-alt"></i> IDR';
+            }
+            if (savedDateRange) {
+                document.getElementById('dateRange').value = savedDateRange;
+            }
+        }
+        
+        // Retry sync functionality
+         function retrySyncActivity(activityId) {
+             showToast('Retrying sync...', 'info', 2000);
+             
+             // Simulate API call
+             setTimeout(() => {
+                 const success = Math.random() > 0.3; // 70% success rate
+                 if (success) {
+                     showToast('Sync successful!', 'success');
+                     // Update activity status in UI
+                     const failedChip = document.querySelector(`[data-activity-id="${activityId}"] .sync-chip.failed`);
+                     if (failedChip) {
+                         failedChip.className = 'sync-chip synced';
+                         failedChip.innerHTML = 'Synced';
+                     }
+                 } else {
+                     showToast('Sync failed. Please try again.', 'error');
+                 }
+             }, 1500);
+         }
+         
+         // Loading skeleton for activities
+         function showActivitySkeleton() {
+             const activityFeed = document.querySelector('.activity-feed');
+             const skeletonHTML = `
+                 <div class="activity-skeleton">
+                     <div class="skeleton-icon"></div>
+                     <div class="skeleton-content">
+                         <div class="skeleton-line medium"></div>
+                         <div class="skeleton-line short"></div>
+                     </div>
+                 </div>
+             `.repeat(3);
+             activityFeed.innerHTML = skeletonHTML;
+         }
+         
+         // Simulate loading activities
+         function loadActivities() {
+             showActivitySkeleton();
+             
+             // Simulate API delay
+             setTimeout(() => {
+                 // Restore original content (in real app, this would be populated from API)
+                 location.reload();
+             }, 2000);
+         }
+         
+         // Initialize badge counts from API (simulated)
+         function initializeBadges() {
+             // Simulate API call to get current counts
+             setTimeout(() => {
+                 updateBadge('badge-approvals', 5);
+                 updateBadge('badge-expenses', 3);
+             }, 500);
+         }
+         
+         // Convert single trip function
+         function convertSingleTrip(tripId) {
+             showToast('Converting trip...', 'info', 2000);
+             
+             setTimeout(() => {
+                 showToast('Trip converted successfully!', 'success');
+                 // In real app, would update UI to reflect conversion
+             }, 1500);
+         }
+         
+         // Convert all approved trips
+         function convertAllTrips() {
+             const approvedTrips = document.querySelectorAll('.trip-item[data-status="approved"]');
+             const convertBtn = document.getElementById('convertAllBtn');
+             
+             if (approvedTrips.length === 0) {
+                 convertBtn.disabled = true;
+                 convertBtn.title = 'No approved plan to convert';
+                 showToast('No approved trips to convert', 'warning');
+                 return;
+             }
+             
+             showToast(`Converting ${approvedTrips.length} approved trips...`, 'info', 2000);
+             
+             setTimeout(() => {
+                 showToast('All trips converted successfully!', 'success');
+                 // In real app, would update UI to reflect conversions
+             }, 2000);
+         }
+         
+
+         
+
+         
+         // Lazy render budget chart
+         function initializeLazyChart() {
+             const budgetCard = document.querySelector('.budget-breakdown');
+             if (!budgetCard) return;
+             
+             const observer = new IntersectionObserver((entries) => {
+                 entries.forEach(entry => {
+                     if (entry.isIntersecting) {
+                         setTimeout(() => {
+                             renderBudgetChart();
+                         }, 150); // 150ms delay for smooth FPS
+                         observer.unobserve(entry.target);
+                     }
+                 });
+             });
+             
+             observer.observe(budgetCard);
+         }
+         
+         // Render budget chart (simulated)
+         function renderBudgetChart() {
+             const chartContainer = document.querySelector('.budget-breakdown');
+             if (chartContainer && !chartContainer.dataset.rendered) {
+                 chartContainer.dataset.rendered = 'true';
+                 // Chart rendering would happen here
+                 console.log('Budget chart rendered with lazy loading');
+             }
+         }
+         
+         // Check convert button state
+         function checkConvertButtonState() {
+             const approvedTrips = document.querySelectorAll('.trip-item[data-status="approved"]');
+             const convertBtn = document.getElementById('convertAllBtn');
+             
+             if (convertBtn) {
+                 if (approvedTrips.length === 0) {
+                     convertBtn.disabled = true;
+                     convertBtn.title = 'No approved plan to convert';
+                 } else {
+                     convertBtn.disabled = false;
+                     convertBtn.title = 'Convert all approved trips';
+                 }
+             }
+         }
+    </script>
+</body>
+</html>

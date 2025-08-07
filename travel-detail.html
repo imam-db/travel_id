@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details - Travel Expense Manager</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-plane"></i>
+                <span>TravelExpense</span>
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="mwp.html" class="nav-link">
+                <i class="fas fa-calendar-alt"></i>
+                <span>MWP</span>
+            </a>
+            <a href="travel.html" class="nav-link active">
+                <i class="fas fa-plane"></i>
+                <span>Travel</span>
+            </a>
+            <a href="expenses.html" class="nav-link">
+                <i class="fas fa-receipt"></i>
+                <span>Expenses</span>
+            </a>
+            <a href="approvals.html" class="nav-link">
+                <i class="fas fa-check-circle"></i>
+                <span>Approvals</span>
+            </a>
+            <a href="profile.html" class="nav-link">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-container">
+            <div class="container">
+                <!-- Breadcrumbs -->
+                <nav class="breadcrumbs">
+                    <a href="travel.html" class="breadcrumb-item">Travel</a>
+                    <span class="breadcrumb-separator">/</span>
+                    <span class="breadcrumb-item current">Booking Details</span>
+                </nav>
+                
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="header-with-back">
+                        <button class="back-btn" onclick="window.location.href='travel.html'">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="header-content">
+                            <h1><i class="fas fa-file-alt"></i> Booking Details</h1>
+                            <p>View and manage your travel booking information</p>
+                        </div>
+                    </div>
+                </section>
+            <!-- Booking Header -->
+            <section class="booking-header-section">
+                <div class="booking-card-header">
+                    <div class="booking-title-section">
+                        <h2>Jakarta → Surabaya</h2>
+                        <div class="booking-badges">
+                            <span class="source-badge traveloka">Traveloka</span>
+                            <span class="status-badge confirmed">Confirmed</span>
+                        </div>
+                    </div>
+                    <div class="booking-cost-section">
+                        <span class="total-cost">$465</span>
+                        <span class="cost-breakdown">Flight + Hotel</span>
+                    </div>
+                </div>
+                
+                <div class="booking-meta-info">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Mar 5-12, 2024 • 7 nights</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Jakarta (CGK) → Surabaya (SUB)</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>1 Passenger</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-building"></i>
+                        <span>Business Trip</span>
+                    </div>
+                </div>
+                
+                <div class="booking-actions-header">
+                    <button class="btn-primary" onclick="convertToExpense()">
+                        <i class="fas fa-exchange-alt"></i> Convert to Expense
+                    </button>
+                    <button class="btn-secondary" onclick="editBooking()">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn-ghost dropdown-toggle">⋯</button>
+                        <div class="dropdown-menu">
+                            <a href="#" onclick="duplicateBooking()">Duplicate</a>
+                            <a href="#" onclick="cancelBooking()">Cancel</a>
+                            <a href="#" onclick="exportPDF()">Export PDF</a>
+                            <a href="#" onclick="shareBooking()">Share</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Policy Compliance -->
+            <section class="policy-section">
+                <h3>Policy Compliance</h3>
+                <div class="policy-grid">
+                    <div class="policy-item ok">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="policy-content">
+                            <span class="policy-title">Flight Class</span>
+                            <span class="policy-desc">Economy class within policy</span>
+                        </div>
+                    </div>
+                    <div class="policy-item warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="policy-content">
+                            <span class="policy-title">Budget Limit</span>
+                            <span class="policy-desc">$15 over monthly budget</span>
+                        </div>
+                    </div>
+                    <div class="policy-item ok">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="policy-content">
+                            <span class="policy-title">Advance Booking</span>
+                            <span class="policy-desc">Booked 14 days in advance</span>
+                        </div>
+                    </div>
+                    <div class="policy-item ok">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="policy-content">
+                            <span class="policy-title">Hotel Rate</span>
+                            <span class="policy-desc">Within per-diem limits</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Flight Details -->
+            <section class="detail-section">
+                <h3>Flight Details</h3>
+                <div class="detail-card">
+                    <div class="flight-header">
+                        <div class="airline-info">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzY2N2VlYSIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HQTwvdGV4dD4KPHN2Zz4K" alt="GA" class="airline-logo">
+                            <div class="airline-details">
+                                <span class="airline-name">Garuda Indonesia</span>
+                                <span class="flight-number">GA-123</span>
+                            </div>
+                        </div>
+                        <div class="flight-cost">
+                            <span class="cost-amount">$300</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flight-route">
+                        <div class="route-segment">
+                            <div class="airport-info">
+                                <span class="airport-code">CGK</span>
+                                <span class="airport-name">Soekarno-Hatta</span>
+                                <span class="city-name">Jakarta</span>
+                            </div>
+                            <div class="flight-time">
+                                <span class="departure-time">07:30</span>
+                                <span class="flight-date">Mar 5, 2024</span>
+                            </div>
+                        </div>
+                        
+                        <div class="route-line">
+                            <div class="duration-info">
+                                <i class="fas fa-plane"></i>
+                                <span>1h 30m</span>
+                            </div>
+                            <div class="route-connector"></div>
+                        </div>
+                        
+                        <div class="route-segment">
+                            <div class="airport-info">
+                                <span class="airport-code">SUB</span>
+                                <span class="airport-name">Juanda</span>
+                                <span class="city-name">Surabaya</span>
+                            </div>
+                            <div class="flight-time">
+                                <span class="arrival-time">09:00</span>
+                                <span class="flight-date">Mar 5, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flight-details-info">
+                        <div class="detail-row">
+                            <span class="detail-label">Class:</span>
+                            <span class="detail-value">Economy</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Seat:</span>
+                            <span class="detail-value">12A</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Baggage:</span>
+                            <span class="detail-value">20kg included</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">PNR:</span>
+                            <span class="detail-value">ABC123</span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <button class="btn-secondary" onclick="viewETicket()">
+                            <i class="fas fa-ticket-alt"></i> View E-Ticket
+                        </button>
+                        <button class="btn-secondary" onclick="checkIn()">
+                            <i class="fas fa-check"></i> Web Check-in
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Return Flight -->
+                <div class="detail-card">
+                    <div class="flight-header">
+                        <div class="airline-info">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiByeD0iOCIgZmlsbD0iIzY2N2VlYSIvPgo8dGV4dCB4PSIyMCIgeT0iMjYiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5HQTwvdGV4dD4KPHN2Zz4K" alt="GA" class="airline-logo">
+                            <div class="airline-details">
+                                <span class="airline-name">Garuda Indonesia</span>
+                                <span class="flight-number">GA-456</span>
+                            </div>
+                        </div>
+                        <div class="flight-cost">
+                            <span class="cost-amount">$300</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flight-route">
+                        <div class="route-segment">
+                            <div class="airport-info">
+                                <span class="airport-code">SUB</span>
+                                <span class="airport-name">Juanda</span>
+                                <span class="city-name">Surabaya</span>
+                            </div>
+                            <div class="flight-time">
+                                <span class="departure-time">18:30</span>
+                                <span class="flight-date">Mar 12, 2024</span>
+                            </div>
+                        </div>
+                        
+                        <div class="route-line">
+                            <div class="duration-info">
+                                <i class="fas fa-plane"></i>
+                                <span>1h 35m</span>
+                            </div>
+                            <div class="route-connector"></div>
+                        </div>
+                        
+                        <div class="route-segment">
+                            <div class="airport-info">
+                                <span class="airport-code">CGK</span>
+                                <span class="airport-name">Soekarno-Hatta</span>
+                                <span class="city-name">Jakarta</span>
+                            </div>
+                            <div class="flight-time">
+                                <span class="arrival-time">20:05</span>
+                                <span class="flight-date">Mar 12, 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flight-details-info">
+                        <div class="detail-row">
+                            <span class="detail-label">Class:</span>
+                            <span class="detail-value">Economy</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Seat:</span>
+                            <span class="detail-value">15C</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Baggage:</span>
+                            <span class="detail-value">20kg included</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">PNR:</span>
+                            <span class="detail-value">DEF456</span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <button class="btn-secondary" onclick="viewETicket()">
+                            <i class="fas fa-ticket-alt"></i> View E-Ticket
+                        </button>
+                        <button class="btn-secondary" onclick="checkIn()">
+                            <i class="fas fa-check"></i> Web Check-in
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Hotel Details -->
+            <section class="detail-section">
+                <h3>Hotel Details</h3>
+                <div class="detail-card">
+                    <div class="hotel-header">
+                        <div class="hotel-info">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjYwIiBoZWlnaHQ9IjYwIiByeD0iOCIgZmlsbD0iI2YzZjRmNiIvPgo8cmVjdCB4PSIxNSIgeT0iMTUiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iIzEwYjk4MSIvPgo8dGV4dCB4PSIzMCIgeT0iMzUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5IPC90ZXh0Pgo8L3N2Zz4K" alt="Hotel" class="hotel-image">
+                            <div class="hotel-details">
+                                <h4>Grand Surabaya Hotel</h4>
+                                <div class="hotel-rating">
+                                    <span class="stars">★★★★☆</span>
+                                    <span class="rating-score">4.2</span>
+                                </div>
+                                <p class="hotel-address">Jl. Tunjungan No. 102, Surabaya</p>
+                            </div>
+                        </div>
+                        <div class="hotel-cost">
+                            <span class="cost-amount">$165</span>
+                            <span class="cost-period">7 nights</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-stay-info">
+                        <div class="stay-dates">
+                            <div class="checkin-info">
+                                <span class="date-label">Check-in</span>
+                                <span class="date-value">Mar 5, 2024</span>
+                                <span class="time-value">15:00</span>
+                            </div>
+                            <div class="stay-duration">
+                                <i class="fas fa-moon"></i>
+                                <span>7 nights</span>
+                            </div>
+                            <div class="checkout-info">
+                                <span class="date-label">Check-out</span>
+                                <span class="date-value">Mar 12, 2024</span>
+                                <span class="time-value">12:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-details-info">
+                        <div class="detail-row">
+                            <span class="detail-label">Room Type:</span>
+                            <span class="detail-value">Deluxe Room</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Guests:</span>
+                            <span class="detail-value">1 Adult</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Rate per Night:</span>
+                            <span class="detail-value">$23.50</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Confirmation:</span>
+                            <span class="detail-value">HTL789</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hotel-amenities">
+                        <h5>Amenities</h5>
+                        <div class="amenities-grid">
+                            <span class="amenity-tag"><i class="fas fa-wifi"></i> Free WiFi</span>
+                            <span class="amenity-tag"><i class="fas fa-utensils"></i> Breakfast</span>
+                            <span class="amenity-tag"><i class="fas fa-swimming-pool"></i> Pool</span>
+                            <span class="amenity-tag"><i class="fas fa-dumbbell"></i> Gym</span>
+                            <span class="amenity-tag"><i class="fas fa-car"></i> Parking</span>
+                            <span class="amenity-tag"><i class="fas fa-concierge-bell"></i> Room Service</span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <button class="btn-secondary" onclick="viewVoucher()">
+                            <i class="fas fa-file-alt"></i> View Voucher
+                        </button>
+                        <button class="btn-secondary" onclick="contactHotel()">
+                            <i class="fas fa-phone"></i> Contact Hotel
+                        </button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Booking Timeline -->
+            <section class="timeline-section">
+                <h3>Booking Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h5>Booking Created</h5>
+                            <p>Trip details entered and saved</p>
+                            <span class="timeline-date">Mar 1, 2024 - 10:30 AM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h5>Submitted for Approval</h5>
+                            <p>Sent to manager for review</p>
+                            <span class="timeline-date">Mar 2, 2024 - 09:15 AM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h5>Approved</h5>
+                            <p>Approved by Sarah Johnson</p>
+                            <span class="timeline-date">Mar 3, 2024 - 02:45 PM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h5>Booking Confirmed</h5>
+                            <p>Flight and hotel reservations confirmed</p>
+                            <span class="timeline-date">Mar 3, 2024 - 03:20 PM</span>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item pending">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h5>Travel Date</h5>
+                            <p>Departure from Jakarta</p>
+                            <span class="timeline-date">Mar 5, 2024 - 07:30 AM</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Documents -->
+            <section class="documents-section">
+                <h3>Documents & Receipts</h3>
+                <div class="documents-grid">
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-plane"></i>
+                        </div>
+                        <div class="document-info">
+                            <span class="document-name">Flight E-Ticket</span>
+                            <span class="document-desc">GA-123 & GA-456</span>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn-ghost" onclick="downloadDocument('flight-ticket')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn-ghost" onclick="viewDocument('flight-ticket')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="document-info">
+                            <span class="document-name">Hotel Voucher</span>
+                            <span class="document-desc">Grand Surabaya Hotel</span>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn-ghost" onclick="downloadDocument('hotel-voucher')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn-ghost" onclick="viewDocument('hotel-voucher')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <div class="document-info">
+                            <span class="document-name">Booking Receipt</span>
+                            <span class="document-desc">Payment confirmation</span>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn-ghost" onclick="downloadDocument('receipt')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn-ghost" onclick="viewDocument('receipt')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        // Booking detail functions
+        function convertToExpense() {
+            showConvertToExpenseModal();
+        }
+        
+        function editBooking() {
+            window.location.href = 'travel-edit.html?id=BK-2024-001';
+        }
+        
+        function duplicateBooking() {
+            showNotification('Creating duplicate booking...', 'info');
+            setTimeout(() => {
+                window.location.href = 'travel-new.html?duplicate=BK-2024-001';
+            }, 1000);
+        }
+        
+        function cancelBooking() {
+            if (confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+                showNotification('Cancelling booking...', 'info');
+                setTimeout(() => {
+                    showNotification('Booking cancelled successfully', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'travel.html';
+                    }, 1500);
+                }, 2000);
+            }
+        }
+        
+        function exportPDF() {
+            showNotification('Generating PDF...', 'info');
+            setTimeout(() => {
+                showNotification('PDF downloaded successfully', 'success');
+            }, 2000);
+        }
+        
+        function shareBooking() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Travel Booking Details',
+                    text: 'Jakarta → Surabaya trip details',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('Link copied to clipboard', 'success');
+            }
+        }
+        
+        function viewETicket() {
+            showNotification('Opening e-ticket...', 'info');
+            // In real app, would open PDF or redirect to airline website
+        }
+        
+        function checkIn() {
+            showNotification('Redirecting to airline check-in...', 'info');
+            // In real app, would redirect to airline website
+        }
+        
+        function viewVoucher() {
+            showNotification('Opening hotel voucher...', 'info');
+            // In real app, would open PDF or hotel booking details
+        }
+        
+        function contactHotel() {
+            showNotification('Opening hotel contact...', 'info');
+            // In real app, would show hotel contact details or redirect
+        }
+        
+        function downloadDocument(docType) {
+            showNotification(`Downloading ${docType}...`, 'info');
+            setTimeout(() => {
+                showNotification('Document downloaded', 'success');
+            }, 1500);
+        }
+        
+        function viewDocument(docType) {
+            showNotification(`Opening ${docType}...`, 'info');
+            // In real app, would open document viewer
+        }
+        
+        function showConvertToExpenseModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content convert-modal">
+                    <div class="modal-header">
+                        <h3>Convert to Expense Report</h3>
+                        <button class="modal-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="conversion-summary">
+                            <h4>Booking Summary</h4>
+                            <div class="summary-items">
+                                <div class="summary-item">
+                                    <span class="item-name">Flight (CGK-SUB-CGK)</span>
+                                    <span class="item-cost">$300</span>
+                                    <label class="item-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="item-name">Hotel (7 nights)</span>
+                                    <span class="item-cost">$165</span>
+                                    <label class="item-checkbox">
+                                        <input type="checkbox" checked>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="summary-total">
+                                <span>Total: <strong>$465</strong></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Expense Report</label>
+                            <select class="form-control" id="expenseReport">
+                                <option value="new">Create new report</option>
+                                <option value="draft-001">March 2024 Business Trips (Draft)</option>
+                                <option value="draft-002">Q1 Travel Expenses (Draft)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Report Title (if creating new)</label>
+                            <input type="text" class="form-control" placeholder="e.g., March 2024 Surabaya Trip" id="reportTitle">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select class="form-control" id="expenseCategory">
+                                <option value="travel">Travel & Transportation</option>
+                                <option value="accommodation">Accommodation</option>
+                                <option value="mixed">Mixed Travel Expenses</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Additional Notes</label>
+                            <textarea class="form-control" rows="3" placeholder="Add any additional notes for the expense report..." id="expenseNotes"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" checked id="attachDocuments">
+                                <span class="checkmark"></span>
+                                Attach booking documents as receipts
+                            </label>
+                        </div>
+                        
+                        <div class="conversion-preview">
+                            <h5>Preview</h5>
+                            <div class="preview-items">
+                                <div class="preview-item">
+                                    <i class="fas fa-plane"></i>
+                                    <span>Flight Expense - $300</span>
+                                </div>
+                                <div class="preview-item">
+                                    <i class="fas fa-bed"></i>
+                                    <span>Hotel Expense - $165</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove()">Cancel</button>
+                        <button class="btn-primary" onclick="processConversion()">Convert to Expense</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function processConversion() {
+            showNotification('Converting booking to expense report...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Conversion successful!', 'success');
+                document.querySelector('.modal-overlay').remove();
+                
+                setTimeout(() => {
+                    if (confirm('Would you like to view the expense report now?')) {
+                        window.location.href = 'expenses.html';
+                    }
+                }, 1500);
+            }, 2500);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dropdown functionality
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const dropdown = this.parentElement;
+                    dropdown.classList.toggle('active');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function() {
+                document.querySelectorAll('.dropdown').forEach(dropdown => {
+                    dropdown.classList.remove('active');
+                });
+            });
+            
+            // Show page load notification
+            setTimeout(() => {
+                showNotification('Booking details loaded', 'success');
+            }, 500);
+        });
+    </script>
+    
+    <style>
+        /* Breadcrumbs styling */
+        .breadcrumbs {
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .breadcrumb-item {
+            display: inline;
+        }
+        
+        .breadcrumb-item a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item a:hover {
+            color: #374151;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 0.5rem;
+            color: #9ca3af;
+        }
+        
+        /* Header with back button styling */
+        .header-with-back {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .header-with-back .back-btn {
+            margin-right: 1rem;
+        }
+        
+        .header-content h1 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .header-content .header-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        /* Booking detail specific styles */
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        
+        .back-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .booking-header-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .booking-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .booking-title-section h2 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+            font-size: 1.5rem;
+        }
+        
+        .booking-badges {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .source-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .source-badge.traveloka {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.confirmed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .booking-cost-section {
+            text-align: right;
+        }
+        
+        .total-cost {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            display: block;
+        }
+        
+        .cost-breakdown {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .booking-meta-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .meta-item i {
+            color: #9ca3af;
+            width: 16px;
+        }
+        
+        .booking-actions-header {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .policy-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .policy-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #111827;
+        }
+        
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .policy-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .policy-item.ok {
+            background: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        
+        .policy-item.warning {
+            background: #fffbeb;
+            border-color: #fed7aa;
+        }
+        
+        .policy-item.error {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        
+        .policy-item i {
+            font-size: 1.2rem;
+        }
+        
+        .policy-item.ok i {
+            color: #16a34a;
+        }
+        
+        .policy-item.warning i {
+            color: #d97706;
+        }
+        
+        .policy-item.error i {
+            color: #dc2626;
+        }
+        
+        .policy-content {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .policy-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .policy-desc {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .detail-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .detail-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #111827;
+        }
+        
+        .detail-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Flight detail styles */
+        .flight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .airline-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .airline-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+        }
+        
+        .airline-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .airline-name {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .flight-number {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .flight-cost {
+            text-align: right;
+        }
+        
+        .cost-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .flight-route {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .route-segment {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .airport-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .airport-code {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .airport-name {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .city-name {
+            font-size: 0.9rem;
+            color: #374151;
+            font-weight: 500;
+        }
+        
+        .flight-time {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .departure-time, .arrival-time {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .flight-date {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .route-line {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            margin: 0 1rem;
+        }
+        
+        .duration-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .route-connector {
+            width: 100%;
+            height: 2px;
+            background: #d1d5db;
+            position: relative;
+        }
+        
+        .route-connector::after {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #d1d5db;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        
+        .flight-details-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .detail-value {
+            font-size: 0.9rem;
+            color: #111827;
+            font-weight: 500;
+        }
+        
+        .booking-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Hotel detail styles */
+        .hotel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hotel-info {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .hotel-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .hotel-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: #111827;
+        }
+        
+        .hotel-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stars {
+            color: #f59e0b;
+            font-size: 0.9rem;
+        }
+        
+        .rating-score {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .hotel-address {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .hotel-cost {
+            text-align: right;
+        }
+        
+        .cost-period {
+            font-size: 0.8rem;
+            color: #6b7280;
+            display: block;
+        }
+        
+        .hotel-stay-info {
+            margin-bottom: 1.5rem;
+        }
+        
+        .stay-dates {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .checkin-info, .checkout-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .date-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .date-value {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .time-value {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+        
+        .stay-duration {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: #6b7280;
+        }
+        
+        .hotel-details-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hotel-amenities {
+            margin-bottom: 1.5rem;
+        }
+        
+        .hotel-amenities h5 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+            font-size: 0.9rem;
+        }
+        
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+        }
+        
+        .amenity-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: #f3f4f6;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #374151;
+        }
+        
+        .amenity-tag i {
+            color: #667eea;
+        }
+        
+        /* Timeline styles */
+        .timeline-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #111827;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0.75rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: -2rem;
+            top: 0.25rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            background: white;
+        }
+        
+        .timeline-item.completed .timeline-marker {
+            background: #10b981;
+            border-color: #10b981;
+        }
+        
+        .timeline-item.pending .timeline-marker {
+            background: #f59e0b;
+            border-color: #f59e0b;
+        }
+        
+        .timeline-content h5 {
+            margin: 0 0 0.25rem 0;
+            color: #111827;
+            font-size: 1rem;
+        }
+        
+        .timeline-content p {
+            margin: 0 0 0.5rem 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        /* Documents styles */
+        .documents-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .documents-section h3 {
+            margin: 0 0 1.5rem 0;
+            color: #111827;
+        }
+        
+        .documents-grid {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .document-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .document-item:hover {
+            border-color: #667eea;
+            background: #f8faff;
+        }
+        
+        .document-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+        
+        .document-info {
+            flex: 1;
+        }
+        
+        .document-name {
+            display: block;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+        }
+        
+        .document-desc {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .document-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #111827;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.25rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .conversion-summary {
+            margin-bottom: 1.5rem;
+        }
+        
+        .conversion-summary h4 {
+            margin: 0 0 1rem 0;
+            color: #111827;
+        }
+        
+        .summary-items {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .summary-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-name {
+            flex: 1;
+            color: #374151;
+        }
+        
+        .item-cost {
+            font-weight: 600;
+            color: #111827;
+            margin-right: 1rem;
+        }
+        
+        .item-checkbox {
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .item-checkbox input {
+            opacity: 0;
+            position: absolute;
+        }
+        
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .item-checkbox input:checked + .checkmark {
+            background: #667eea;
+            border-color: #667eea;
+        }
+        
+        .item-checkbox input:checked + .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .summary-total {
+            text-align: right;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-weight: normal;
+        }
+        
+        .conversion-preview {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .conversion-preview h5 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+        }
+        
+        .preview-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .preview-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .preview-item i {
+            color: #667eea;
+        }
+        
+        /* Dropdown styles */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 150px;
+            z-index: 10;
+            display: none;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .dropdown-menu a:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .booking-card-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .booking-cost-section {
+                text-align: left;
+            }
+            
+            .booking-meta-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-actions-header {
+                flex-wrap: wrap;
+            }
+            
+            .policy-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flight-route {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .route-line {
+                width: 100%;
+                margin: 0;
+            }
+            
+            .route-connector {
+                height: 30px;
+                width: 2px;
+                margin: 0 auto;
+            }
+            
+            .route-connector::after {
+                top: 26px;
+                left: -3px;
+                border-left: 4px solid #d1d5db;
+                border-top: 8px solid transparent;
+                border-bottom: 8px solid transparent;
+                transform: rotate(90deg);
+            }
+            
+            .hotel-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .hotel-cost {
+                text-align: left;
+            }
+            
+            .stay-dates {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .amenities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+        }
+    </style>
+</body>
+</html>
