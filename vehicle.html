@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="icon-192.svg">
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header with consistent gradient -->
     <header class="header">
         <div class="container">
             <div class="logo">
@@ -25,94 +25,63 @@
         </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>Dashboard</span>
-        </a>
-        <a href="mwp.html" class="nav-item">
-            <i class="fas fa-calendar-alt"></i>
-            <span>MWP</span>
-        </a>
-        <a href="travel.html" class="nav-item">
-            <i class="fas fa-plane"></i>
-            <span>Travel</span>
-        </a>
-        <a href="vehicle.html" class="nav-item active">
-            <i class="fas fa-car"></i>
-            <span>Vehicle</span>
-        </a>
-        <a href="expenses.html" class="nav-item">
-            <i class="fas fa-receipt"></i>
-            <span>Expenses</span>
-            <span class="nav-badge warning" id="badge-expenses" data-count="3" title="3 violations found">3</span>
-        </a>
-        <a href="approvals.html" class="nav-item">
-            <i class="fas fa-check-circle"></i>
-            <span>Approvals</span>
-            <span class="nav-badge" id="badge-approvals" data-count="5" title="5 approvals pending">5</span>
-        </a>
-        <a href="profile.html" class="nav-item">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </nav>
-
     <!-- Main Content -->
     <main class="main-content">
         <!-- Page Header -->
-        <div class="page-header page-container" style="margin-bottom: 16px;">
-            <h1 style="font-size: 28px; font-weight: 700; color: #1E1E1E; margin: 0; display: flex; align-items: center; gap: 12px;">
-                <i class="fas fa-car" style="color: #667eea;"></i>
+        <div class="page-header page-container">
+            <h1 class="page-title">
+                <i class="fas fa-car"></i>
                 Vehicle & Mileage
             </h1>
-            <p style="color: #666; margin: 8px 0 0 0;">Manage your vehicles and track your trips</p>
+            <p class="page-subtitle">Manage your vehicles and track your trips</p>
         </div>
+        
         <!-- KPI Cards -->
         <section class="kpi-section page-container">
+            <!-- Aria live region for KPI updates -->
+            <div id="kpi-updates" class="sr-only" aria-live="polite" aria-atomic="true"></div>
             <div class="kpi-grid">
-                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
-                    <div class="kpi-icon" style="width:40px;height:40px;background:#e3f2fd;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1976d2;">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-blue">
                         <i class="fas fa-route"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 class="kpi-number" data-count="24" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">0</h3>
-                        <p style="font-size:14px;color:#666;margin:4px 0;">Trips Logged</p>
-                        <span class="kpi-period" style="font-size:12px;color:#999;">This Month</span>
+                        <h3 class="kpi-number" data-count="24">0</h3>
+                        <p class="kpi-label">Trips Logged</p>
+                        <span class="kpi-period">This Month</span>
                     </div>
                 </div>
                 
-                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
-                    <div class="kpi-icon pending" style="width:40px;height:40px;background:#fff3e0;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#f57c00;">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-amber">
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 class="kpi-number" data-count="3" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">0</h3>
-                        <p style="font-size:14px;color:#666;margin:4px 0;">Pending Approval</p>
-                        <span class="kpi-period" style="font-size:12px;color:#999;">Awaiting Review</span>
+                        <h3 class="kpi-number" data-count="3">0</h3>
+                        <p class="kpi-label">Pending Approval</p>
+                        <span class="kpi-period">Awaiting Review</span>
                     </div>
                 </div>
                 
-                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
-                    <div class="kpi-icon cost" style="width:40px;height:40px;background:#e8f5e8;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#388e3c;">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-green">
                         <i class="fas fa-money-bill-wave"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 class="kpi-number" data-count-text="Rp 2.4M" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">Rp 0</h3>
-                        <p style="font-size:14px;color:#666;margin:4px 0;">Est. Cost</p>
-                        <span class="kpi-period" style="font-size:12px;color:#999;">This Month</span>
+                        <h3 class="kpi-number" data-count-text="Rp 2.4M">Rp 0</h3>
+                        <p class="kpi-label">Est. Cost</p>
+                        <span class="kpi-period">This Month</span>
                     </div>
                 </div>
                 
-                <div class="kpi-card" style="display:flex;align-items:center;gap:16px;">
-                    <div class="kpi-icon warning" style="width:40px;height:40px;background:#ffebee;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#d32f2f;">
+                <div class="kpi-card">
+                    <div class="kpi-icon kpi-red">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
                     <div class="kpi-content">
-                        <h3 class="kpi-number" data-count="1" style="font-size:24px;font-weight:700;color:#1E1E1E;margin:0;line-height:1;">0</h3>
-                        <p style="font-size:14px;color:#666;margin:4px 0;">Policy Violations</p>
-                        <span class="kpi-period" style="font-size:12px;color:#999;">Needs Attention</span>
+                        <h3 class="kpi-number" data-count="1">0</h3>
+                        <p class="kpi-label">Policy Violations</p>
+                        <span class="kpi-period">Needs Attention</span>
                     </div>
                 </div>
             </div>
@@ -125,41 +94,24 @@
                 New vehicle log
             </button>
 
-            <!-- Tooltip-wrapped import button (max ~72 characters width) -->
-            <span class="tooltip-wrap" style="position: relative; display: inline-flex; align-items: center;">
-                <button class="btn-secondary" onclick="showImportDialog()" aria-describedby="import-tip" disabled>
+            <div class="tooltip-wrap">
+                <button class="btn-secondary disabled" onclick="showImportDialog()" aria-describedby="import-tip" disabled>
                     <i class="fas fa-file-import"></i>
                     Bulk import (CSV/XLSX)
-                    <i class="fas fa-info-circle" style="margin-left: 4px; opacity: 0.7;"></i>
-                    <span style="font-size: 12px; color: #999; margin-left: 8px;">(Available Q4)</span>
+                    <i class="fas fa-info-circle"></i>
+                    <span class="availability-note">(Available Q4)</span>
                 </button>
-                <span id="import-tip" class="tip" role="tooltip" style="position: absolute; bottom: calc(100% + 8px); left: 0; background: #111827; color: #fff; padding: 8px 10px; border-radius: 6px; font-size: 12px; line-height: 1.4; max-width: 72ch; width: auto; box-shadow: 0 6px 20px rgba(0,0,0,0.25); opacity: 0; pointer-events: none; transform: translateY(4px); transition: opacity .15s ease, transform .15s ease; overflow-wrap: anywhere; z-index: 10; white-space: normal;">
+                <div id="import-tip" class="tooltip" role="tooltip">
                     Bulk import vehicle logs from CSV/XLSX template (max 100 rows)
-                </span>
-            </span>
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    const wrap = document.querySelector('.tooltip-wrap');
-                    const tip = wrap?.querySelector('.tip');
-                    if (wrap && tip) {
-                        wrap.addEventListener('mouseenter', () => {
-                            tip.style.opacity = '1';
-                            tip.style.transform = 'translateY(0)';
-                        });
-                        wrap.addEventListener('mouseleave', () => {
-                            tip.style.opacity = '0';
-                            tip.style.transform = 'translateY(4px)';
-                        });
-                    }
-                });
-            </script>
+                </div>
+            </div>
         </section>
 
         <!-- Filter Bar -->
-        <div class="filter-bar page-container" style="background: white; padding: 12px 12px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 16px 0; display: grid; grid-auto-flow: column; grid-auto-columns: max-content; overflow-x: auto; gap: 12px; white-space: nowrap;">
-            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-size: 14px; color: #666; font-weight: 500;">Saved Views:</label>
-                <select id="savedViewsFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;">
+        <div class="filter-bar page-container">
+            <div class="filter-group">
+                <label>Saved Views:</label>
+                <select id="savedViewsFilter">
                     <option value="all">All Logs</option>
                     <option value="my-pending">My Pending</option>
                     <option value="this-week">This Week</option>
@@ -167,11 +119,11 @@
                 </select>
             </div>
             
-            <div class="filter-separator" style="width: 1px; height: 24px; background: #e0e0e0;"></div>
+            <div class="filter-separator"></div>
             
-            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-size: 14px; color: #666; font-weight: 500;">Status:</label>
-                <select id="statusFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;">
+            <div class="filter-group">
+                <label>Status:</label>
+                <select id="statusFilter">
                     <option value="all">All</option>
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
@@ -179,31 +131,31 @@
                 </select>
             </div>
             
-            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-size: 14px; color: #666; font-weight: 500;">Period:</label>
-                <select id="periodFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;">
+            <div class="filter-group">
+                <label>Period:</label>
+                <select id="periodFilter">
                     <option value="this-month">This Month</option>
                     <option value="last-month">Last Month</option>
                     <option value="custom">Custom Range</option>
                 </select>
             </div>
             
-            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-size: 14px; color: #666; font-weight: 500;">Vehicle:</label>
-                <select id="vehicleFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;">
+            <div class="filter-group">
+                <label>Vehicle:</label>
+                <select id="vehicleFilter">
                     <option value="all">All Vehicles</option>
                     <option value="B1234ABC">Honda Civic (B 1234 ABC)</option>
                     <option value="B5678DEF">Toyota Avanza (B 5678 DEF)</option>
                 </select>
             </div>
             
-            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
-                <input type="text" id="searchFilter" placeholder="Search destination..." style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; width: 200px;">
+            <div class="filter-group">
+                <input type="text" id="searchFilter" placeholder="Search destination...">
             </div>
             
-            <div class="filter-group" style="display: flex; align-items: center; gap: 8px;">
-                <label style="font-size: 14px; color: #666; font-weight: 500;">Sort:</label>
-                <select id="sortFilter" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; background: white;">
+            <div class="filter-group">
+                <label>Sort:</label>
+                <select id="sortFilter">
                     <option value="date-desc">Date (Newest)</option>
                     <option value="date-asc">Date (Oldest)</option>
                     <option value="distance-desc">Distance (High to Low)</option>
@@ -219,143 +171,138 @@
                 <span class="log-count">24 logs found</span>
             </div>
             
-            <div class="log-list" style="display: flex; flex-direction: column; gap: 16px; margin: 24px 0;">
+            <div class="log-list">
                 <!-- Log Card 1 - Pending with Policy Violation -->
-                <div class="log-card" data-log-id="VH-2025-0315-001" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px;">
-                    <div class="log-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div class="log-card" data-log-id="VH-2025-0315-001">
+                    <div class="log-header">
                         <div class="log-date">
-                            <span class="date" style="font-size: 16px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">15 Mar 2025</span>
-                            <span class="vehicle" style="font-size: 14px; color: #666;">Honda Civic • B 1234 ABC</span>
+                            <span class="date">15 Mar 2025</span>
+                            <span class="vehicle">Honda Civic • B 1234 ABC</span>
+                            <span class="linked-trip"><a href="travel.html#TRV-2025-0032">Linked trip: TRV-2025-0032</a></span>
                         </div>
-                        <div class="log-status" style="display: flex; gap: 8px; align-items: center;">
-                            <span class="status-badge pending" aria-label="Status: Pending approval" style="background: #fff3e0; color: #f57c00; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;">Pending</span>
-                            <span class="policy-chip violation" aria-label="Policy violation: Over budget limit" style="background: #ffebee; color: #d32f2f; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Over Budget</span>
-                            <span class="sla-chip" aria-label="SLA status: Due in 2 days" style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Due in 2 days</span>
-                        </div>
-                    </div>
-                    <div class="log-content" style="display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div class="log-details" style="flex: 1;">
-                            <div class="distance-info" style="margin-bottom: 12px;">
-                                <span style="font-size: 14px; color: #666;">12,500 - 12,640 km → </span>
-                                <span style="font-size: 18px; font-weight: bold; color: #333;">140 km</span>
-                            </div>
-                            <div class="cost-breakdown" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 14px;">
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Fuel</div>
-                                    <div style="font-weight: 500;">20L × Rp 15,000/L</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 300,000</div>
-                                </div>
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Parking</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 10,000</div>
-                                </div>
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Toll</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 5,000</div>
-                                </div>
-                            </div>
-                            <style>
-                                @media (max-width: 1024px) {
-                                    .cost-breakdown {
-                                        grid-template-columns: repeat(2, 1fr) !important;
-                                    }
-                                }
-                            </style>
+                        <div class="log-status">
+                            <span class="status-badge pending" aria-label="Status: Pending approval">Pending</span>
+                            <span class="policy-chip violation" aria-label="Policy violation: Over budget limit">Over Budget</span>
+                            <span class="sla-chip amber" aria-label="SLA status: Due in 2 days">Due in 2 days</span>
                         </div>
                     </div>
-                    <div class="log-actions footer-row" style="display: flex; gap: 8px; margin-left: 0; padding: 10px 0 0; border-top: 1px solid #f0f0f0;">
-                        <button class="btn-sm" onclick="viewLog('VH-2025-0315-001')" style="padding: 8px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer;">View</button>
-                        <button class="btn-sm secondary" onclick="editLog('VH-2025-0315-001')" style="padding: 8px 16px; border: none; background: #1976d2; color: white; border-radius: 6px; font-size: 14px; cursor: pointer;">Edit</button>
+                    <div class="log-content">
+                        <div class="log-details">
+                            <div class="distance-info">
+                                <span class="odometer-range">12,500 - 12,640 km → </span>
+                                <span class="distance">140 km</span>
+                            </div>
+                            <div class="cost-breakdown">
+                                <div class="cost-item">
+                                    <div class="cost-label">Fuel</div>
+                                    <div class="cost-detail">20L × Rp 15,000/L</div>
+                                    <div class="cost-amount">Rp 300,000</div>
+                                </div>
+                                <div class="cost-item">
+                                    <div class="cost-label">Parking</div>
+                                    <div class="cost-amount">Rp 10,000</div>
+                                </div>
+                                <div class="cost-item">
+                                    <div class="cost-label">Toll</div>
+                                    <div class="cost-amount">Rp 5,000</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="log-actions footer-row">
+                        <button class="btn-sm" onclick="viewLog('VH-2025-0315-001')">View</button>
+                        <button class="btn-sm primary" onclick="editLog('VH-2025-0315-001')">Edit</button>
+                        <button class="btn-sm success" onclick="exportToExpense('VH-2025-0315-001')" title="Export this pending log to expense draft">Export to Expense</button>
                     </div>
                 </div>
 
                 <!-- Log Card 2 - Approved -->
-                <div class="log-card" data-log-id="VH-2025-0314-002" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px;">
-                    <div class="log-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div class="log-card" data-log-id="VH-2025-0314-002">
+                    <div class="log-header">
                         <div class="log-date">
-                            <span class="date" style="font-size: 16px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">14 Mar 2025</span>
-                            <span class="vehicle" style="font-size: 14px; color: #666;">Toyota Avanza • B 5678 DEF</span>
+                            <span class="date">14 Mar 2025</span>
+                            <span class="vehicle">Toyota Avanza • B 5678 DEF</span>
                         </div>
-                        <div class="log-status" style="display: flex; gap: 8px; align-items: center;">
-                            <span class="status-badge approved" aria-label="Status: Approved" style="background: #e8f5e8; color: #388e3c; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;">Approved</span>
-                            <span class="policy-chip ok" aria-label="Policy status: Compliant with policy" style="background: #e8f5e8; color: #388e3c; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Policy OK</span>
-                        </div>
-                    </div>
-                    <div class="log-content" style="display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div class="log-details" style="flex: 1;">
-                            <div class="distance-info" style="margin-bottom: 12px;">
-                                <span style="font-size: 14px; color: #666;">8,200 - 8,285 km → </span>
-                                <span style="font-size: 18px; font-weight: bold; color: #333;">85 km</span>
-                            </div>
-                            <div class="cost-breakdown" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 14px;">
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Fuel</div>
-                                    <div style="font-weight: 500;">12L × Rp 14,200/L</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 170,400</div>
-                                </div>
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Parking</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 5,000</div>
-                                </div>
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Toll</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 0</div>
-                                </div>
-                            </div>
+                        <div class="log-status">
+                            <span class="status-badge approved" aria-label="Status: Approved">Approved</span>
+                            <span class="policy-chip ok" aria-label="Policy status: Compliant with policy">Policy OK</span>
                         </div>
                     </div>
-                    <div class="log-actions footer-row" style="display: flex; gap: 8px; margin-left: 0; padding: 10px 0 0; border-top: 1px solid #f0f0f0;">
-                        <button class="btn-sm" onclick="viewLog('VH-2025-0314-002')" style="padding: 8px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">View</button>
-                        <button class="btn-sm convert" onclick="convertToExpense('VH-2025-0314-002')" title="Convert this log into an expense draft" style="padding: 8px 16px; border: none; background: #388e3c; color: white; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">Convert to expense</button>
+                    <div class="log-content">
+                        <div class="log-details">
+                            <div class="distance-info">
+                                <span class="odometer-range">8,200 - 8,285 km → </span>
+                                <span class="distance">85 km</span>
+                            </div>
+                            <div class="cost-breakdown">
+                                <div class="cost-item">
+                                    <div class="cost-label">Fuel</div>
+                                    <div class="cost-detail">12L × Rp 14,200/L</div>
+                                    <div class="cost-amount">Rp 170,400</div>
+                                </div>
+                                <div class="cost-item">
+                                    <div class="cost-label">Parking</div>
+                                    <div class="cost-amount">Rp 5,000</div>
+                                </div>
+                                <div class="cost-item">
+                                    <div class="cost-label">Toll</div>
+                                    <div class="cost-amount">Rp 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="log-actions footer-row">
+                        <button class="btn-sm" onclick="viewLog('VH-2025-0314-002')">View</button>
+                        <button class="btn-sm success" onclick="convertToExpense('VH-2025-0314-002')" title="Convert this log into an expense draft">Convert to expense</button>
                     </div>
                 </div>
 
                 <!-- Log Card 3 - Draft -->
-                <div class="log-card" data-log-id="VH-2025-0313-003" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 20px;">
-                    <div class="log-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                <div class="log-card" data-log-id="VH-2025-0313-003">
+                    <div class="log-header">
                         <div class="log-date">
-                            <span class="date" style="font-size: 16px; font-weight: bold; color: #333; display: block; margin-bottom: 4px;">13 Mar 2025</span>
-                            <span class="vehicle" style="font-size: 14px; color: #666;">Honda Civic • B 1234 ABC</span>
+                            <span class="date">13 Mar 2025</span>
+                            <span class="vehicle">Honda Civic • B 1234 ABC</span>
                         </div>
-                        <div class="log-status" style="display: flex; gap: 8px; align-items: center;">
-                            <span class="status-badge draft" aria-label="Status: Draft - not yet submitted" style="background: #f5f5f5; color: #666; padding: 4px 12px; border-radius: 16px; font-size: 12px; font-weight: 500;">Draft</span>
-                            <span class="policy-chip warning" aria-label="Policy warning: Approaching soft cap limit" style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">Soft Cap</span>
+                        <div class="log-status">
+                            <span class="status-badge draft" aria-label="Status: Draft - not yet submitted">Draft</span>
+                            <span class="policy-chip warning" aria-label="Policy warning: Approaching soft cap limit">Soft Cap</span>
                         </div>
                     </div>
-                    <div class="log-content" style="display: flex; justify-content: space-between; align-items: flex-end;">
-                        <div class="log-details" style="flex: 1;">
-                            <div class="distance-info" style="margin-bottom: 12px;">
-                                <span style="font-size: 14px; color: #666;">12,350 - 12,500 km → </span>
-                                <span style="font-size: 18px; font-weight: bold; color: #333;">150 km</span>
+                    <div class="log-content">
+                        <div class="log-details">
+                            <div class="distance-info">
+                                <span class="odometer-range">12,350 - 12,500 km → </span>
+                                <span class="distance">150 km</span>
                             </div>
-                            <div class="cost-breakdown" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 14px;">
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Fuel</div>
-                                    <div style="font-weight: 500;">18L × Rp 14,800/L</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 266,400</div>
+                            <div class="cost-breakdown">
+                                <div class="cost-item">
+                                    <div class="cost-label">Fuel</div>
+                                    <div class="cost-detail">18L × Rp 14,800/L</div>
+                                    <div class="cost-amount">Rp 266,400</div>
                                 </div>
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Parking</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 15,000</div>
+                                <div class="cost-item">
+                                    <div class="cost-label">Parking</div>
+                                    <div class="cost-amount">Rp 15,000</div>
                                 </div>
-                                <div>
-                                    <div style="color: #666; margin-bottom: 2px;">Toll</div>
-                                    <div class="numeric" style="color: #333; font-weight: bold; text-align: right;">Rp 10,000</div>
+                                <div class="cost-item">
+                                    <div class="cost-label">Toll</div>
+                                    <div class="cost-amount">Rp 10,000</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="log-actions footer-row" style="display: flex; gap: 8px; margin-left: 20px; position: sticky; bottom: 0; background: white; padding: 12px 0; border-top: 1px solid #f0f0f0; margin-top: 16px;">
-                            <button class="btn-sm" onclick="viewLog('VH-2025-0313-003')" style="padding: 10px 16px; border: 1px solid #ddd; background: white; color: #666; border-radius: 6px; font-size: 14px; cursor: pointer; text-transform: none;">View</button>
-                            <button class="btn-sm primary" onclick="submitLog('VH-2025-0313-003')" style="padding: 10px 20px; border: none; background: #2196F3; color: white; border-radius: 6px; font-size: 14px; cursor: pointer; font-weight: 600; text-transform: none;">Submit for approval</button>
-                        </div>
+                    </div>
+                    <div class="log-actions footer-row">
+                        <button class="btn-sm" onclick="viewLog('VH-2025-0313-003')">View</button>
+                        <button class="btn-sm primary" onclick="submitLog('VH-2025-0313-003')">Submit for approval</button>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- New Log Chooser Modal -->
-        <div id="newLogModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div class="modal-content" style="background: white; border-radius: 12px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+        <div id="newLogModal" class="modal" style="display: none;">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h3>Create new vehicle log</h3>
                     <button class="modal-close" onclick="closeModal('newLogModal')">&times;</button>
@@ -388,13 +335,13 @@
             </div>
             
             <!-- Empty State (hidden by default, shown when no results) -->
-            <div class="empty-state" id="emptyState" style="display: none; text-align: center; padding: 60px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin: 24px 0;">
-                <div style="font-size: 64px; color: #e0e0e0; margin-bottom: 16px;">
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">
                     <i class="fas fa-car"></i>
                 </div>
-                <h3 style="color: #666; margin-bottom: 8px; font-size: 18px;">No vehicle logs yet</h3>
-                <p style="color: #999; font-size: 14px; margin-bottom: 24px;">Try adjusting filters or create a new vehicle log</p>
-                <button onclick="showNewLogChooser()" style="padding: 12px 24px; background: #1976d2; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer;">
+                <h3 class="empty-title">No vehicle logs yet</h3>
+                <p class="empty-subtitle">Try adjusting filters or create a new vehicle log</p>
+                <button class="btn-sm primary" onclick="showNewLogChooser()">
                     <i class="fas fa-plus" style="margin-right: 8px;"></i>
                     Create vehicle log
                 </button>
@@ -402,22 +349,22 @@
         </div>
 
         <!-- New Vehicle Log Wizard Modal (3-step) -->
-        <div id="fuelMileageModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
-            <div class="modal-content large" style="background: white; border-radius: 12px; width: 90%; max-width: 800px; max-height: 90vh; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column;">
+        <div id="fuelMileageModal" class="modal" style="display: none;">
+            <div class="modal-content large">
                 <div class="modal-header">
                     <h3>New vehicle log</h3>
                     <button class="modal-close" onclick="closeModal('fuelMileageModal')">&times;</button>
                 </div>
                 <div class="modal-body" style="padding-bottom: 0;">
                     <!-- Step Tabs -->
-                    <div class="wizard-tabs" style="display: flex; gap: 8px; border-bottom: 1px solid #eee; margin: -14px -16px 12px; padding: 0 16px;">
-                        <button type="button" class="wizard-tab" data-step="0" aria-current="page" style="border: none; background: none; padding: 12px 8px; font-weight: 600; color: #4f46e5;">Basic</button>
-                        <button type="button" class="wizard-tab" data-step="1" style="border: none; background: none; padding: 12px 8px; color: #64748b;">Fuel</button>
-                        <button type="button" class="wizard-tab" data-step="2" style="border: none; background: none; padding: 12px 8px; color: #64748b;">Attachments</button>
+                    <div class="wizard-tabs" role="tablist" style="display: flex; gap: 8px; border-bottom: 1px solid #eee; margin: -14px -16px 12px; padding: 0 16px;">
+                        <button type="button" class="wizard-tab" role="tab" data-step="0" aria-current="page" aria-selected="true" aria-controls="wizard-step-0">Basic</button>
+                        <button type="button" class="wizard-tab" role="tab" data-step="1" aria-selected="false" aria-controls="wizard-step-1">Fuel</button>
+                        <button type="button" class="wizard-tab" role="tab" data-step="2" aria-selected="false" aria-controls="wizard-step-2">Attachments</button>
                     </div>
                     <form id="fuelMileageForm" class="vehicle-form">
                         <!-- Step 0: Basic -->
-                        <div class="wizard-step" data-step="0">
+                        <div class="wizard-step" role="tabpanel" id="wizard-step-0" data-step="0" aria-labelledby="wizard-tab-0">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="vehicleSelect">Vehicle <span class="req">*</span></label>
@@ -444,30 +391,18 @@
                                     <small class="form-hint">Distance will be calculated automatically</small>
 
                                     <!-- Policy helper banner (green / amber / red / neutral) -->
-                                    <div id="rate-per-km" class="banner banner-neutral" role="status" aria-live="polite" style="margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 12px; display: none; border: 1px solid transparent; display: none;">
-                                        <span id="rate-icon" class="icon" style="margin-right: 6px;"></span>
+                                    <div id="rate-per-km" class="banner banner-neutral" role="status" aria-live="polite">
+                                        <span id="rate-icon" class="icon"></span>
                                         <span id="rate-display">Enter fuel volume and price to compute rate per km.</span>
-                                        <div id="policy-caption" style="margin-top: 4px; font-weight: 500;"></div>
+                                        <div id="policy-caption"></div>
                                     </div>
 
-                                    <style>
-                                        /* Inline banner palette for wizard policy helper */
-                                        .banner { display: none; }
-                                        .banner-neutral { background: #f3f4f6; color: #374151; border-color: #e5e7eb !important; }
-                                        .banner-ok { background: #ecfdf5; color: #065f46; border-color: #a7f3d0 !important; }
-                                        .banner-amber { background: #fffbeb; color: #92400e; border-color: #fde68a !important; }
-                                        .banner-red { background: #fef2f2; color: #991b1b; border-color: #fecaca !important; }
-                                        .banner .icon { display: inline-flex; width: 16px; height: 16px; vertical-align: -2px; }
-                                        .banner-ok .icon::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                        .banner-amber .icon::before { content: "\f071"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                        .banner-red .icon::before { content: "\f06a"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                        .banner-neutral .icon::before { content: "\f129"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                    </style>
+                                    <!-- styles moved to global CSS -->
                                 </div>
                             </div>
                         </div>
                         <!-- Step 1: Fuel -->
-                        <div class="wizard-step" data-step="1" style="display:none;">
+                        <div class="wizard-step" role="tabpanel" id="wizard-step-1" data-step="1" style="display:none;" aria-labelledby="wizard-tab-1">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="fuelVolume">Fuel Volume (L) <span class="req">*</span></label>
@@ -491,27 +426,15 @@
                                 </div>
                             </div>
                             <!-- Policy helper banner mirrored in Step 1 (Fuel) -->
-                            <div id="rate-per-km-step1" class="banner banner-neutral" role="status" aria-live="polite" style="margin-top: 8px; padding: 10px 12px; border-radius: 6px; font-size: 12px; display: none; border: 1px solid transparent; display: none;">
-                                <span class="icon" style="margin-right: 6px;"></span>
+                            <div id="rate-per-km-step1" class="banner banner-neutral" role="status" aria-live="polite">
+                                <span class="icon"></span>
                                 <span class="rate-display">Masukkan volume & harga BBM untuk menghitung Rp/km.</span>
-                                <div class="policy-caption" style="margin-top: 4px; font-weight: 500;"></div>
+                                <div class="policy-caption"></div>
                             </div>
-                            <style>
-                                /* Reuse inline banner palette */
-                                #rate-per-km-step1.banner { display: none; }
-                                #rate-per-km-step1.banner-neutral { background: #f3f4f6; color: #374151; border-color: #e5e7eb !important; }
-                                #rate-per-km-step1.banner-ok { background: #ecfdf5; color: #065f46; border-color: #a7f3d0 !important; }
-                                #rate-per-km-step1.banner-amber { background: #fffbeb; color: #92400e; border-color: #fde68a !important; }
-                                #rate-per-km-step1.banner-red { background: #fef2f2; color: #991b1b; border-color: #fecaca !important; }
-                                #rate-per-km-step1 .icon { display: inline-flex; width: 16px; height: 16px; vertical-align: -2px; }
-                                #rate-per-km-step1.banner-ok .icon::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                #rate-per-km-step1.banner-amber .icon::before { content: "\f071"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                #rate-per-km-step1.banner-red .icon::before { content: "\f06a"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                                #rate-per-km-step1.banner-neutral .icon::before { content: "\f129"; font-family: "Font Awesome 6 Free"; font-weight: 900; }
-                            </style>
+                            <!-- styles moved to global CSS -->
                         </div>
                         <!-- Step 2: Attachments -->
-                        <div class="wizard-step" data-step="2" style="display:none;">
+                        <div class="wizard-step" role="tabpanel" id="wizard-step-2" data-step="2" style="display:none;" aria-labelledby="wizard-tab-2">
                             <div class="form-group">
                                 <label for="receipt">Receipt</label>
                                 <input type="file" id="receipt" accept=".jpg,.jpeg,.png,.pdf">
@@ -545,7 +468,7 @@
                             </div>
                         </div>
                         <!-- Wizard Navigation -->
-                        <div class="modal-footer" style="display:flex;justify-content:space-between;gap:8px;border-top:1px solid #eee;margin:0 -16px;padding:12px 16px;">
+                        <div class="modal-footer">
                             <div>
                                 <button type="button" class="btn btn-ghost" id="wizardBackBtn" onclick="wizardPrev()" disabled>Back</button>
                             </div>
@@ -561,7 +484,50 @@
         </div>
     </main>
 
-    <!-- Bottom Navigation (single instance kept at top) -->
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="mwp.html" class="nav-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>MWP</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="vehicle.html" class="nav-item active">
+            <i class="fas fa-car"></i>
+            <span>Vehicle</span>
+            <span class="nav-badge warning" id="badge-vehicle" data-count="1" title="1 policy violation">1</span>
+        </a>
+        <a href="cash-advance.html" class="nav-item">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Advances</span>
+            <span class="nav-badge" id="badge-advances" data-count="2" title="2 outstanding advances">2</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+            <span class="nav-badge warning" id="badge-expenses" data-count="3" title="3 violations found">3</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+            <span class="nav-badge" id="badge-approvals" data-count="5" title="5 approvals pending">5</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <!-- FAB for New Vehicle Log -->
+    <button class="fab" onclick="showNewLogChooser()" title="New vehicle log" aria-label="Create new vehicle log">
+        <i class="fas fa-plus"></i>
+    </button>
 
     <script src="script.js"></script>
     <script>
@@ -616,21 +582,44 @@
             }
         }
 
+        function exportToExpense(logId) {
+            if (confirm(`Export pending log ${logId} to expense draft?`)) {
+                const expenseId = `EXP-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 9999)).padStart(4, '0')}`;
+                showSnackbar(`Pending log ${logId} exported to expense draft ${expenseId}`);
+                
+                // Update the log card to show expense-draft status
+                const logCard = document.querySelector(`[data-log-id="${logId}"]`);
+                if (logCard) {
+                    const statusContainer = logCard.querySelector('.log-status');
+                    const expenseChip = document.createElement('span');
+                    expenseChip.className = 'policy-chip ok';
+                    expenseChip.setAttribute('aria-label', 'Status: Exported to expense draft');
+                    expenseChip.textContent = 'Expense Draft';
+                    statusContainer.appendChild(expenseChip);
+                }
+            }
+        }
+
         // Simple wizard state
         let wizardStep = 0;
         function setWizardStep(step) {
             wizardStep = step;
-            // Tabs
-            document.querySelectorAll('.wizard-tab').forEach(tab => {
+            // Tabs with proper ARIA attributes
+            document.querySelectorAll('.wizard-tab').forEach((tab, index) => {
                 const s = parseInt(tab.dataset.step, 10);
-                tab.setAttribute('aria-current', s === step ? 'page' : 'false');
-                tab.style.color = s === step ? '#4f46e5' : '#64748b';
-                tab.style.fontWeight = s === step ? '600' : '500';
-                tab.style.borderBottom = s === step ? '2px solid #4f46e5' : '2px solid transparent';
+                const isActive = s === step;
+                tab.setAttribute('aria-current', isActive ? 'page' : 'false');
+                tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                tab.setAttribute('id', `wizard-tab-${s}`);
+                tab.style.color = isActive ? '#4f46e5' : '#64748b';
+                tab.style.fontWeight = isActive ? '600' : '500';
+                tab.style.borderBottom = isActive ? '2px solid #4f46e5' : '2px solid transparent';
             });
             // Steps
             document.querySelectorAll('.wizard-step').forEach(p => {
-                p.style.display = parseInt(p.dataset.step, 10) === step ? 'block' : 'none';
+                const stepNum = parseInt(p.dataset.step, 10);
+                p.style.display = stepNum === step ? 'block' : 'none';
+                p.setAttribute('aria-hidden', stepNum === step ? 'false' : 'true');
             });
             // Buttons
             const back = document.getElementById('wizardBackBtn');
@@ -1057,6 +1046,16 @@
             });
         });
 
+        // Escape key to close modals
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const visibleModals = document.querySelectorAll('.modal[style*="flex"]');
+                visibleModals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+            }
+        });
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             // Update user info
@@ -1065,7 +1064,7 @@
                 document.querySelector('.user-info span').textContent = `Hello, ${userEmail.split('@')[0]}`;
             }
 
-            // KPI count-up (unified)
+            // KPI count-up (unified) with accessibility announcements
             const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
             function animateNumber(el, to, formatText) {
                 const start = performance.now();
@@ -1075,6 +1074,14 @@
                     const val = Math.round(to * easeOutCubic(p));
                     el.textContent = formatText ? formatText(val) : String(val);
                     if (p < 1) requestAnimationFrame(tick);
+                    else {
+                        // Announce completion to screen readers
+                        const liveRegion = document.getElementById('kpi-updates');
+                        if (liveRegion) {
+                            const label = el.closest('.kpi-card')?.querySelector('.kpi-label')?.textContent || 'KPI';
+                            liveRegion.textContent = `${label} updated to ${el.textContent}`;
+                        }
+                    }
                 }
                 requestAnimationFrame(tick);
             }
@@ -1083,7 +1090,15 @@
                 const count = el.getAttribute('data-count');
                 if (countText) {
                     // currency or formatted text — just snap after short delay to avoid layout shift
-                    setTimeout(() => { el.textContent = countText; }, 350);
+                    setTimeout(() => {
+                        el.textContent = countText;
+                        // Announce to screen readers
+                        const liveRegion = document.getElementById('kpi-updates');
+                        if (liveRegion) {
+                            const label = el.closest('.kpi-card')?.querySelector('.kpi-label')?.textContent || 'KPI';
+                            liveRegion.textContent = `${label} updated to ${countText}`;
+                        }
+                    }, 350);
                 } else if (count) {
                     const to = parseInt(count, 10) || 0;
                     animateNumber(el, to);

@@ -22,9 +22,8 @@
                 <div class="quick-actions-desktop">
                     <button class="action-btn" onclick="showNotImplementedPopup('Add Expense')"><i class="fas fa-plus"></i> Add Expense</button>
                     <button class="action-btn" onclick="window.location.href='travel-new.html'"><i class="fas fa-plane"></i> New Trip</button>
-                    <button class="action-btn" onclick="showNotImplementedPopup('Create MWP')"><i class="fas fa-calendar-alt"></i> Create MWP</button>
                     <button class="action-btn" onclick="window.location.href='cash-advance.html'"><i class="fas fa-money-bill"></i> Request Advance</button>
-                    <button class="action-btn" onclick="showNotImplementedPopup('Scan Receipts')"><i class="fas fa-camera"></i> Scan Receipts</button>
+                    <button class="action-btn" onclick="window.location.href='vehicle.html#new-log'"><i class="fas fa-road"></i> Log Mileage</button>
                 </div>
                 <span>Hello, John Doe</span>
                 <i class="fas fa-user-circle"></i>
@@ -151,7 +150,7 @@
                         </div>
                     </div>
 
-                    <!-- NEW: KPI tile “Vehicle logs this month” (deep-links to vehicle.html) -->
+                    <!-- NEW: KPI tile "Vehicle logs this month" (deep-links to vehicle.html) -->
                     <div class="dashboard-card" onclick="window.location.href='vehicle.html'">
                         <div class="card-header">
                             <h3><i class="fas fa-tachometer-alt"></i> Vehicle logs this month</h3>
@@ -165,6 +164,24 @@
                             </div>
                             <button class="cta-button secondary" onclick="event.stopPropagation(); window.location.href='vehicle.html#new-log'">
                                 Log mileage
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- NEW: KPI tile "Outstanding advances" (deep-links to cash-advance.html) -->
+                    <div class="dashboard-card" onclick="window.location.href='cash-advance.html'">
+                        <div class="card-header">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Outstanding advances</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="mwp-stats">
+                                <div class="stat-item text-center">
+                                    <span class="stat-value kpi-number" data-count-text="$5,500">$0</span>
+                                    <span class="stat-label">2 advances</span>
+                                </div>
+                            </div>
+                            <button class="cta-button primary" onclick="event.stopPropagation(); window.location.href='cash-advance.html'">
+                                Request advance
                             </button>
                         </div>
                     </div>

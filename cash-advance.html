@@ -7,230 +7,540 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
+    <meta name="theme-color" content="#4f46e5">
     <link rel="apple-touch-icon" href="icon-192.svg">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <div class="header-content">
-            <h1><i class="fas fa-money-bill-wave"></i> Cash Advance</h1>
-            <div class="user-info">
-                <span>Hello, John Doe</span>
+        <div class="page-container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Cash Advance</span>
+                </div>
+                <div class="user-info">
+                    <span>Hello, John Doe</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Outstanding Summary -->
-        <section class="summary-cards">
-            <div class="summary-card">
-                <div class="summary-icon outstanding">
-                    <i class="fas fa-exclamation-triangle"></i>
+        <div class="page-container">
+            <!-- KPI Section -->
+            <section class="kpi-section">
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3>Outstanding</h3>
+                            <span class="kpi-number" data-count-text="$5,500">$0</span>
+                            <span class="kpi-period">2 advances</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3>Settled This Month</h3>
+                            <span class="kpi-number" data-count-text="$3,200">$0</span>
+                            <span class="kpi-period">3 advances</span>
+                        </div>
+                    </div>
+                    
+                    <div class="kpi-card pending">
+                        <div class="kpi-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3>Pending Approval</h3>
+                            <span class="kpi-number" data-count-text="$2,000">$0</span>
+                            <span class="kpi-period">1 request</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="summary-info">
-                    <h3>Outstanding</h3>
-                    <p class="amount">$5,500</p>
-                    <span class="count">2 advances</span>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-icon settled">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="summary-info">
-                    <h3>Settled This Month</h3>
-                    <p class="amount">$3,200</p>
-                    <span class="count">3 advances</span>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-icon pending">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="summary-info">
-                    <h3>Pending Approval</h3>
-                    <p class="amount">$2,000</p>
-                    <span class="count">1 request</span>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Quick Actions -->
-        <section class="quick-actions">
-            <button class="action-btn primary" onclick="showNotImplementedPopup('Request Cash Advance')">
-                <i class="fas fa-plus"></i>
-                Request Cash Advance
-            </button>
-            <button class="action-btn secondary" onclick="showNotImplementedPopup('Settlement History')">
-                <i class="fas fa-history"></i>
-                Settlement History
-            </button>
-        </section>
+            <!-- Tab Navigation -->
+            <section class="tab-navigation">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('advances')" id="advancesTab">
+                        <i class="fas fa-wallet"></i> My Advances
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('approvals')" id="approvalsTab">
+                        <i class="fas fa-check-circle"></i> Approvals
+                        <span class="tab-badge">5</span>
+                    </button>
+                    <button class="tab-btn" onclick="switchTab('payments')" id="paymentsTab">
+                        <i class="fas fa-credit-card"></i> Payment Queue
+                        <span class="tab-badge">12</span>
+                    </button>
+                </div>
+            </section>
 
-        <!-- Filter Section -->
-        <section class="filter-section">
-            <div class="filter-tabs">
-                <button class="filter-tab active" data-status="all">All</button>
-                <button class="filter-tab" data-status="outstanding">Outstanding</button>
-                <button class="filter-tab" data-status="pending">Pending</button>
-                <button class="filter-tab" data-status="settled">Settled</button>
-            </div>
-            <div class="filter-controls">
-                <select class="filter-select">
-                    <option value="all">All Periods</option>
-                    <option value="current">Current Month</option>
-                    <option value="last3">Last 3 Months</option>
-                    <option value="last6">Last 6 Months</option>
-                </select>
-                <input type="search" class="search-input" placeholder="Search by purpose...">
-            </div>
-        </section>
+            <!-- Action Bar -->
+            <section class="action-bar" id="advancesActionBar">
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="openAdvanceWizard()">
+                        <i class="fas fa-plus"></i> Request Cash Advance
+                    </button>
+                    <button class="btn-secondary" onclick="showNotImplementedPopup('Settlement History')">
+                        <i class="fas fa-history"></i> Settlement History
+                    </button>
+                </div>
+                
+                <!-- Bulk Actions -->
+                <div class="bulk-actions" id="bulkActions" style="display: none;">
+                    <div class="bulk-info">
+                        <span id="selectedCount">0</span> selected
+                        <button class="btn-link" onclick="selectAll()">
+                            <i class="fas fa-check-square"></i> Select All
+                        </button>
+                    </div>
+                    <div class="bulk-buttons">
+                        <button class="btn-secondary" onclick="bulkCancel()" disabled id="bulkCancelBtn">
+                            <i class="fas fa-times"></i> Cancel Selected
+                        </button>
+                        <button class="btn-primary" onclick="bulkSettle()" disabled id="bulkSettleBtn">
+                            <i class="fas fa-handshake"></i> Settle Selected
+                        </button>
+                        <button class="btn-secondary" onclick="bulkExport()" disabled id="bulkExportBtn">
+                            <i class="fas fa-file-export"></i> Export Selected
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-        <!-- Cash Advance List -->
-        <section class="cash-advance-list">
-            <!-- Outstanding Advances -->
-            <div class="advance-card outstanding">
-                <div class="advance-header">
-                    <div class="advance-info">
-                        <h4>Business Trip - Jakarta</h4>
-                        <p class="advance-id">CA-2024-001</p>
-                    </div>
-                    <div class="advance-amount">
-                        <span class="amount">$3,500</span>
-                        <span class="status-badge outstanding">Outstanding</span>
-                    </div>
+            <!-- Filter Bar -->
+            <section class="filter-bar">
+                <div class="filter-chips" id="filterChips">
+                    <button class="chip active" data-filter="all">All</button>
+                    <button class="chip" data-filter="outstanding">Outstanding</button>
+                    <button class="chip" data-filter="pending">Pending</button>
+                    <button class="chip" data-filter="approved">Approved</button>
+                    <button class="chip" data-filter="queued">Queued</button>
+                    <button class="chip" data-filter="paid">Paid</button>
+                    <button class="chip" data-filter="settlement">Settlement Required</button>
+                    <button class="chip" data-filter="settled">Settled</button>
                 </div>
-                <div class="advance-details">
-                    <div class="detail-row">
-                        <span class="label">Approved Date:</span>
-                        <span class="value">15 Jan 2024</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Due Settlement:</span>
-                        <span class="value urgent">25 Jan 2024 (Overdue)</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Purpose:</span>
-                        <span class="value">Client meeting and accommodation</span>
-                    </div>
+                <div class="filter-controls">
+                    <select class="filter-select" id="periodFilter">
+                        <option value="all">All Periods</option>
+                        <option value="current">Current Month</option>
+                        <option value="last3">Last 3 Months</option>
+                        <option value="last6">Last 6 Months</option>
+                    </select>
+                    <input type="search" class="search-input" id="searchInput" placeholder="Search by purpose, ID...">
                 </div>
-                <div class="advance-actions">
-                    <button class="btn-action settle" onclick="settleAdvance('CA-2024-001')">
-                        <i class="fas fa-handshake"></i> Settle Now
-                    </button>
-                    <button class="btn-action view" onclick="viewAdvanceDetails('CA-2024-001')">
-                        <i class="fas fa-eye"></i> View Details
-                    </button>
-                </div>
-            </div>
+            </section>
 
-            <div class="advance-card outstanding">
-                <div class="advance-header">
-                    <div class="advance-info">
-                        <h4>Training Program - Surabaya</h4>
-                        <p class="advance-id">CA-2024-002</p>
+            <!-- Cash Advance List -->
+            <section class="advance-list" id="advanceList">
+                <!-- Outstanding Advance -->
+                <div class="advance-card" data-status="outstanding" data-id="ADV-2025-0412-003">
+                    <div class="advance-header">
+                        <div class="advance-checkbox">
+                            <input type="checkbox" id="advance-ADV-2025-0412-003" onchange="toggleSelection('ADV-2025-0412-003')">
+                            <label for="advance-ADV-2025-0412-003" class="sr-only">Select advance ADV-2025-0412-003</label>
+                        </div>
+                        <div class="advance-info">
+                            <h4>Business Trip - Jakarta</h4>
+                            <p class="advance-id">ADV-2025-0412-003</p>
+                        </div>
+                        <div class="advance-amount">
+                            <span class="amount">$3,500</span>
+                            <span class="status-badge outstanding" aria-label="Outstanding advance">Outstanding</span>
+                        </div>
                     </div>
-                    <div class="advance-amount">
-                        <span class="amount">$2,000</span>
-                        <span class="status-badge outstanding">Outstanding</span>
+                    
+                    <div class="advance-details">
+                        <div class="detail-row">
+                            <span class="label">Approved Date:</span>
+                            <span class="value">15 Jan 2024</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Due Settlement:</span>
+                            <span class="value urgent">25 Jan 2024 (Overdue)</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Purpose:</span>
+                            <span class="value">Client meeting and accommodation</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Linked Trip:</span>
+                            <span class="value"><a href="travel.html?id=TRV-2025-0032" class="trip-link">TRV-2025-0032</a></span>
+                        </div>
+                    </div>
+                    
+                    <div class="sla-info">
+                        <span class="sla-chip overdue" aria-label="Settlement overdue">Overdue</span>
+                    </div>
+                    
+                    <div class="advance-actions">
+                        <button class="btn-primary" onclick="settleAdvance('ADV-2025-0412-003')">
+                            <i class="fas fa-handshake"></i> Settle advance
+                        </button>
+                        <button class="btn-secondary" onclick="viewAdvanceDetails('ADV-2025-0412-003')">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
                     </div>
                 </div>
-                <div class="advance-details">
-                    <div class="detail-row">
-                        <span class="label">Approved Date:</span>
-                        <span class="value">20 Jan 2024</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Due Settlement:</span>
-                        <span class="value">30 Jan 2024</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Purpose:</span>
-                        <span class="value">Training attendance and meals</span>
-                    </div>
-                </div>
-                <div class="advance-actions">
-                    <button class="btn-action settle" onclick="settleAdvance('CA-2024-002')">
-                        <i class="fas fa-handshake"></i> Settle Now
-                    </button>
-                    <button class="btn-action view" onclick="viewAdvanceDetails('CA-2024-002')">
-                        <i class="fas fa-eye"></i> View Details
-                    </button>
-                </div>
-            </div>
 
-            <!-- Pending Approval -->
-            <div class="advance-card pending">
-                <div class="advance-header">
-                    <div class="advance-info">
-                        <h4>Conference - Bali</h4>
-                        <p class="advance-id">CA-2024-003</p>
+                <!-- Pending Approval -->
+                <div class="advance-card" data-status="pending" data-id="ADV-2025-0413-001">
+                    <div class="advance-header">
+                        <div class="advance-checkbox">
+                            <input type="checkbox" id="advance-ADV-2025-0413-001" onchange="toggleSelection('ADV-2025-0413-001')">
+                            <label for="advance-ADV-2025-0413-001" class="sr-only">Select advance ADV-2025-0413-001</label>
+                        </div>
+                        <div class="advance-info">
+                            <h4>Conference - Bali</h4>
+                            <p class="advance-id">ADV-2025-0413-001</p>
+                        </div>
+                        <div class="advance-amount">
+                            <span class="amount">$2,000</span>
+                            <span class="status-badge pending" aria-label="Pending approval">Pending Approval</span>
+                        </div>
                     </div>
-                    <div class="advance-amount">
-                        <span class="amount">$2,000</span>
-                        <span class="status-badge pending">Pending Approval</span>
+                    
+                    <div class="advance-details">
+                        <div class="detail-row">
+                            <span class="label">Requested Date:</span>
+                            <span class="value">22 Jan 2024</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Travel Date:</span>
+                            <span class="value">05 Feb 2024</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Purpose:</span>
+                            <span class="value">Industry conference attendance</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sla-info">
+                        <span class="sla-chip urgent" aria-label="Due in 12 hours">Due in 12h</span>
+                    </div>
+                    
+                    <div class="advance-actions">
+                        <button class="btn-secondary" onclick="editAdvanceRequest('ADV-2025-0413-001')">
+                            <i class="fas fa-edit"></i> Edit Request
+                        </button>
+                        <button class="btn-ghost" onclick="cancelAdvanceRequest('ADV-2025-0413-001')">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
                     </div>
                 </div>
-                <div class="advance-details">
-                    <div class="detail-row">
-                        <span class="label">Requested Date:</span>
-                        <span class="value">22 Jan 2024</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Travel Date:</span>
-                        <span class="value">05 Feb 2024</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="label">Purpose:</span>
-                        <span class="value">Industry conference attendance</span>
-                    </div>
-                </div>
-                <div class="advance-actions">
-                    <button class="btn-action edit" onclick="editAdvanceRequest('CA-2024-003')">
-                        <i class="fas fa-edit"></i> Edit Request
-                    </button>
-                    <button class="btn-action cancel" onclick="cancelAdvanceRequest('CA-2024-003')">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </div>
 
-            <!-- Settled Advances -->
-            <div class="advance-card settled">
-                <div class="advance-header">
-                    <div class="advance-info">
-                        <h4>Sales Visit - Medan</h4>
-                        <p class="advance-id">CA-2023-045</p>
+                <!-- Approved/Queued for Payment -->
+                <div class="advance-card" data-status="approved" data-id="ADV-2025-0414-001">
+                    <div class="advance-header">
+                        <div class="advance-checkbox">
+                            <input type="checkbox" id="advance-ADV-2025-0414-001" onchange="toggleSelection('ADV-2025-0414-001')">
+                            <label for="advance-ADV-2025-0414-001" class="sr-only">Select advance ADV-2025-0414-001</label>
+                        </div>
+                        <div class="advance-info">
+                            <h4>Training Program - Surabaya</h4>
+                            <p class="advance-id">ADV-2025-0414-001</p>
+                        </div>
+                        <div class="advance-amount">
+                            <span class="amount">$1,800</span>
+                            <span class="status-badge approved" aria-label="Approved for payment">Approved</span>
+                        </div>
                     </div>
-                    <div class="advance-amount">
-                        <span class="amount">$1,800</span>
-                        <span class="status-badge settled">Settled</span>
+                    
+                    <div class="advance-details">
+                        <div class="detail-row">
+                            <span class="label">Approved Date:</span>
+                            <span class="value">20 Jan 2024</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Travel Date:</span>
+                            <span class="value">30 Jan 2024</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Purpose:</span>
+                            <span class="value">Training attendance and meals</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sla-info">
+                        <span class="sla-chip ok" aria-label="On time">On time</span>
+                    </div>
+                    
+                    <div class="advance-actions">
+                        <button class="btn-primary" onclick="queueForPayment('ADV-2025-0414-001')">
+                            <i class="fas fa-credit-card"></i> Queue for Payment
+                        </button>
+                        <button class="btn-secondary" onclick="viewAdvanceDetails('ADV-2025-0414-001')">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
                     </div>
                 </div>
-                <div class="advance-details">
-                    <div class="detail-row">
-                        <span class="label">Settlement Date:</span>
-                        <span class="value">10 Jan 2024</span>
+
+                <!-- Settled -->
+                <div class="advance-card" data-status="settled" data-id="ADV-2023-0045-001">
+                    <div class="advance-header">
+                        <div class="advance-checkbox">
+                            <input type="checkbox" id="advance-ADV-2023-0045-001" onchange="toggleSelection('ADV-2023-0045-001')">
+                            <label for="advance-ADV-2023-0045-001" class="sr-only">Select advance ADV-2023-0045-001</label>
+                        </div>
+                        <div class="advance-info">
+                            <h4>Sales Visit - Medan</h4>
+                            <p class="advance-id">ADV-2023-0045-001</p>
+                        </div>
+                        <div class="advance-amount">
+                            <span class="amount">$1,800</span>
+                            <span class="status-badge settled" aria-label="Settled advance">Settled</span>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <span class="label">Settlement Method:</span>
-                        <span class="value">Auto-deduction from expense report</span>
+                    
+                    <div class="advance-details">
+                        <div class="detail-row">
+                            <span class="label">Settlement Date:</span>
+                            <span class="value">10 Jan 2024</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Settlement Method:</span>
+                            <span class="value">Auto-deduction from expense report</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="label">Linked Report:</span>
+                            <span class="value"><a href="expenses.html?id=EXP-2024-001" class="trip-link">EXP-2024-001</a></span>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <span class="label">Linked Report:</span>
-                        <span class="value">EXP-2024-001</span>
+                    
+                    <div class="advance-actions">
+                        <button class="btn-secondary" onclick="viewAdvanceDetails('ADV-2023-0045-001')">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
                     </div>
                 </div>
-                <div class="advance-actions">
-                    <button class="btn-action view" onclick="viewAdvanceDetails('CA-2023-045')">
-                        <i class="fas fa-eye"></i> View Details
-                    </button>
+            </section>
+
+            <!-- Approvals Section -->
+            <section class="approvals-section" id="approvalsSection" style="display: none;">
+                <div class="section-header">
+                    <h3>Pending Approvals</h3>
+                    <span class="approval-count">5 requests awaiting approval</span>
                 </div>
+                
+                <div class="approval-list">
+                    <!-- Approval Card 1 -->
+                    <div class="approval-card" data-id="ADV-2025-0415-001">
+                        <div class="approval-header">
+                            <div class="requester-info">
+                                <div class="avatar">JD</div>
+                                <div class="requester-details">
+                                    <h4>John Doe</h4>
+                                    <p class="department">Engineering • Senior Developer</p>
+                                    <p class="request-id">ADV-2025-0415-001</p>
+                                </div>
+                            </div>
+                            <div class="request-amount">
+                                <span class="amount">$2,500</span>
+                                <span class="priority-badge high">High Priority</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-details">
+                            <div class="detail-row">
+                                <span class="label">Purpose:</span>
+                                <span class="value">Client meeting in Singapore</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Travel Dates:</span>
+                                <span class="value">20-22 Jan 2025</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Submitted:</span>
+                                <span class="value">2 hours ago</span>
+                            </div>
+                        </div>
+                        
+                        <div class="approval-actions">
+                            <button class="btn-success" onclick="approveAdvance('ADV-2025-0415-001')">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn-danger" onclick="rejectAdvance('ADV-2025-0415-001')">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                            <button class="btn-secondary" onclick="viewApprovalDetails('ADV-2025-0415-001')">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- More approval cards would go here -->
+                </div>
+            </section>
+
+            <!-- Payment Queue Section -->
+            <section class="payments-section" id="paymentsSection" style="display: none;">
+                <div class="section-header">
+                    <h3>Payment Queue</h3>
+                    <span class="payment-count">12 payments pending processing</span>
+                </div>
+                
+                <div class="payment-list">
+                    <!-- Payment Card 1 -->
+                    <div class="payment-card" data-id="ADV-2025-0410-002">
+                        <div class="payment-header">
+                            <div class="payee-info">
+                                <div class="avatar">SM</div>
+                                <div class="payee-details">
+                                    <h4>Sarah Miller</h4>
+                                    <p class="department">Sales • Account Manager</p>
+                                    <p class="advance-id">ADV-2025-0410-002</p>
+                                </div>
+                            </div>
+                            <div class="payment-amount">
+                                <span class="amount">$1,200</span>
+                                <span class="status-badge approved">Approved</span>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-details">
+                            <div class="detail-row">
+                                <span class="label">Bank Account:</span>
+                                <span class="value">****-****-****-1234</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Approved Date:</span>
+                                <span class="value">14 Jan 2025</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="label">Priority:</span>
+                                <span class="value urgent">Urgent - Due Today</span>
+                            </div>
+                        </div>
+                        
+                        <div class="payment-actions">
+                            <button class="btn-primary" onclick="processPayment('ADV-2025-0410-002')">
+                                <i class="fas fa-credit-card"></i> Process Payment
+                            </button>
+                            <button class="btn-secondary" onclick="viewPaymentDetails('ADV-2025-0410-002')">
+                                <i class="fas fa-eye"></i> Details
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- More payment cards would go here -->
+                </div>
+            </section>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-illustration">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h3>No cash advances found</h3>
+                <p>Create your first cash advance request to get started</p>
+                <button class="btn-primary" onclick="openAdvanceWizard()">
+                    <i class="fas fa-plus"></i> Request Cash Advance
+                </button>
             </div>
-        </section>
+        </div>
     </main>
+
+    <!-- Cash Advance Wizard Modal -->
+    <div class="modal" id="advanceWizard" aria-hidden="true" aria-modal="true" role="dialog" aria-labelledby="wizardTitle">
+        <div class="modal__backdrop" onclick="closeAdvanceWizard()"></div>
+        <div class="modal__dialog">
+            <div class="modal__header">
+                <h3 id="wizardTitle">Request Cash Advance</h3>
+                <button class="modal__close" onclick="closeAdvanceWizard()" aria-label="Close modal">&times;</button>
+            </div>
+            
+            <!-- Wizard Steps -->
+            <div class="wizard-steps" role="tablist">
+                <div class="step active" role="tab" aria-selected="true" data-step="1">
+                    <span class="step-number">1</span>
+                    <span class="step-title">Amount & Purpose</span>
+                </div>
+                <div class="step" role="tab" aria-selected="false" data-step="2">
+                    <span class="step-number">2</span>
+                    <span class="step-title">Policy & Confirmation</span>
+                </div>
+            </div>
+            
+            <div class="modal__body">
+                <!-- Step 1: Amount & Purpose -->
+                <div class="wizard-step" id="step1" style="display: block;">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label for="advanceAmount">Amount <span class="req">*</span></label>
+                            <input type="number" id="advanceAmount" placeholder="0.00" min="0" step="0.01" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="advanceCurrency">Currency <span class="req">*</span></label>
+                            <select id="advanceCurrency" required>
+                                <option value="USD">USD</option>
+                                <option value="IDR">IDR</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label for="advancePurpose">Purpose <span class="req">*</span></label>
+                        <textarea id="advancePurpose" placeholder="Describe the purpose of this cash advance..." required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label for="advanceDate">Required Date <span class="req">*</span></label>
+                        <input type="date" id="advanceDate" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label for="linkedTrip">Linked Trip (Optional)</label>
+                        <select id="linkedTrip">
+                            <option value="">Select a trip...</option>
+                            <option value="TRV-2025-0032">TRV-2025-0032 - Jakarta Business Trip</option>
+                            <option value="TRV-2025-0033">TRV-2025-0033 - Bali Conference</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Step 2: Policy & Confirmation -->
+                <div class="wizard-step" id="step2" style="display: none;">
+                    <div class="policy-panel">
+                        <h4>Policy Check</h4>
+                        <div class="policy-flags" id="policyFlags">
+                            <!-- Policy flags will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label for="supportDocs">Supporting Documents</label>
+                        <input type="file" id="supportDocs" multiple accept=".pdf,.jpg,.jpeg,.png">
+                        <div class="muted">Upload receipts, quotes, or other supporting documents</div>
+                        <div class="filelist" id="fileList"></div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>
+                            <input type="checkbox" id="confirmPolicy" required>
+                            I confirm that this request complies with company policy and the information provided is accurate.
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal__footer">
+                <button class="btn ghost" id="prevBtn" onclick="prevStep()" style="display: none;">Previous</button>
+                <button class="btn ghost" onclick="closeAdvanceWizard()">Cancel</button>
+                <button class="btn primary" id="nextBtn" onclick="nextStep()">Next</button>
+                <button class="btn primary" id="submitBtn" onclick="submitAdvance()" style="display: none;">Submit Request</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
@@ -245,86 +555,1796 @@
         <a href="vehicle.html" class="nav-item">
             <i class="fas fa-car"></i>
             <span>Vehicle</span>
+            <span class="nav-badge warning" id="badge-vehicle" data-count="3" title="3 pending/policy issues">3</span>
         </a>
         <a href="expenses.html" class="nav-item">
             <i class="fas fa-receipt"></i>
             <span>Expenses</span>
         </a>
+        <a href="cash-advance.html" class="nav-item active">
+            <i class="fas fa-money-bill-wave"></i>
+            <span>Cash Advance</span>
+        </a>
         <a href="approvals.html" class="nav-item">
             <i class="fas fa-check-circle"></i>
             <span>Approvals</span>
+            <span class="nav-badge" id="badge-approvals" data-count="5" title="5 approvals pending">5</span>
         </a>
     </nav>
 
+    <!-- Mobile Quick Actions -->
+    <div class="quick-actions-mobile">
+        <button class="fab-main" onclick="toggleActionSheet()">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <!-- Action Sheet Backdrop -->
+    <div class="action-sheet-backdrop" id="actionSheetBackdrop" onclick="closeActionSheet()"></div>
+    
+    <!-- Action Sheet -->
+    <div class="action-sheet" id="actionSheet">
+        <div class="action-sheet-header">
+            <h3>Quick Actions</h3>
+        </div>
+        <button class="action-sheet-item" onclick="closeActionSheet(); openAdvanceWizard();">
+            <i class="fas fa-money-bill"></i>
+            <span>Request Cash Advance</span>
+        </button>
+        <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='vehicle.html#new-log';">
+            <i class="fas fa-road"></i>
+            <span>Log mileage</span>
+        </button>
+        <button class="action-sheet-item" onclick="closeActionSheet(); window.location.href='travel-new.html';">
+            <i class="fas fa-plane"></i>
+            <span>New Trip</span>
+        </button>
+    </div>
+
     <script src="script.js"></script>
     <script>
-        // Cash Advance specific functions
-        function requestCashAdvance() {
-            // In a real app, this would open a form modal or navigate to a form page
-            alert('Cash advance request form would open here');
-        }
+        // Cash Advance State Management
+        let currentStep = 1;
+        let advances = JSON.parse(localStorage.getItem('cashAdvances')) || [];
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeKPICountUp();
+            initializeFilters();
+            updateKPIs();
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('advanceDate').min = today;
+            
+            // File upload handler
+            document.getElementById('supportDocs').addEventListener('change', handleFileUpload);
+        });
 
-        function viewSettlements() {
-            alert('Settlement history would be displayed here');
-        }
+        // KPI Count-up Animation
+        function initializeKPICountUp() {
+            const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+            const duration = 900;
 
-        function settleAdvance(advanceId) {
-            if (confirm(`Settle cash advance ${advanceId}?`)) {
-                alert(`Settlement process for ${advanceId} would be initiated here`);
+            function animateNumber(el, to, formatText) {
+                const start = performance.now();
+                function tick(now) {
+                    const p = Math.min(1, (now - start) / duration);
+                    const val = Math.round(to * easeOutCubic(p));
+                    el.textContent = formatText ? formatText(val) : String(val);
+                    if (p < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
             }
-        }
 
-        function viewAdvanceDetails(advanceId) {
-            alert(`Detailed view for ${advanceId} would be displayed here`);
-        }
+            document.querySelectorAll('.kpi-number[data-count]').forEach(el => {
+                const to = parseInt(el.getAttribute('data-count'), 10) || 0;
+                animateNumber(el, to);
+            });
 
-        function editAdvanceRequest(advanceId) {
-            alert(`Edit form for ${advanceId} would open here`);
-        }
-
-        function cancelAdvanceRequest(advanceId) {
-            if (confirm(`Cancel cash advance request ${advanceId}?`)) {
-                alert(`Request ${advanceId} would be cancelled`);
-            }
+            document.querySelectorAll('.kpi-number[data-count-text]').forEach(el => {
+                const target = el.getAttribute('data-count-text') || '';
+                const num = (target.match(/[\d,\.]+/) || ['0'])[0];
+                const to = Number(num.replace(/,/g, ''));
+                const [prefix, suffix] = target.split(num);
+                const formatter = new Intl.NumberFormat('en-US');
+                animateNumber(el, to, v => `${prefix || ''}${formatter.format(v)}${suffix || ''}`);
+            });
         }
 
         // Filter functionality
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                this.classList.add('active');
-                
-                const status = this.dataset.status;
-                filterAdvances(status);
+        function initializeFilters() {
+            // Filter chips
+            document.querySelectorAll('.chip').forEach(chip => {
+                chip.addEventListener('click', function() {
+                    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    applyFilters();
+                });
             });
-        });
 
-        function filterAdvances(status) {
+            // Search and period filters
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('periodFilter').addEventListener('change', applyFilters);
+        }
+
+        function applyFilters() {
+            const activeFilter = document.querySelector('.chip.active').dataset.filter;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('.advance-card');
+            let visibleCount = 0;
+
             cards.forEach(card => {
-                if (status === 'all' || card.classList.contains(status)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
+                let show = true;
+
+                // Status filter
+                if (activeFilter !== 'all' && card.dataset.status !== activeFilter) {
+                    show = false;
                 }
+
+                // Search filter
+                if (searchTerm && !card.textContent.toLowerCase().includes(searchTerm)) {
+                    show = false;
+                }
+
+                card.style.display = show ? 'block' : 'none';
+                if (show) visibleCount++;
+            });
+
+            // Show/hide empty state
+            document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        // Wizard functionality
+        function openAdvanceWizard() {
+            const modal = document.getElementById('advanceWizard');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            currentStep = 1;
+            showStep(1);
+            trapFocus(modal);
+        }
+
+        function closeAdvanceWizard() {
+            document.getElementById('advanceWizard').setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            resetWizard();
+        }
+
+        function nextStep() {
+            if (currentStep === 1) {
+                if (validateStep1()) {
+                    currentStep = 2;
+                    showStep(2);
+                    checkPolicyCompliance();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep === 2) {
+                currentStep = 1;
+                showStep(1);
+            }
+        }
+
+        function showStep(step) {
+            // Update step indicators
+            document.querySelectorAll('.step').forEach((s, index) => {
+                s.classList.toggle('active', index + 1 === step);
+                s.setAttribute('aria-selected', index + 1 === step);
+            });
+
+            // Show/hide step content
+            document.querySelectorAll('.wizard-step').forEach((s, index) => {
+                s.style.display = index + 1 === step ? 'block' : 'none';
+            });
+
+            // Update buttons
+            document.getElementById('prevBtn').style.display = step > 1 ? 'inline-block' : 'none';
+            document.getElementById('nextBtn').style.display = step < 2 ? 'inline-block' : 'none';
+            document.getElementById('submitBtn').style.display = step === 2 ? 'inline-block' : 'none';
+        }
+
+        function validateStep1() {
+            const amount = document.getElementById('advanceAmount').value;
+            const currency = document.getElementById('advanceCurrency').value;
+            const purpose = document.getElementById('advancePurpose').value;
+            const date = document.getElementById('advanceDate').value;
+
+            if (!amount || !currency || !purpose || !date) {
+                showToast('Please fill in all required fields', 'error');
+                return false;
+            }
+
+            if (parseFloat(amount) <= 0) {
+                showToast('Amount must be greater than 0', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function checkPolicyCompliance() {
+            const amount = parseFloat(document.getElementById('advanceAmount').value);
+            const currency = document.getElementById('advanceCurrency').value;
+            const flagsContainer = document.getElementById('policyFlags');
+            
+            flagsContainer.innerHTML = '';
+
+            // Check for existing outstanding advances (hard limit)
+            const hasOutstanding = document.querySelectorAll('.advance-card[data-status="outstanding"]').length > 0;
+            if (hasOutstanding) {
+                flagsContainer.innerHTML += `
+                    <div class="banner error">
+                        <i class="fas fa-times-circle"></i>
+                        Hard limit violation: You have an outstanding advance that must be settled first. Submit disabled.
+                    </div>
+                `;
+                document.getElementById('submitBtn').disabled = true;
+                showToast('Settle outstanding advance first', 'error');
+                return;
+            }
+
+            // Soft cap warnings
+            const maxAmount = currency === 'USD' ? 5000 : 75000000; // $5K or Rp 75M
+            if (amount > maxAmount * 0.8) {
+                flagsContainer.innerHTML += `
+                    <div class="banner warn">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Warning: Amount exceeds 80% of your grade limit (${currency === 'USD' ? '$' + maxAmount.toLocaleString() : 'Rp ' + maxAmount.toLocaleString()}).
+                    </div>
+                `;
+            }
+
+            // Settlement reminder
+            flagsContainer.innerHTML += `
+                <div class="banner ok">
+                    <i class="fas fa-check-circle"></i>
+                    Reminder: Cash advances must be settled within 14 days of receipt.
+                </div>
+            `;
+
+            document.getElementById('submitBtn').disabled = false;
+        }
+
+        function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            const fileList = document.getElementById('fileList');
+            
+            fileList.innerHTML = '';
+            files.forEach(file => {
+                const pill = document.createElement('div');
+                pill.className = 'pill';
+                pill.textContent = file.name;
+                fileList.appendChild(pill);
             });
         }
 
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set active navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
+        function submitAdvance() {
+            if (!document.getElementById('confirmPolicy').checked) {
+                showToast('Please confirm policy compliance', 'error');
+                return;
+            }
+
+            const advance = {
+                id: 'ADV-' + new Date().getFullYear() + '-' + String(Date.now()).slice(-6),
+                amount: parseFloat(document.getElementById('advanceAmount').value),
+                currency: document.getElementById('advanceCurrency').value,
+                purpose: document.getElementById('advancePurpose').value,
+                date: document.getElementById('advanceDate').value,
+                linkedTrip: document.getElementById('linkedTrip').value,
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                outstanding: 0
+            };
+
+            advances.push(advance);
+            localStorage.setItem('cashAdvances', JSON.stringify(advances));
+
+            showToast(`Advance ${advance.id} submitted`, 'success');
+            closeAdvanceWizard();
+            
+            // Refresh page to show new advance
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+
+        function resetWizard() {
+            currentStep = 1;
+            document.getElementById('advanceAmount').value = '';
+            document.getElementById('advancePurpose').value = '';
+            document.getElementById('advanceDate').value = '';
+            document.getElementById('linkedTrip').value = '';
+            document.getElementById('confirmPolicy').checked = false;
+            document.getElementById('supportDocs').value = '';
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('policyFlags').innerHTML = '';
+            showStep(1);
+        }
+
+        // Action handlers
+        function settleAdvance(advanceId) {
+            showSettlementModal(advanceId);
+        }
+
+        function showSettlementModal(advanceId) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.setAttribute('aria-hidden', 'false');
+            modal.setAttribute('aria-modal', 'true');
+            modal.innerHTML = `
+                <div class="modal__backdrop" onclick="closeSettlementModal()"></div>
+                <div class="modal__dialog">
+                    <div class="modal__header">
+                        <h3>Settle Advance ${advanceId}</h3>
+                        <button class="modal__close" onclick="closeSettlementModal()" aria-label="Close modal">&times;</button>
+                    </div>
+                    <div class="modal__body">
+                        <div class="form-row">
+                            <label>Settlement Method</label>
+                            <select id="settlementMethod" onchange="toggleSettlementOptions()">
+                                <option value="offset">Offset against expense report</option>
+                                <option value="refund">Cash refund</option>
+                            </select>
+                        </div>
+                        <div class="form-row" id="expenseReportSection">
+                            <label>Select Expense Report</label>
+                            <select id="expenseReport">
+                                <option value="EXP-2024-001">EXP-2024-001 - Jakarta Trip ($3,200)</option>
+                                <option value="EXP-2024-002">EXP-2024-002 - Bali Conference ($1,800)</option>
+                            </select>
+                        </div>
+                        <div class="form-row" id="refundSection" style="display: none;">
+                            <label>Refund Amount</label>
+                            <input type="number" id="refundAmount" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                        <div class="form-row">
+                            <label>Supporting Documents</label>
+                            <input type="file" id="settlementDocs" multiple accept=".pdf,.jpg,.jpeg,.png">
+                            <div class="muted">Upload receipts or proof of settlement</div>
+                        </div>
+                        <div class="form-row">
+                            <label>Notes</label>
+                            <textarea id="settlementNotes" placeholder="Additional settlement notes..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal__footer">
+                        <button class="btn ghost" onclick="closeSettlementModal()">Cancel</button>
+                        <button class="btn primary" onclick="processSettlement('${advanceId}')">Complete Settlement</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+            trapFocus(modal);
+            
+            // Add escape key handler for settlement modal
+            const escapeHandler = function(e) {
+                if (e.key === 'Escape') {
+                    closeSettlementModal();
+                    document.removeEventListener('keydown', escapeHandler);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+        }
+
+        function closeSettlementModal() {
+            const modal = document.querySelector('.modal[aria-modal="true"]');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+        }
+
+        function toggleSettlementOptions() {
+            const method = document.getElementById('settlementMethod').value;
+            const expenseSection = document.getElementById('expenseReportSection');
+            const refundSection = document.getElementById('refundSection');
+            
+            if (method === 'offset') {
+                expenseSection.style.display = 'block';
+                refundSection.style.display = 'none';
+            } else {
+                expenseSection.style.display = 'none';
+                refundSection.style.display = 'block';
+            }
+        }
+
+        function processSettlement(advanceId) {
+            const method = document.getElementById('settlementMethod').value;
+            const methodText = method === 'offset' ? 'offset against expense report' : 'cash refund';
+            
+            showToast(`Settlement completed via ${methodText}`, 'success');
+            closeSettlementModal();
+            
+            // In real app, would update advance status to settled
+            setTimeout(() => {
+                location.reload();
+            }, 1500);
+        }
+
+        function viewAdvanceDetails(advanceId) {
+            showAdvanceDetailModal(advanceId);
+        }
+
+        function showAdvanceDetailModal(advanceId) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.setAttribute('aria-hidden', 'false');
+            modal.setAttribute('aria-modal', 'true');
+            modal.innerHTML = `
+                <div class="modal__backdrop" onclick="closeAdvanceDetailModal()"></div>
+                <div class="modal__dialog advance-detail-modal">
+                    <div class="modal__header">
+                        <h3>Cash Advance Details - ${advanceId}</h3>
+                        <button class="modal__close" onclick="closeAdvanceDetailModal()" aria-label="Close modal">&times;</button>
+                    </div>
+                    
+                    <!-- Detail Tabs -->
+                    <div class="detail-tabs" role="tablist">
+                        <button class="detail-tab active" role="tab" aria-selected="true" onclick="showDetailTab('overview')" data-tab="overview">
+                            <i class="fas fa-info-circle"></i> Overview
+                        </button>
+                        <button class="detail-tab" role="tab" aria-selected="false" onclick="showDetailTab('attachments')" data-tab="attachments">
+                            <i class="fas fa-paperclip"></i> Attachments
+                        </button>
+                        <button class="detail-tab" role="tab" aria-selected="false" onclick="showDetailTab('policy')" data-tab="policy">
+                            <i class="fas fa-shield-alt"></i> Policy
+                        </button>
+                        <button class="detail-tab" role="tab" aria-selected="false" onclick="showDetailTab('history')" data-tab="history">
+                            <i class="fas fa-history"></i> History
+                        </button>
+                        <button class="detail-tab" role="tab" aria-selected="false" onclick="showDetailTab('settlement')" data-tab="settlement">
+                            <i class="fas fa-calculator"></i> Settlement
+                        </button>
+                    </div>
+                    
+                    <div class="modal__body">
+                        <!-- Overview Tab -->
+                        <div class="detail-tab-content active" id="overview-tab">
+                            <div class="advance-overview">
+                                <div class="overview-grid">
+                                    <div class="overview-item">
+                                        <span class="label">Amount:</span>
+                                        <span class="value">$3,500</span>
+                                    </div>
+                                    <div class="overview-item">
+                                        <span class="label">Purpose:</span>
+                                        <span class="value">Business Trip - Jakarta</span>
+                                    </div>
+                                    <div class="overview-item">
+                                        <span class="label">Status:</span>
+                                        <span class="value"><span class="status-badge outstanding">Outstanding</span></span>
+                                    </div>
+                                    <div class="overview-item">
+                                        <span class="label">Request Date:</span>
+                                        <span class="value">12 Apr 2025</span>
+                                    </div>
+                                    <div class="overview-item">
+                                        <span class="label">Required Date:</span>
+                                        <span class="value">20 Apr 2025</span>
+                                    </div>
+                                    <div class="overview-item">
+                                        <span class="label">Approved Date:</span>
+                                        <span class="value">13 Apr 2025</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Attachments Tab -->
+                        <div class="detail-tab-content" id="attachments-tab" style="display: none;">
+                            <div class="attachments-list">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span>Travel Request Form.pdf</span>
+                                    <button class="btn-link">Download</button>
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-image"></i>
+                                    <span>Flight Itinerary.jpg</span>
+                                    <button class="btn-link">Download</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Policy Tab -->
+                        <div class="detail-tab-content" id="policy-tab" style="display: none;">
+                            <div class="policy-checks">
+                                <div class="policy-item ok">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div class="policy-content">
+                                        <span class="policy-title">Amount Limit</span>
+                                        <span class="policy-desc">Within monthly advance limit</span>
+                                    </div>
+                                </div>
+                                <div class="policy-item ok">
+                                    <i class="fas fa-check-circle"></i>
+                                    <div class="policy-content">
+                                        <span class="policy-title">Approval Required</span>
+                                        <span class="policy-desc">Manager approval obtained</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- History Tab -->
+                        <div class="detail-tab-content" id="history-tab" style="display: none;">
+                            <div class="history-timeline">
+                                <div class="history-item">
+                                    <div class="history-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="history-content">
+                                        <div class="history-title">Approved by Manager</div>
+                                        <div class="history-meta">
+                                            <span class="history-user">Sarah Johnson</span>
+                                            <span class="history-time">13 Apr 2025, 10:30 AM</span>
+                                        </div>
+                                        <div class="history-note">Advance approved for business trip to Jakarta</div>
+                                    </div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-icon">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </div>
+                                    <div class="history-content">
+                                        <div class="history-title">Submitted for Approval</div>
+                                        <div class="history-meta">
+                                            <span class="history-user">John Doe</span>
+                                            <span class="history-time">12 Apr 2025, 2:15 PM</span>
+                                        </div>
+                                        <div class="history-note">Cash advance request submitted</div>
+                                    </div>
+                                </div>
+                                <div class="history-item">
+                                    <div class="history-icon">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </div>
+                                    <div class="history-content">
+                                        <div class="history-title">Request Created</div>
+                                        <div class="history-meta">
+                                            <span class="history-user">John Doe</span>
+                                            <span class="history-time">12 Apr 2025, 2:00 PM</span>
+                                        </div>
+                                        <div class="history-note">Initial cash advance request created</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Settlement Tab -->
+                        <div class="detail-tab-content" id="settlement-tab" style="display: none;">
+                            <div class="settlement-info">
+                                <p>Settlement information will be available once the advance is processed.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal__footer">
+                        <button class="btn-secondary" onclick="closeAdvanceDetailModal()">Close</button>
+                        <button class="btn-primary" onclick="editAdvanceRequest('${advanceId}')">Edit Request</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            document.body.style.overflow = 'hidden';
+            trapFocus(modal.querySelector('.modal__dialog'));
+        }
+
+        function closeAdvanceDetailModal() {
+            const modal = document.querySelector('.modal[aria-modal="true"]');
+            if (modal) {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+        }
+
+        function showDetailTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.detail-tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).setAttribute('aria-selected', 'true');
+            
+            // Update tab content
+            document.querySelectorAll('.detail-tab-content').forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
+            const activeContent = document.getElementById(`${tabName}-tab`);
+            activeContent.style.display = 'block';
+            activeContent.classList.add('active');
+        }
+
+        function editAdvanceRequest(advanceId) {
+            showToast('Opening edit form...', 'info');
+            // In real app, would open edit modal or navigate to edit page
+        }
+
+        function cancelAdvanceRequest(advanceId) {
+            if (confirm('Cancel this cash advance request?')) {
+                showToast('Request cancelled', 'success');
+                // In real app, would update status to cancelled
+            }
+        }
+
+        function queueForPayment(advanceId) {
+            if (confirm('Queue this advance for payment?')) {
+                showToast('Advance queued for payment', 'success');
+                // In real app, would update status to queued
+            }
+        }
+
+        // Update KPIs based on current data
+        function updateKPIs() {
+            const cards = document.querySelectorAll('.advance-card');
+            let outstanding = 0, settled = 0, pending = 0;
+            let outstandingCount = 0, settledCount = 0, pendingCount = 0;
+
+            cards.forEach(card => {
+                const status = card.dataset.status;
+                const amount = parseFloat(card.querySelector('.amount').textContent.replace('$', '').replace(',', ''));
+                
+                switch(status) {
+                    case 'outstanding':
+                        outstanding += amount;
+                        outstandingCount++;
+                        break;
+                    case 'settled':
+                        settled += amount;
+                        settledCount++;
+                        break;
+                    case 'pending':
+                        pending += amount;
+                        pendingCount++;
+                        break;
+                }
+            });
+
+            // Update KPI displays (would be animated on page load)
+            const kpiCards = document.querySelectorAll('.kpi-card');
+            if (kpiCards[0]) {
+                kpiCards[0].querySelector('.kpi-number').setAttribute('data-count-text', `$${outstanding.toLocaleString()}`);
+                kpiCards[0].querySelector('.kpi-period').textContent = `${outstandingCount} advances`;
+            }
+            if (kpiCards[1]) {
+                kpiCards[1].querySelector('.kpi-number').setAttribute('data-count-text', `$${settled.toLocaleString()}`);
+                kpiCards[1].querySelector('.kpi-period').textContent = `${settledCount} advances`;
+            }
+            if (kpiCards[2]) {
+                kpiCards[2].querySelector('.kpi-number').setAttribute('data-count-text', `$${pending.toLocaleString()}`);
+                kpiCards[2].querySelector('.kpi-period').textContent = `${pendingCount} request${pendingCount !== 1 ? 's' : ''}`;
+            }
+        }
+
+        // Mobile action sheet handlers
+        function toggleActionSheet() {
+            const actionSheet = document.getElementById('actionSheet');
+            const backdrop = document.getElementById('actionSheetBackdrop');
+            const fabMain = document.querySelector('.fab-main');
+            
+            actionSheet.classList.add('active');
+            backdrop.classList.add('active');
+            fabMain.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeActionSheet() {
+            const actionSheet = document.getElementById('actionSheet');
+            const backdrop = document.getElementById('actionSheetBackdrop');
+            const fabMain = document.querySelector('.fab-main');
+            
+            actionSheet.classList.remove('active');
+            backdrop.classList.remove('active');
+            fabMain.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Tab Management
+        function switchTab(tabName) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            
+            // Hide all sections
+            document.getElementById('advanceList').style.display = 'none';
+            document.getElementById('approvalsSection').style.display = 'none';
+            document.getElementById('paymentsSection').style.display = 'none';
+            document.getElementById('advancesActionBar').style.display = 'none';
+            document.getElementById('bulkActions').style.display = 'none';
+            
+            // Show selected section
+            switch(tabName) {
+                case 'advances':
+                    document.getElementById('advanceList').style.display = 'block';
+                    document.getElementById('advancesActionBar').style.display = 'block';
+                    break;
+                case 'approvals':
+                    document.getElementById('approvalsSection').style.display = 'block';
+                    break;
+                case 'payments':
+                    document.getElementById('paymentsSection').style.display = 'block';
+                    break;
+            }
+        }
+        
+        // Approval Actions
+        function approveAdvance(advanceId) {
+            showToast(`Advance ${advanceId} approved successfully`, 'success');
+            // Remove the card or update its status
+            const card = document.querySelector(`[data-id="${advanceId}"]`);
+            if (card) {
+                card.style.opacity = '0.5';
+                setTimeout(() => card.remove(), 1000);
+            }
+        }
+        
+        function rejectAdvance(advanceId) {
+            const reason = prompt('Please provide a reason for rejection:');
+            if (reason) {
+                showToast(`Advance ${advanceId} rejected`, 'error');
+                const card = document.querySelector(`[data-id="${advanceId}"]`);
+                if (card) {
+                    card.style.opacity = '0.5';
+                    setTimeout(() => card.remove(), 1000);
+                }
+            }
+        }
+        
+        function viewApprovalDetails(advanceId) {
+            showToast(`Opening details for ${advanceId}`, 'info');
+        }
+        
+        // Payment Actions
+        function processPayment(advanceId) {
+            showToast(`Processing payment for ${advanceId}`, 'success');
+            const card = document.querySelector(`[data-id="${advanceId}"]`);
+            if (card) {
+                const statusBadge = card.querySelector('.status-badge');
+                statusBadge.textContent = 'Processing';
+                statusBadge.className = 'status-badge processing';
+            }
+        }
+        
+        function viewPaymentDetails(advanceId) {
+            showToast(`Opening payment details for ${advanceId}`, 'info');
+        }
+
+        // Bulk Actions Management
+        let selectedAdvances = new Set();
+        
+        function toggleSelection(advanceId) {
+            if (selectedAdvances.has(advanceId)) {
+                selectedAdvances.delete(advanceId);
+            } else {
+                selectedAdvances.add(advanceId);
+            }
+            updateBulkActions();
+        }
+        
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.advance-card input[type="checkbox"]');
+            const allSelected = Array.from(checkboxes).every(cb => cb.checked);
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = !allSelected;
+                const advanceId = checkbox.closest('.advance-card').dataset.id;
+                if (!allSelected) {
+                    selectedAdvances.add(advanceId);
+                } else {
+                    selectedAdvances.delete(advanceId);
+                }
             });
             
-            // Update user info
-            const userEmail = localStorage.getItem('userEmail');
-            if (userEmail) {
-                document.querySelector('.user-info span').textContent = `Hello, ${userEmail.split('@')[0]}`;
+            updateBulkActions();
+        }
+        
+        function updateBulkActions() {
+            const bulkActions = document.getElementById('bulkActions');
+            const selectedCount = document.getElementById('selectedCount');
+            const bulkCancelBtn = document.getElementById('bulkCancelBtn');
+            const bulkSettleBtn = document.getElementById('bulkSettleBtn');
+            const bulkExportBtn = document.getElementById('bulkExportBtn');
+            const hasSelection = selectedAdvances.size > 0;
+            
+            selectedCount.textContent = selectedAdvances.size;
+            bulkActions.style.display = hasSelection ? 'flex' : 'none';
+            
+            bulkCancelBtn.disabled = !hasSelection;
+            bulkSettleBtn.disabled = !hasSelection;
+            bulkExportBtn.disabled = !hasSelection;
+        }
+        
+        function bulkCancel() {
+            if (selectedAdvances.size === 0) return;
+            
+            if (confirm(`Are you sure you want to cancel ${selectedAdvances.size} advance request(s)?`)) {
+                showToast(`Cancelling ${selectedAdvances.size} requests...`, 'info');
+                
+                setTimeout(() => {
+                    showToast(`${selectedAdvances.size} requests cancelled successfully`, 'success');
+                    selectedAdvances.clear();
+                    updateBulkActions();
+                    // In real app, would update the data and re-render
+                }, 2000);
+            }
+        }
+        
+        function bulkSettle() {
+            if (selectedAdvances.size === 0) return;
+            
+            if (confirm(`Are you sure you want to settle ${selectedAdvances.size} advance(s)?`)) {
+                showToast(`Settling ${selectedAdvances.size} advances...`, 'info');
+                
+                setTimeout(() => {
+                    showToast(`${selectedAdvances.size} advances settled successfully`, 'success');
+                    selectedAdvances.clear();
+                    updateBulkActions();
+                    // In real app, would update the data and re-render
+                }, 2000);
+            }
+        }
+        
+        function bulkExport() {
+            if (selectedAdvances.size === 0) return;
+            
+            showToast(`Exporting ${selectedAdvances.size} advance(s)...`, 'info');
+            
+            setTimeout(() => {
+                showToast(`${selectedAdvances.size} advances exported successfully`, 'success');
+                selectedAdvances.clear();
+                updateBulkActions();
+            }, 1500);
+        }
+
+        // Toast notification system
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.classList.add('show'), 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Accessibility: Close modal on Escape and trap focus
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                if (document.getElementById('advanceWizard').getAttribute('aria-hidden') === 'false') {
+                    closeAdvanceWizard();
+                }
+                const settlementModal = document.querySelector('.modal[aria-modal="true"]');
+                if (settlementModal) {
+                    closeSettlementModal();
+                }
+                closeActionSheet();
             }
         });
+
+        // Focus trap for modals
+        function trapFocus(modal) {
+            const focusableElements = modal.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            modal.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey) {
+                        if (document.activeElement === firstElement) {
+                            lastElement.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === lastElement) {
+                            firstElement.focus();
+                            e.preventDefault();
+                        }
+                    }
+                }
+            });
+
+            firstElement.focus();
+        }
+
+        // Demo function for not implemented features
+        function showNotImplementedPopup(feature) {
+            showToast(`${feature} feature coming soon!`, 'info');
+        }
     </script>
-</body>
+
+    <style>
+        /* Cash Advance specific styles */
+        .advance-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .advance-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+
+        .advance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        
+        .advance-checkbox {
+            display: flex;
+            align-items: center;
+            margin-top: 0.25rem;
+        }
+        
+        .advance-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .advance-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
+            color: #111827;
+        }
+
+        .advance-id {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .advance-amount {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.outstanding {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.settled {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .advance-details {
+            margin-bottom: 1rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .detail-row .label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .detail-row .value {
+            color: #111827;
+        }
+
+        .detail-row .value.urgent {
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .trip-link {
+            color: #4f46e5;
+            text-decoration: none;
+        }
+
+        .trip-link:hover {
+            text-decoration: underline;
+        }
+
+        .sla-info {
+            margin-bottom: 1rem;
+        }
+
+        .sla-chip {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .sla-chip.ok {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .sla-chip.urgent {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .sla-chip.overdue {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .advance-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Filter bar styles */
+        .filter-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .filter-chips {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: max-content;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0 24px 0.5rem 24px; /* Add horizontal padding for proper gutters */
+            margin-bottom: 1rem;
+            white-space: nowrap;
+        }
+
+        .chip {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .chip.active {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+
+        .chip:hover:not(.active) {
+            background: #f9fafb;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Wizard styles */
+        .wizard-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .step.active {
+            border-bottom-color: #4f46e5;
+            color: #4f46e5;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .step-title {
+            font-weight: 500;
+        }
+
+        .policy-panel {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .policy-panel h4 {
+            margin: 0 0 1rem 0;
+            color: #374151;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .advance-header {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: flex-start;
+            }
+
+            .advance-amount {
+                align-items: flex-start;
+                flex-direction: row;
+                gap: 1rem;
+            }
+
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.75rem;
+            }
+
+            .advance-actions {
+                justify-content: space-between;
+            }
+
+            .wizard-steps {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .step {
+                padding: 0.75rem 1rem;
+                justify-content: flex-start;
+            }
+        }
+
+        /* KPI font size standardization - match other modules at 24px */
+        .kpi-number {
+            font-size: 24px !important; /* Override any existing styles */
+        }
+
+        /* Policy banner styling improvements */
+        .banner {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .banner.ok {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .banner.warn {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .banner.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Header consistency fix */
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Mobile responsive additions */
+        @media (max-width: 768px) {
+            .filter-chips {
+                padding: 0 20px 0.5rem 20px; /* Mobile gutter adjustment */
+            }
+        }
+    /* Detail Modal Styles */
+        .advance-detail-modal {
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .detail-tabs {
+            display: flex;
+            border-bottom: 1px solid #e9ecef;
+            margin: -16px -24px 0;
+            padding: 0 24px;
+            background: #f8f9fa;
+        }
+
+        .detail-tab {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #6c757d;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-tab:hover {
+            color: #495057;
+            background: rgba(0, 123, 255, 0.05);
+        }
+
+        .detail-tab.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+            background: white;
+        }
+
+        .detail-tab-content {
+            padding: 20px 0;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .overview-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .overview-item .label {
+            font-weight: 500;
+            color: #6c757d;
+        }
+
+        .overview-item .value {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .attachments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .attachment-item i {
+            color: #dc3545;
+            font-size: 18px;
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-left: auto;
+        }
+
+        .btn-link:hover {
+            color: #0056b3;
+        }
+
+        .policy-checks {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .policy-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .policy-item.ok {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .policy-item.ok i {
+            color: #28a745;
+        }
+
+        .policy-item.warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+
+        .policy-item.warning i {
+            color: #ffc107;
+        }
+
+        .policy-item.error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .policy-item.error i {
+            color: #dc3545;
+        }
+
+        .policy-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .policy-title {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .policy-desc {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .history-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .history-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e9ecef;
+        }
+
+        .history-item {
+            position: relative;
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .history-icon {
+            position: absolute;
+            left: -22px;
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .history-item:first-child .history-icon {
+            border-color: #28a745;
+        }
+
+        .history-item:first-child .history-icon i {
+            color: #28a745;
+        }
+
+        .history-content {
+            flex: 1;
+            padding-top: 4px;
+        }
+
+        .history-title {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 4px;
+        }
+
+        .history-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: #6c757d;
+            margin-bottom: 6px;
+        }
+
+        .history-user {
+            font-weight: 500;
+        }
+
+        .history-note {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .settlement-info {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .modal__footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 16px 24px;
+            border-top: 1px solid #e9ecef;
+            margin: 0 -24px -16px;
+        }
+
+        @media (max-width: 768px) {
+            .advance-detail-modal {
+                width: 95%;
+                margin: 1rem;
+            }
+
+            .detail-tabs {
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .detail-tab {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Bulk Actions Styles */
+        .bulk-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 1rem;
+        }
+        
+        .bulk-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .bulk-buttons {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-link {
+            background: none;
+            border: none;
+            color: #3b82f6;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-link:hover {
+            background-color: #eff6ff;
+        }
+        
+        @media (max-width: 768px) {
+            .bulk-actions {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .bulk-buttons {
+                justify-content: center;
+            }
+        }
+        
+        /* Tab Navigation Styles */
+        .tab-navigation {
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 4px;
+            gap: 4px;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .tab-btn:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        .tab-btn.active {
+            background: white;
+            color: #4f46e5;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .tab-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.125rem 0.375rem;
+            border-radius: 10px;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-btn.active .tab-badge {
+            background: #4f46e5;
+        }
+        
+        /* Approval Section Styles */
+        .approvals-section, .payments-section {
+            margin-bottom: 2rem;
+        }
+        
+        .approval-list, .payment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .approval-card, .payment-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .approval-card:hover, .payment-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+        
+        .approval-header, .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .requester-info, .payee-info {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .requester-details h4, .payee-details h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
+            color: #111827;
+        }
+        
+        .department {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .request-id, .advance-id {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        .request-amount, .payment-amount {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .priority-badge.high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .approval-details, .payment-details {
+            margin-bottom: 1rem;
+        }
+        
+        .approval-actions, .payment-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .status-badge.processing {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .approval-header, .payment-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .request-amount, .payment-amount {
+                align-items: flex-start;
+                text-align: left;
+            }
+            
+            .approval-actions, .payment-actions {
+                flex-direction: column;
+            }
+        }
+
+        </style>
+    </body>
 </html>
