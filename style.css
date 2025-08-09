@@ -1,3 +1,37 @@
+/* TrevID Brand System - Foundation Tokens */
+:root {
+    /* Brand Colors */
+    --brand-primary: #3d0974;   /* TrevID wordmark (Trev) */
+    --brand-accent:  #600468;   /* TrevID "ID" */
+    --brand-ink:     #2A37A2;   /* dark text */
+    --brand-teal:    #0F766E;   /* success/links alt */
+    --brand-bg:      #0A2533;   /* page bg */
+    
+    /* UI Colors */
+    --ink-900: #0F172A;         /* primary text */
+    --ink-700: #334155;         /* secondary text */
+    --ink-500: #64748B;         /* muted text */
+    --bg-0:    #FFFFFF;         /* white background */
+    --bg-50:   #F8FAFC;         /* light background */
+    --card:    #FFFFFF;         /* card background */
+    --card-border: #E2E8F0;     /* card border */
+    --focus:   #2563EB;         /* focus state */
+    --success: #16A34A;         /* success state */
+    --warning: #F59E0B;         /* warning state */
+    --danger:  #EF4444;         /* danger state */
+    
+    /* Layout */
+    --radius: 12px;             /* card radius */
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.06), 0 1px 1px rgba(0,0,0,.04);
+    --shadow-md: 0 6px 24px rgba(15, 23, 42, .08);
+    
+    /* Typography */
+    --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    
+    /* Navigation */
+    --nav-h: 64px;
+}
+
 /* Reset dan Base Styles */
 * {
     margin: 0;
@@ -6,9 +40,9 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
-    color: #333;
+    font-family: var(--font-sans);
+    background-color: var(--bg-50);
+    color: var(--ink-900);
     line-height: 1.6;
     padding-bottom: 80px;
 }
@@ -19,31 +53,108 @@ body {
     padding: 0 20px;
 }
 
+.main-content {
+    padding-top: 16px;
+}
+
+/* Brand System Utility Classes */
+.card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary {
+    background: var(--brand-primary);
+    color: var(--bg-0);
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    filter: brightness(0.95);
+}
+
+.link {
+    color: var(--brand-primary);
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
 /* Header */
 .header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 1rem 0;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+    color: var(--bg-0);
+    padding: 0;
+    box-shadow: var(--shadow-md);
+    height: var(--nav-h);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 .header .container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+}
+
+.header .container .quick-actions-desktop {
+    flex: 1;
+    display: flex;
+    justify-content: center;
 }
 
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.5rem;
-    font-weight: bold;
 }
 
-.logo i {
-    font-size: 28px; /* Standardized header logo icon size per PRD */
-    line-height: 1;
+.brand-logo {
+    height: 40px;
+    width: auto;
+    display: block;
+}
+
+/* Logo khusus untuk halaman login */
+.login-card .brand-logo {
+    height: 60px;
+    width: auto;
+}
+
+@media (max-width: 640px) {
+    .header {
+        height: 56px;
+    }
+    
+    .header .container {
+        padding: 8px 12px;
+    }
+    
+    .brand-logo {
+        height: 28px;
+        width: auto;
+    }
+    
+    .quick-actions-desktop {
+        display: none;
+    }
+    
+    .user-info span {
+        display: none;
+    }
 }
 
 .user-info {
@@ -54,6 +165,34 @@ body {
 
 .user-info i {
     font-size: 1.5rem;
+}
+
+/* User Menu Button */
+.user-menu-btn {
+    background: none;
+    border: none;
+    color: var(--bg-0);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 40px;
+}
+
+.user-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.user-menu-btn i:first-child {
+    font-size: 28px;
+}
+
+.user-menu-btn i:last-child {
+    font-size: 12px;
+    opacity: 0.8;
 }
 
 /* Navigation */
@@ -95,11 +234,11 @@ body {
 
 .nav-links a:hover {
     background: #f0f4ff;
-    color: #667eea;
+    color: var(--brand-primary);
 }
 
 .nav-links a.active {
-    background: #667eea;
+    background: var(--brand-primary);
     color: white;
 }
 
@@ -129,7 +268,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ef4444;
+    background: var(--danger);
     color: #fff;
     padding: 0 5px;
     border: 2px solid white;
@@ -137,7 +276,7 @@ body {
 }
 
 .nav-badge.warning {
-    background: #f59e0b;
+    background: var(--warning);
     color: #fff;
 }
 
@@ -182,13 +321,13 @@ body {
 
 .nav-link:hover {
     background: #f0f4ff;
-    color: #667eea;
+    color: var(--brand-primary);
     text-decoration: none;
 }
 
 .nav-link.active {
-    background: #667eea;
-    color: white;
+    background: var(--brand-primary);
+    color: var(--bg-0);
 }
 
 .nav-link i {
@@ -229,7 +368,7 @@ body {
 }
 
 .toast.success {
-    background: #10b981;
+    background: var(--success);
 }
 
 .toast.error {

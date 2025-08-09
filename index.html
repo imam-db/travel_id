@@ -3,28 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Expense Manager - Dashboard</title>
+    <title>TrevID - Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2563eb">
-    <link rel="apple-touch-icon" href="icon-192.svg">
+    <meta name="theme-color" content="#3d0974">
+    <link rel="icon" href="/assets/brand/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/brand/trevid_icon_192.png">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="logo">
-                <i class="fas fa-plane"></i>
-                <span>TravelExpense</span>
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="quick-actions-desktop">
+                <button class="action-btn" onclick="showNotImplementedPopup('Add Expense')"><i class="fas fa-plus"></i> Add Expense</button>
+                <button class="action-btn" onclick="window.location.href='travel-new.html'"><i class="fas fa-plane"></i> New Trip</button>
+                <button class="action-btn" onclick="window.location.href='cash-advance.html'"><i class="fas fa-money-bill"></i> Request Advance</button>
+                <button class="action-btn" onclick="window.location.href='vehicle.html#new-log'"><i class="fas fa-road"></i> Log Mileage</button>
             </div>
             <div class="user-info">
-                <div class="quick-actions-desktop">
-                    <button class="action-btn" onclick="showNotImplementedPopup('Add Expense')"><i class="fas fa-plus"></i> Add Expense</button>
-                    <button class="action-btn" onclick="window.location.href='travel-new.html'"><i class="fas fa-plane"></i> New Trip</button>
-                    <button class="action-btn" onclick="window.location.href='cash-advance.html'"><i class="fas fa-money-bill"></i> Request Advance</button>
-                    <button class="action-btn" onclick="window.location.href='vehicle.html#new-log'"><i class="fas fa-road"></i> Log Mileage</button>
-                </div>
                 <span>Hello, John Doe</span>
                 <i class="fas fa-user-circle"></i>
             </div>
@@ -883,20 +888,28 @@
          }
          
          // Check convert button state
-         function checkConvertButtonState() {
-             const approvedTrips = document.querySelectorAll('.trip-item[data-status="approved"]');
-             const convertBtn = document.getElementById('convertAllBtn');
-             
-             if (convertBtn) {
-                 if (approvedTrips.length === 0) {
-                     convertBtn.disabled = true;
-                     convertBtn.title = 'No approved plan to convert';
-                 } else {
-                     convertBtn.disabled = false;
-                     convertBtn.title = 'Convert all approved trips';
-                 }
-             }
-         }
+        function checkConvertButtonState() {
+            const approvedTrips = document.querySelectorAll('.trip-item[data-status="approved"]');
+            const convertBtn = document.getElementById('convertAllBtn');
+            
+            if (convertBtn) {
+                if (approvedTrips.length === 0) {
+                    convertBtn.disabled = true;
+                    convertBtn.title = 'No approved plan to convert';
+                } else {
+                    convertBtn.disabled = false;
+                    convertBtn.title = 'Convert all approved trips';
+                }
+            }
+        }
+        
+        // Toggle user menu
+        function toggleUserMenu() {
+            // Placeholder for user menu functionality
+            // In a real app, this would show/hide a dropdown menu
+            console.log('User menu toggled');
+            showToast('User menu - Coming soon!', 'info');
+        }
     </script>
 </body>
 </html>

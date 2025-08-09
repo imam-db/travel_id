@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Travel Expense Manager (Fixed)</title>
+    <title>Profile - TrevID</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <style>
@@ -1199,8 +1199,12 @@
     <header class="header">
         <div class="container">
             <div class="logo">
-                <i class="fas fa-plane"></i>
-                <span>TravelExpense</span>
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
             </div>
             <div class="user-info">
                 <span>Hello, John Doe</span>
@@ -2942,6 +2946,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Profile page loaded successfully - All features implemented!');
         });
+    </script>
+    <script>
+        // Toggle user menu
+        function toggleUserMenu() {
+            // Placeholder for user menu functionality
+            // In a real app, this would show/hide a dropdown menu
+            console.log('User menu toggled');
+            alert('User menu - Coming soon!');
+        }
     </script>
 </body>
 </html>
