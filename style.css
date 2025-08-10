@@ -441,6 +441,7 @@ textarea:focus {
     align-items: center;
     justify-content: space-between;
     padding: 12px 16px;
+    width: 100%;
 }
 
 .header .container .quick-actions-desktop {
