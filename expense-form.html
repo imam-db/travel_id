@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Expense Report - TrevID</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" />
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="vehicle.html" class="nav-item">
+            <i class="fas fa-car"></i>
+            <span>Vehicle</span>
+        </a>
+        <a href="expenses.html" class="nav-item active">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Back Navigation -->
+            <div class="back-nav">
+                <a href="expenses.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Expense Reports
+                </a>
+            </div>
+
+            <!-- Form Header -->
+            <section class="form-header">
+                <h1><i class="fas fa-plus-circle"></i> Create New Expense Report</h1>
+                <p class="form-subtitle">Fill in the basic information to create your expense report</p>
+            </section>
+
+            <!-- Create Form -->
+            <section class="expense-form-container">
+                <form class="expense-form" id="createExpenseForm">
+                    <!-- Basic Information -->
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reportTitle">Report Title *</label>
+                                <input type="text" id="reportTitle" name="reportTitle" placeholder="e.g., Trip to Jakarta Feb 2024" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="startDate">Start Date *</label>
+                                <input type="date" id="startDate" name="startDate" required onchange="validateDateRange()">
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">End Date *</label>
+                                <input type="date" id="endDate" name="endDate" required onchange="validateDateRange()">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="costCenter">Cost Center *</label>
+                                <select id="costCenter" name="costCenter" required>
+                                    <option value="">Select Cost Center</option>
+                                    <option value="CC001">Marketing - CC001</option>
+                                    <option value="CC002">Sales - CC002</option>
+                                    <option value="CC003">IT - CC003</option>
+                                    <option value="CC004">Finance - CC004</option>
+                                    <option value="CC005">Operations - CC005</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="project">Project (Optional)</label>
+                                <select id="project" name="project">
+                                    <option value="">Select Project (Optional)</option>
+                                    <option value="PRJ001">Q1 Campaign - PRJ001</option>
+                                    <option value="PRJ002">System Upgrade - PRJ002</option>
+                                    <option value="PRJ003">Market Research - PRJ003</option>
+                                    <option value="PRJ004">Product Launch - PRJ004</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currency">Primary Currency *</label>
+                                <select id="currency" name="currency" required>
+                                    <option value="IDR">IDR - Indonesian Rupiah</option>
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="SGD">SGD - Singapore Dollar</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="MYR">MYR - Malaysian Ringgit</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="purpose">Business Purpose *</label>
+                                <select id="purpose" name="purpose" required>
+                                    <option value="">Select Purpose</option>
+                                    <option value="business-trip">Business Trip</option>
+                                    <option value="client-meeting">Client Meeting</option>
+                                    <option value="conference">Conference/Training</option>
+                                    <option value="site-visit">Site Visit</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" rows="3" placeholder="Brief description of the business purpose and activities..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Add Options -->
+                    <div class="form-section">
+                        <h3>Quick Add Items (Optional)</h3>
+                        <p class="section-subtitle">You can add items now or after creating the report</p>
+                        
+                        <div class="quick-add-options">
+                            <div class="quick-add-card" onclick="toggleQuickAdd('flight')">
+                                <div class="quick-add-header">
+                                    <i class="fas fa-plane"></i>
+                                    <span>Add Flight</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </div>
+                                <div class="quick-add-content" id="quickAddFlight" style="display: none;">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="flightFrom">From</label>
+                                            <select id="flightFrom" name="flightFrom">
+                                                <option value="">Select departure city</option>
+                                                <option value="CGK">CGK - Jakarta</option>
+                                                <option value="SUB">SUB - Surabaya</option>
+                                                <option value="DPS">DPS - Denpasar</option>
+                                                <option value="MLG">MLG - Malang</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="flightTo">To</label>
+                                            <select id="flightTo" name="flightTo">
+                                                <option value="">Select destination city</option>
+                                                <option value="CGK">CGK - Jakarta</option>
+                                                <option value="SUB">SUB - Surabaya</option>
+                                                <option value="DPS">DPS - Denpasar</option>
+                                                <option value="MLG">MLG - Malang</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="flightDate">Date</label>
+                                            <input type="date" id="flightDate" name="flightDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="flightAmount">Estimated Amount</label>
+                                            <input type="number" id="flightAmount" name="flightAmount" placeholder="0" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="quick-add-card" onclick="toggleQuickAdd('hotel')">
+                                <div class="quick-add-header">
+                                    <i class="fas fa-bed"></i>
+                                    <span>Add Hotel</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </div>
+                                <div class="quick-add-content" id="quickAddHotel" style="display: none;">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="hotelCity">City</label>
+                                            <select id="hotelCity" name="hotelCity">
+                                                <option value="">Select city</option>
+                                                <option value="jakarta">Jakarta</option>
+                                                <option value="surabaya">Surabaya</option>
+                                                <option value="bandung">Bandung</option>
+                                                <option value="yogyakarta">Yogyakarta</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hotelNights">Nights</label>
+                                            <input type="number" id="hotelNights" name="hotelNights" placeholder="1" min="1">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="hotelCheckIn">Check-in</label>
+                                            <input type="date" id="hotelCheckIn" name="hotelCheckIn">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hotelAmount">Estimated Amount</label>
+                                            <input type="number" id="hotelAmount" name="hotelAmount" placeholder="0" step="0.01">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Import Hint -->
+                        <div class="import-hint">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Semua data booking dari modul Travel dapat diimpor dari tombol 'Add from Bookings' di halaman detail.</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Actions -->
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='expenses.html'">Cancel</button>
+                        <button type="button" class="btn btn-outline" onclick="saveDraft()">Save as Draft</button>
+                        <button type="submit" class="btn btn-primary">Create Report</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        // Form validation
+        function validateDateRange() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate) {
+                if (new Date(endDate) < new Date(startDate)) {
+                    document.getElementById('endDate').setCustomValidity('End date must be after start date');
+                } else {
+                    document.getElementById('endDate').setCustomValidity('');
+                }
+            }
+        }
+        
+        // Quick add toggles
+        function toggleQuickAdd(type) {
+            const content = document.getElementById(`quickAdd${type.charAt(0).toUpperCase() + type.slice(1)}`);
+            const icon = content.parentElement.querySelector('.toggle-icon');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.style.display = 'none';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Form submission
+        document.getElementById('createExpenseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate required fields
+            const requiredFields = ['reportTitle', 'startDate', 'endDate', 'costCenter', 'currency', 'purpose'];
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (!element.value.trim()) {
+                    element.classList.add('error');
+                    isValid = false;
+                } else {
+                    element.classList.remove('error');
+                }
+            });
+            
+            if (isValid) {
+                // Simulate creating report and redirect to detail page
+                alert('Expense report created successfully!');
+                window.location.href = 'expense-detail.html';
+            } else {
+                alert('Please fill in all required fields.');
+            }
+        });
+        
+        // Save as draft
+        function saveDraft() {
+            const formData = new FormData(document.getElementById('createExpenseForm'));
+            // Simulate saving draft
+            alert('Draft saved successfully!');
+            window.location.href = 'expenses.html';
+        }
+        
+        // Auto-populate dates based on business purpose
+        document.getElementById('purpose').addEventListener('change', function() {
+            const purpose = this.value;
+            const today = new Date();
+            const startDateField = document.getElementById('startDate');
+            const endDateField = document.getElementById('endDate');
+            
+            if (purpose === 'conference') {
+                // Default to 3-day conference
+                const start = new Date(today);
+                start.setDate(today.getDate() + 7); // Next week
+                const end = new Date(start);
+                end.setDate(start.getDate() + 2);
+                
+                startDateField.value = start.toISOString().split('T')[0];
+                endDateField.value = end.toISOString().split('T')[0];
+            } else if (purpose === 'business-trip') {
+                // Default to 2-day business trip
+                const start = new Date(today);
+                start.setDate(today.getDate() + 3);
+                const end = new Date(start);
+                end.setDate(start.getDate() + 1);
+                
+                startDateField.value = start.toISOString().split('T')[0];
+                endDateField.value = end.toISOString().split('T')[0];
+            }
+        });
+    </script>
+</body>
+</html>

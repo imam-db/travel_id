@@ -1,0 +1,3189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Report Detail - TrevID</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    srcset="assets/brand/trevid_logo.png 1x, assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" />
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="vehicle.html" class="nav-item">
+            <i class="fas fa-car"></i>
+            <span>Vehicle</span>
+        </a>
+        <a href="expenses.html" class="nav-item active">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Back Navigation -->
+            <div class="back-nav">
+                <a href="expenses.html" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Expense Reports
+                </a>
+            </div>
+
+            <!-- Report Header -->
+            <section class="expense-report-header">
+                <div class="report-title-section">
+                    <div class="report-title-input">
+                        <input type="text" class="report-title-field" value="Trip to JAKARTA Feb 2024" placeholder="Report Title">
+                        <button class="edit-title-btn" onclick="toggleTitleEdit()">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                    <span class="report-code">#EXP-2024-001</span>
+                </div>
+                
+                <div class="report-meta">
+                    <div class="meta-item">
+                        <label>Date Range</label>
+                        <div class="date-range-inputs">
+                            <input type="date" value="2024-02-15" class="date-input">
+                            <span>to</span>
+                            <input type="date" value="2024-02-17" class="date-input">
+                        </div>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <label>Cost Center</label>
+                        <select class="meta-select">
+                            <option value="CC001">Marketing - CC001</option>
+                            <option value="CC002">Sales - CC002</option>
+                            <option value="CC003">IT - CC003</option>
+                        </select>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <label>Project</label>
+                        <select class="meta-select">
+                            <option value="">Select Project (Optional)</option>
+                            <option value="PRJ001">Q1 Campaign - PRJ001</option>
+                            <option value="PRJ002">System Upgrade - PRJ002</option>
+                        </select>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <label>Base Currency</label>
+                        <select class="meta-select">
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                        <div class="fx-info">
+                            <i class="fas fa-exchange-alt"></i>
+                            <span class="fx-rate">FX Rate: 1 USD = 15,750 IDR</span>
+                            <span class="fx-updated">Updated: Feb 18, 2024 10:30 AM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Policy Status Summary -->
+                <div class="policy-status-summary">
+                    <div class="policy-chips">
+                        <button class="policy-chip ok" onclick="showPolicyDetails('ok')">
+                            <i class="fas fa-check-circle"></i> 3 OK
+                        </button>
+                        <button class="policy-chip warning" onclick="showPolicyDetails('warning')">
+                            <i class="fas fa-exclamation-triangle"></i> 1 Warning
+                        </button>
+                        <button class="policy-chip violation" onclick="showPolicyDetails('violation')">
+                            <i class="fas fa-times-circle"></i> 1 Violation
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="report-actions">
+                <div class="primary-actions">
+                    <button class="btn btn-primary" onclick="showAddFromBookingsModal()">
+                        <i class="fas fa-plane"></i> Add from Bookings
+                    </button>
+                    <button class="btn btn-outline" onclick="showAttachAdvanceModal()">
+                        <i class="fas fa-link"></i> Attach Advance
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" onclick="toggleAddItemDropdown()">
+                            <i class="fas fa-plus"></i> Add Item
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="dropdown-menu" id="addItemDropdown">
+                            <div class="dropdown-section">
+                                <div class="dropdown-section-title">Travel & Hotel</div>
+                                <button class="dropdown-item" onclick="showAddItemModal('flight')">
+                                    <i class="fas fa-plane"></i> Flight
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('train')">
+                                    <i class="fas fa-train"></i> Train
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('bus')">
+                                    <i class="fas fa-bus"></i> Bus/Ferry
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('hotel')">
+                                    <i class="fas fa-bed"></i> Hotel
+                                </button>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-section">
+                                <div class="dropdown-section-title">Vehicle & Transport</div>
+                                <button class="dropdown-item" onclick="showAddItemModal('fuel')">
+                                    <i class="fas fa-gas-pump"></i> Fuel
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('parking')">
+                                    <i class="fas fa-parking"></i> Parking/Toll
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('mileage')">
+                                    <i class="fas fa-route"></i> Mileage
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('taxi')">
+                                    <i class="fas fa-taxi"></i> Taxi/Ride-hailing
+                                </button>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-section">
+                                <div class="dropdown-section-title">Meals & Per-diem</div>
+                                <button class="dropdown-item" onclick="showAddItemModal('meals')">
+                                    <i class="fas fa-utensils"></i> Meals
+                                </button>
+                                <button class="dropdown-item" onclick="showAddItemModal('perdiem')">
+                                    <i class="fas fa-calendar-day"></i> Per-diem
+                                </button>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-section">
+                                <div class="dropdown-section-title">Others</div>
+                                <button class="dropdown-item" onclick="showAddItemModal('others')">
+                                    <i class="fas fa-receipt"></i> Others
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="secondary-actions">
+                    <button class="btn btn-outline" onclick="showAddFromReceiptModal()">
+                        <i class="fas fa-camera"></i> Add from Receipt
+                    </button>
+                    <button class="btn btn-outline" onclick="submitForApproval()">
+                        <i class="fas fa-paper-plane"></i> Submit for Approval
+                    </button>
+                    <button class="btn btn-outline" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                </div>
+            </section>
+
+            <!-- Main Content Area -->
+            <div class="report-content">
+                <!-- Items List -->
+                <section class="expense-items">
+                    <h3>Expense Items</h3>
+                    
+                    <!-- Flight Item -->
+                    <div class="expense-item-card">
+                        <div class="item-header">
+                            <div class="item-type">
+                                <i class="fas fa-plane item-icon"></i>
+                                <span class="item-type-label">FLIGHT</span>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-icon" onclick="editItem('flight-1')" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon" onclick="deleteItem('flight-1')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="item-content">
+                            <div class="item-main-info">
+                                <h4>CGK → SUB · 15 Feb 2025 · Garuda GA331</h4>
+                                <div class="item-amount">IDR 1,850,000</div>
+                            </div>
+                            
+                            <div class="item-details">
+                                <span class="detail-tag">Economy</span>
+                                <span class="detail-tag">Personal Payment</span>
+                                <span class="detail-tag receipt-attached">
+                                    <i class="fas fa-paperclip"></i> Receipt attached
+                                </span>
+                            </div>
+                            
+                            <div class="policy-badges">
+                                <span class="policy-badge warning">
+                                    <i class="fas fa-exclamation-triangle"></i> Booked < 7 days
+                                </span>
+                                <span class="policy-badge violation">
+                                    <i class="fas fa-times-circle"></i> Fare > cap 10%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hotel Item -->
+                    <div class="expense-item-card">
+                        <div class="item-header">
+                            <div class="item-type">
+                                <i class="fas fa-bed item-icon"></i>
+                                <span class="item-type-label">HOTEL</span>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-icon" onclick="editItem('hotel-1')" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon" onclick="deleteItem('hotel-1')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="item-content">
+                            <div class="item-main-info">
+                                <h4>Hotel Santika Surabaya · 2 nights</h4>
+                                <div class="item-amount">IDR 1,200,000</div>
+                            </div>
+                            
+                            <div class="item-details">
+                                <span class="detail-tag">15-17 Feb 2024</span>
+                                <span class="detail-tag">IDR 600,000/night</span>
+                                <span class="detail-tag">Breakfast included</span>
+                                <span class="detail-tag receipt-pending">
+                                    <i class="fas fa-clock"></i> Receipt pending
+                                </span>
+                            </div>
+                            
+                            <div class="policy-badges">
+                                <span class="policy-badge ok">
+                                    <i class="fas fa-check-circle"></i> Within policy
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Train Item -->
+                    <div class="expense-item-card">
+                        <div class="item-header">
+                            <div class="item-type">
+                                <i class="fas fa-train item-icon"></i>
+                                <span class="item-type-label">TRAIN</span>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-icon" onclick="editItem('train-1')" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-icon" onclick="deleteItem('train-1')" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="item-content">
+                            <div class="item-main-info">
+                                <h4>SUB → CGK · 17 Feb 2024 · Argo Bromo Anggrek</h4>
+                                <div class="item-amount">IDR 450,000</div>
+                            </div>
+                            
+                            <div class="item-details">
+                                <span class="detail-tag">Executive</span>
+                                <span class="detail-tag">Corporate Card</span>
+                                <span class="detail-tag receipt-attached">
+                                    <i class="fas fa-paperclip"></i> Receipt attached
+                                </span>
+                            </div>
+                            
+                            <div class="policy-badges">
+                                <span class="policy-badge ok">
+                                    <i class="fas fa-check-circle"></i> Within policy
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Right Sidebar -->
+                <aside class="report-sidebar">
+                    <!-- Totals -->
+                    <div class="sidebar-section">
+                        <h4>Summary</h4>
+                        <div class="totals-breakdown">
+                            <div class="total-item">
+                                <span class="total-label">Reimbursable</span>
+                                <span class="total-amount">IDR 2,250,000</span>
+                            </div>
+                            <div class="total-item">
+                                <span class="total-label">Corporate Card</span>
+                                <span class="total-amount">IDR 450,000</span>
+                            </div>
+                            <div class="total-item">
+                                <span class="total-label">Company-paid</span>
+                                <span class="total-amount">IDR 0</span>
+                            </div>
+                            <div class="total-item grand-total">
+                                <span class="total-label">Grand Total</span>
+                                <span class="total-amount">IDR 2,700,000</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advance Settlement -->
+                    <div class="sidebar-section advance-settlement">
+                        <h4>Advance Settlement</h4>
+                        <div class="advance-info">
+                            <div class="advance-item">
+                                <span class="advance-label">Linked Advance:</span>
+                                <span class="advance-ref">ADV-2024-001</span>
+                            </div>
+                            <div class="advance-item">
+                                <span class="advance-label">Advance Amount:</span>
+                                <span class="advance-amount">IDR 3,000,000</span>
+                            </div>
+                            <div class="advance-item">
+                                <span class="advance-label">Report Total:</span>
+                                <span class="advance-amount">IDR 2,700,000</span>
+                            </div>
+                            <div class="advance-item settlement-total">
+                                <span class="advance-label">Net Reimbursable:</span>
+                                <span class="advance-amount negative">IDR -300,000</span>
+                            </div>
+                            <div class="advance-note">
+                                <i class="fas fa-info-circle"></i>
+                                <span>You will receive IDR 300,000 less due to advance settlement</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Policy Breakdown -->
+                    <div class="sidebar-section">
+                        <h4>Policy Status</h4>
+                        <div class="policy-breakdown">
+                            <div class="policy-item warning" onclick="jumpToItem('flight-1')">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Flight: Booked < 7 days</span>
+                            </div>
+                            <div class="policy-item violation" onclick="jumpToItem('flight-1')">
+                                <i class="fas fa-times-circle"></i>
+                                <span>Flight: Fare exceeds cap by 10%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Submission Checklist -->
+                    <div class="sidebar-section">
+                        <h4>Submission Checklist</h4>
+                        <div class="checklist">
+                            <div class="checklist-item completed">
+                                <i class="fas fa-check-circle"></i>
+                                <span>All required fields complete</span>
+                            </div>
+                            <div class="checklist-item pending">
+                                <i class="fas fa-clock"></i>
+                                <span>1 receipt missing</span>
+                            </div>
+                            <div class="checklist-item pending">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>1 violation needs justification</span>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-indicator">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 66%;"></div>
+                            </div>
+                            <span class="progress-text">66% complete</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Flight Item Modal -->
+    <div class="modal" id="addFlightModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plane"></i> Add Flight</h3>
+                <button class="modal-close" onclick="closeModal('addFlightModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="flightForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookingSource">Booking Source</label>
+                        <select id="bookingSource" name="bookingSource" onchange="toggleBookingFields()">
+                            <option value="manual">Manual Entry</option>
+                            <option value="traveloka">Traveloka</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="airline">Airline</label>
+                        <input type="text" id="airline" name="airline" placeholder="e.g., Garuda Indonesia">
+                    </div>
+                    <div class="form-group">
+                        <label for="flightNo">Flight Number</label>
+                        <input type="text" id="flightNo" name="flightNo" placeholder="e.g., GA331">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pnr">PNR/Ticket</label>
+                        <input type="text" id="pnr" name="pnr" placeholder="e.g., ABC123">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fromIata">From (IATA)</label>
+                        <select id="fromIata" name="fromIata">
+                            <option value="">Select departure city</option>
+                            <option value="CGK">CGK - Jakarta</option>
+                            <option value="SUB">SUB - Surabaya</option>
+                            <option value="DPS">DPS - Denpasar</option>
+                            <option value="MLG">MLG - Malang</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toIata">To (IATA)</label>
+                        <select id="toIata" name="toIata">
+                            <option value="">Select destination city</option>
+                            <option value="CGK">CGK - Jakarta</option>
+                            <option value="SUB">SUB - Surabaya</option>
+                            <option value="DPS">DPS - Denpasar</option>
+                            <option value="MLG">MLG - Malang</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="departureDateTime">Departure Date/Time</label>
+                        <input type="datetime-local" id="departureDateTime" name="departureDateTime">
+                    </div>
+                    <div class="form-group">
+                        <label for="flightClass">Class</label>
+                        <select id="flightClass" name="flightClass">
+                            <option value="economy">Economy</option>
+                            <option value="premium-economy">Premium Economy</option>
+                            <option value="business">Business</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fareBase">Fare (Base)</label>
+                        <input type="number" id="fareBase" name="fareBase" placeholder="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="taxesFees">Taxes & Fees</label>
+                        <input type="number" id="taxesFees" name="taxesFees" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="flightTotal">Total</label>
+                        <input type="number" id="flightTotal" name="flightTotal" placeholder="0" step="0.01" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="flightCurrency">Currency</label>
+                        <select id="flightCurrency" name="flightCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select id="paymentMethod" name="paymentMethod">
+                            <option value="personal">Personal</option>
+                            <option value="corporate-card">Corporate Card</option>
+                            <option value="company-paid">Company-paid</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="flightReceipt">Receipt</label>
+                    <div class="file-upload-area" onclick="document.getElementById('flightReceipt').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload receipt (PDF, JPG, PNG)</span>
+                        <input type="file" id="flightReceipt" name="flightReceipt" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="form-group" id="justificationGroup" style="display: none;">
+                    <label for="violationReason">Violation Reason (Required)</label>
+                    <select id="violationReason" name="violationReason" onchange="toggleCustomReason()">
+                        <option value="">Select reason for policy violation</option>
+                        <option value="client_request">Client Request</option>
+                        <option value="no_lower_fare">No Lower Fare Available</option>
+                        <option value="schedule_constraint">Schedule Constraint</option>
+                        <option value="last_minute_booking">Last Minute Booking</option>
+                        <option value="business_necessity">Business Necessity</option>
+                        <option value="other">Other (specify below)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="customReasonGroup" style="display: none;">
+                    <label for="customReason">Custom Reason</label>
+                    <input type="text" id="customReason" name="customReason" placeholder="Please specify the reason...">
+                </div>
+                
+                <div class="form-group" id="justificationNotesGroup" style="display: none;">
+                    <label for="justificationNotes">Additional Details</label>
+                    <textarea id="justificationNotes" name="justificationNotes" rows="3" placeholder="Provide additional details or context for this violation..."></textarea>
+                </div>
+                
+                <div class="form-group" id="evidenceGroup" style="display: none;">
+                    <label for="evidenceUpload">Supporting Evidence (Optional)</label>
+                    <div class="file-upload-area" onclick="document.getElementById('evidenceUpload').click()">
+                        <i class="fas fa-paperclip"></i>
+                        <span>Upload supporting documents (emails, quotes, etc.)</span>
+                        <input type="file" id="evidenceUpload" name="evidenceUpload" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;" multiple>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">Notes (Optional)</label>
+                    <textarea id="notes" name="notes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addFlightModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Flight</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Hotel Item Modal -->
+    <div class="modal" id="addHotelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bed"></i> Add Hotel</h3>
+                <button class="modal-close" onclick="closeModal('addHotelModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="hotelForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hotelBookingSource">Booking Source</label>
+                        <select id="hotelBookingSource" name="hotelBookingSource">
+                            <option value="manual">Manual Entry</option>
+                            <option value="traveloka">Traveloka</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hotelName">Hotel Name</label>
+                        <input type="text" id="hotelName" name="hotelName" placeholder="e.g., Hotel Santika Surabaya">
+                    </div>
+                    <div class="form-group">
+                        <label for="hotelCity">City</label>
+                        <select id="hotelCity" name="hotelCity">
+                            <option value="">Select city</option>
+                            <option value="jakarta">Jakarta</option>
+                            <option value="surabaya">Surabaya</option>
+                            <option value="bandung">Bandung</option>
+                            <option value="yogyakarta">Yogyakarta</option>
+                            <option value="singapore">Singapore</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkIn">Check-in Date</label>
+                        <input type="date" id="checkIn" name="checkIn" onchange="calculateNights()">
+                    </div>
+                    <div class="form-group">
+                        <label for="checkOut">Check-out Date</label>
+                        <input type="date" id="checkOut" name="checkOut" onchange="calculateNights()">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nights">Nights</label>
+                        <input type="number" id="nights" name="nights" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="nightlyRate">Nightly Rate</label>
+                        <input type="number" id="nightlyRate" name="nightlyRate" placeholder="0" step="0.01" onchange="calculateHotelTotal()">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hotelTaxesFees">Taxes & Fees</label>
+                        <input type="number" id="hotelTaxesFees" name="hotelTaxesFees" placeholder="0" step="0.01" onchange="calculateHotelTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label for="hotelTotal">Total</label>
+                        <input type="number" id="hotelTotal" name="hotelTotal" placeholder="0" step="0.01" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hotelCurrency">Currency</label>
+                        <select id="hotelCurrency" name="hotelCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="breakfastIncluded">Breakfast Included</label>
+                        <select id="breakfastIncluded" name="breakfastIncluded">
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hotelPaymentMethod">Payment Method</label>
+                        <select id="hotelPaymentMethod" name="hotelPaymentMethod">
+                            <option value="personal">Personal</option>
+                            <option value="corporate-card">Corporate Card</option>
+                            <option value="company-paid">Company-paid</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="invoiceNo">Invoice Number</label>
+                        <input type="text" id="invoiceNo" name="invoiceNo" placeholder="Invoice/booking reference">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="personalNights">Personal Nights (Non-billable)</label>
+                    <input type="number" id="personalNights" name="personalNights" placeholder="0" min="0">
+                    <small class="form-help">Number of nights for personal use (not reimbursable)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hotelReceipt">Receipt</label>
+                    <div class="file-upload-area" onclick="document.getElementById('hotelReceipt').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>Click to upload receipt (PDF, JPG, PNG)</span>
+                        <input type="file" id="hotelReceipt" name="hotelReceipt" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="form-group" id="hotelJustificationGroup" style="display: none;">
+                    <label for="hotelJustification">Justification (Required for violations)</label>
+                    <textarea id="hotelJustification" name="hotelJustification" rows="3" placeholder="Please explain the reason for policy violation..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hotelNotes">Notes (Optional)</label>
+                    <textarea id="hotelNotes" name="hotelNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addHotelModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Hotel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Train Item Modal -->
+    <div class="modal" id="addTrainModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-train"></i> Add Train</h3>
+                <button class="modal-close" onclick="closeModal('addTrainModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="trainForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trainRoute">Route</label>
+                        <input type="text" id="trainRoute" name="trainRoute" placeholder="e.g., Jakarta - Surabaya" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trainDate">Travel Date</label>
+                        <input type="date" id="trainDate" name="trainDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trainClass">Class</label>
+                        <select id="trainClass" name="trainClass" required>
+                            <option value="">Select class</option>
+                            <option value="economy">Economy</option>
+                            <option value="business">Business</option>
+                            <option value="executive">Executive</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trainAmount">Amount</label>
+                        <input type="number" id="trainAmount" name="trainAmount" placeholder="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trainCurrency">Currency</label>
+                        <select id="trainCurrency" name="trainCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="trainPaymentMethod">Payment Method</label>
+                        <select id="trainPaymentMethod" name="trainPaymentMethod">
+                            <option value="personal">Personal Card</option>
+                            <option value="corporate">Corporate Card</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="trainNotes">Notes (Optional)</label>
+                    <textarea id="trainNotes" name="trainNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addTrainModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Train</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Bus/Ferry Item Modal -->
+    <div class="modal" id="addBusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-bus"></i> Add Bus/Ferry</h3>
+                <button class="modal-close" onclick="closeModal('addBusModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="busForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="busRoute">Route</label>
+                        <input type="text" id="busRoute" name="busRoute" placeholder="e.g., Jakarta - Bandung" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="busDate">Travel Date</label>
+                        <input type="date" id="busDate" name="busDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="busType">Type</label>
+                        <select id="busType" name="busType" required>
+                            <option value="">Select type</option>
+                            <option value="bus">Bus</option>
+                            <option value="ferry">Ferry</option>
+                            <option value="shuttle">Shuttle</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="busAmount">Amount</label>
+                        <input type="number" id="busAmount" name="busAmount" placeholder="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="busCurrency">Currency</label>
+                        <select id="busCurrency" name="busCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="busPaymentMethod">Payment Method</label>
+                        <select id="busPaymentMethod" name="busPaymentMethod">
+                            <option value="personal">Personal Card</option>
+                            <option value="corporate">Corporate Card</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="busNotes">Notes (Optional)</label>
+                    <textarea id="busNotes" name="busNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addBusModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Bus/Ferry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Fuel Item Modal -->
+    <div class="modal" id="addFuelModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-gas-pump"></i> Add Fuel</h3>
+                <button class="modal-close" onclick="closeModal('addFuelModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="fuelForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fuelStation">Gas Station</label>
+                        <input type="text" id="fuelStation" name="fuelStation" placeholder="e.g., Shell, Pertamina" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fuelDate">Date</label>
+                        <input type="date" id="fuelDate" name="fuelDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fuelType">Fuel Type</label>
+                        <select id="fuelType" name="fuelType" required>
+                            <option value="">Select fuel type</option>
+                            <option value="premium">Premium</option>
+                            <option value="pertamax">Pertamax</option>
+                            <option value="diesel">Diesel</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fuelLiters">Liters</label>
+                        <input type="number" id="fuelLiters" name="fuelLiters" placeholder="0" step="0.01">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fuelAmount">Amount</label>
+                        <input type="number" id="fuelAmount" name="fuelAmount" placeholder="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fuelCurrency">Currency</label>
+                        <select id="fuelCurrency" name="fuelCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fuelPaymentMethod">Payment Method</label>
+                    <select id="fuelPaymentMethod" name="fuelPaymentMethod">
+                        <option value="personal">Personal Card</option>
+                        <option value="corporate">Corporate Card</option>
+                        <option value="cash">Cash</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fuelNotes">Notes (Optional)</label>
+                    <textarea id="fuelNotes" name="fuelNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addFuelModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Fuel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Parking/Toll Item Modal -->
+    <div class="modal" id="addParkingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-parking"></i> Add Parking/Toll</h3>
+                <button class="modal-close" onclick="closeModal('addParkingModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="parkingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parkingType">Type</label>
+                        <select id="parkingType" name="parkingType" required>
+                            <option value="">Select type</option>
+                            <option value="parking">Parking</option>
+                            <option value="toll">Toll</option>
+                            <option value="valet">Valet</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="parkingDate">Date</label>
+                        <input type="date" id="parkingDate" name="parkingDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parkingLocation">Location</label>
+                        <input type="text" id="parkingLocation" name="parkingLocation" placeholder="e.g., Mall, Airport, Toll Gate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="parkingAmount">Amount</label>
+                        <input type="number" id="parkingAmount" name="parkingAmount" placeholder="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="parkingCurrency">Currency</label>
+                        <select id="parkingCurrency" name="parkingCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="parkingPaymentMethod">Payment Method</label>
+                        <select id="parkingPaymentMethod" name="parkingPaymentMethod">
+                            <option value="personal">Personal Card</option>
+                            <option value="corporate">Corporate Card</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="parkingNotes">Notes (Optional)</label>
+                    <textarea id="parkingNotes" name="parkingNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addParkingModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Parking/Toll</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Mileage Item Modal -->
+    <div class="modal" id="addMileageModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-route"></i> Add Mileage</h3>
+                <button class="modal-close" onclick="closeModal('addMileageModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="mileageForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mileageRoute">Route</label>
+                        <input type="text" id="mileageRoute" name="mileageRoute" placeholder="e.g., Office to Client Site" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mileageDate">Date</label>
+                        <input type="date" id="mileageDate" name="mileageDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mileageDistance">Distance (KM)</label>
+                        <input type="number" id="mileageDistance" name="mileageDistance" placeholder="0" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mileageRate">Rate per KM</label>
+                        <input type="number" id="mileageRate" name="mileageRate" placeholder="2500" step="0.01" value="2500">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mileageAmount">Total Amount</label>
+                        <input type="number" id="mileageAmount" name="mileageAmount" placeholder="0" step="0.01" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="mileageCurrency">Currency</label>
+                        <select id="mileageCurrency" name="mileageCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mileagePurpose">Business Purpose</label>
+                    <input type="text" id="mileagePurpose" name="mileagePurpose" placeholder="e.g., Client meeting, site visit" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mileageNotes">Notes (Optional)</label>
+                    <textarea id="mileageNotes" name="mileageNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMileageModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Mileage</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Taxi Item Modal -->
+    <div class="modal" id="addTaxiModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-taxi"></i> Add Taxi/Ride-hailing</h3>
+                <button class="modal-close" onclick="closeModal('addTaxiModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="taxiForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taxiService">Service</label>
+                        <select id="taxiService" name="taxiService" required>
+                            <option value="">Select service</option>
+                            <option value="gojek">Gojek</option>
+                            <option value="grab">Grab</option>
+                            <option value="taxi">Regular Taxi</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="taxiDate">Date</label>
+                        <input type="date" id="taxiDate" name="taxiDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taxiFrom">From</label>
+                        <input type="text" id="taxiFrom" name="taxiFrom" placeholder="e.g., Office, Hotel" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taxiTo">To</label>
+                        <input type="text" id="taxiTo" name="taxiTo" placeholder="e.g., Airport, Client Office" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taxiAmount">Amount</label>
+                        <input type="number" id="taxiAmount" name="taxiAmount" placeholder="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taxiCurrency">Currency</label>
+                        <select id="taxiCurrency" name="taxiCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taxiPaymentMethod">Payment Method</label>
+                    <select id="taxiPaymentMethod" name="taxiPaymentMethod">
+                        <option value="personal">Personal Card</option>
+                        <option value="corporate">Corporate Card</option>
+                        <option value="cash">Cash</option>
+                        <option value="ewallet">E-Wallet</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taxiNotes">Notes (Optional)</label>
+                    <textarea id="taxiNotes" name="taxiNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addTaxiModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Taxi/Ride-hailing</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Meals Item Modal -->
+    <div class="modal" id="addMealsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-utensils"></i> Add Meals</h3>
+                <button class="modal-close" onclick="closeModal('addMealsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="mealsForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mealsType">Meal Type</label>
+                        <select id="mealsType" name="mealsType" required>
+                            <option value="">Select meal type</option>
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                            <option value="snack">Snack/Coffee</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mealsDate">Date</label>
+                        <input type="date" id="mealsDate" name="mealsDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mealsVenue">Restaurant/Venue</label>
+                        <input type="text" id="mealsVenue" name="mealsVenue" placeholder="e.g., Restaurant name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="mealsCity">City</label>
+                        <input type="text" id="mealsCity" name="mealsCity" placeholder="e.g., Jakarta" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mealsAttendees">Number of Attendees</label>
+                        <input type="number" id="mealsAttendees" name="mealsAttendees" placeholder="1" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="mealsAmount">Amount</label>
+                        <input type="number" id="mealsAmount" name="mealsAmount" placeholder="0" step="0.01" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mealsCurrency">Currency</label>
+                        <select id="mealsCurrency" name="mealsCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="mealsPaymentMethod">Payment Method</label>
+                        <select id="mealsPaymentMethod" name="mealsPaymentMethod">
+                            <option value="personal">Personal Card</option>
+                            <option value="corporate">Corporate Card</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mealsPurpose">Business Purpose</label>
+                    <input type="text" id="mealsPurpose" name="mealsPurpose" placeholder="e.g., Client meeting, team lunch">
+                </div>
+                
+                <div class="form-group">
+                    <label for="mealsNotes">Notes (Optional)</label>
+                    <textarea id="mealsNotes" name="mealsNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addMealsModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Meals</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Per-diem Item Modal -->
+    <div class="modal" id="addPerdiemModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-day"></i> Add Per-diem</h3>
+                <button class="modal-close" onclick="closeModal('addPerdiemModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="perdiemForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="perdiemStartDate">Start Date</label>
+                        <input type="date" id="perdiemStartDate" name="perdiemStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="perdiemEndDate">End Date</label>
+                        <input type="date" id="perdiemEndDate" name="perdiemEndDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="perdiemCity">City/Location</label>
+                        <input type="text" id="perdiemCity" name="perdiemCity" placeholder="e.g., Surabaya" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="perdiemDays">Number of Days</label>
+                        <input type="number" id="perdiemDays" name="perdiemDays" placeholder="1" min="1" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="perdiemRate">Daily Rate</label>
+                        <input type="number" id="perdiemRate" name="perdiemRate" placeholder="200000" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="perdiemTotal">Total Amount</label>
+                        <input type="number" id="perdiemTotal" name="perdiemTotal" placeholder="0" step="0.01" readonly>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="perdiemCurrency">Currency</label>
+                        <select id="perdiemCurrency" name="perdiemCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="perdiemCategory">Category</label>
+                        <select id="perdiemCategory" name="perdiemCategory">
+                            <option value="meals">Meals Allowance</option>
+                            <option value="accommodation">Accommodation Allowance</option>
+                            <option value="general">General Per-diem</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="perdiemPurpose">Business Purpose</label>
+                    <input type="text" id="perdiemPurpose" name="perdiemPurpose" placeholder="e.g., Business trip to branch office" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="perdiemNotes">Notes (Optional)</label>
+                    <textarea id="perdiemNotes" name="perdiemNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addPerdiemModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Per-diem</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Others Item Modal -->
+    <div class="modal" id="addOthersModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-receipt"></i> Add Others</h3>
+                <button class="modal-close" onclick="closeModal('addOthersModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form class="modal-form" id="othersForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="othersCategory">Category</label>
+                        <select id="othersCategory" name="othersCategory" required>
+                            <option value="">Select category</option>
+                            <option value="communication">Communication</option>
+                            <option value="office_supplies">Office Supplies</option>
+                            <option value="training">Training/Conference</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="miscellaneous">Miscellaneous</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="othersDate">Date</label>
+                        <input type="date" id="othersDate" name="othersDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="othersDescription">Description</label>
+                        <input type="text" id="othersDescription" name="othersDescription" placeholder="e.g., Internet charges, stationery" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="othersVendor">Vendor/Supplier</label>
+                        <input type="text" id="othersVendor" name="othersVendor" placeholder="e.g., Vendor name">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="othersAmount">Amount</label>
+                        <input type="number" id="othersAmount" name="othersAmount" placeholder="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="othersCurrency">Currency</label>
+                        <select id="othersCurrency" name="othersCurrency">
+                            <option value="IDR">IDR - Indonesian Rupiah</option>
+                            <option value="USD">USD - US Dollar</option>
+                            <option value="SGD">SGD - Singapore Dollar</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="othersPaymentMethod">Payment Method</label>
+                    <select id="othersPaymentMethod" name="othersPaymentMethod">
+                        <option value="personal">Personal Card</option>
+                        <option value="corporate">Corporate Card</option>
+                        <option value="cash">Cash</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="othersPurpose">Business Purpose</label>
+                    <input type="text" id="othersPurpose" name="othersPurpose" placeholder="e.g., Required for project work">
+                </div>
+                
+                <div class="form-group">
+                    <label for="othersNotes">Notes (Optional)</label>
+                    <textarea id="othersNotes" name="othersNotes" rows="2" placeholder="Additional notes..."></textarea>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addOthersModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Others</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add from Bookings Modal -->
+    <div class="modal" id="addFromBookingsModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3><i class="fas fa-plane"></i> Add from Travel Bookings</h3>
+                <button class="modal-close" onclick="closeModal('addFromBookingsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="booking-filters">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="bookingDateRange">Date Range</label>
+                            <select id="bookingDateRange">
+                                <option value="current">Current Report Period</option>
+                                <option value="last30">Last 30 Days</option>
+                                <option value="last90">Last 90 Days</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bookingType">Booking Type</label>
+                            <select id="bookingType">
+                                <option value="all">All Types</option>
+                                <option value="flight">Flights</option>
+                                <option value="hotel">Hotels</option>
+                                <option value="train">Trains</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="booking-list">
+                    <div class="booking-item" data-booking-id="BK001">
+                        <div class="booking-checkbox">
+                            <input type="checkbox" id="booking-BK001" value="BK001">
+                        </div>
+                        <div class="booking-info">
+                            <div class="booking-type">
+                                <i class="fas fa-plane"></i> Flight
+                            </div>
+                            <div class="booking-details">
+                                <strong>CGK → DPS</strong>
+                                <span class="booking-date">Feb 15, 2024</span>
+                                <span class="booking-airline">Garuda Indonesia</span>
+                            </div>
+                        </div>
+                        <div class="booking-amount">
+                            <span class="amount">IDR 2,450,000</span>
+                            <span class="status confirmed">Confirmed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-item" data-booking-id="BK002">
+                        <div class="booking-checkbox">
+                            <input type="checkbox" id="booking-BK002" value="BK002">
+                        </div>
+                        <div class="booking-info">
+                            <div class="booking-type">
+                                <i class="fas fa-bed"></i> Hotel
+                            </div>
+                            <div class="booking-details">
+                                <strong>Grand Hyatt Bali</strong>
+                                <span class="booking-date">Feb 15-17, 2024 (2 nights)</span>
+                                <span class="booking-location">Denpasar, Bali</span>
+                            </div>
+                        </div>
+                        <div class="booking-amount">
+                            <span class="amount">IDR 3,200,000</span>
+                            <span class="status confirmed">Confirmed</span>
+                        </div>
+                    </div>
+                    
+                    <div class="booking-item" data-booking-id="BK003">
+                        <div class="booking-checkbox">
+                            <input type="checkbox" id="booking-BK003" value="BK003">
+                        </div>
+                        <div class="booking-info">
+                            <div class="booking-type">
+                                <i class="fas fa-plane"></i> Flight
+                            </div>
+                            <div class="booking-details">
+                                <strong>DPS → CGK</strong>
+                                <span class="booking-date">Feb 18, 2024</span>
+                                <span class="booking-airline">Lion Air</span>
+                            </div>
+                        </div>
+                        <div class="booking-amount">
+                            <span class="amount">IDR 1,850,000</span>
+                            <span class="status confirmed">Confirmed</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="booking-summary">
+                    <div class="selected-count">
+                        <span id="selectedBookingsCount">0</span> bookings selected
+                    </div>
+                    <div class="selected-total">
+                        Total: <span id="selectedBookingsTotal">IDR 0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addFromBookingsModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="addSelectedBookings()" disabled id="addBookingsBtn">Add Selected Bookings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attach Advance Modal -->
+    <div class="modal" id="attachAdvanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-link"></i> Attach Cash Advance</h3>
+                <button class="modal-close" onclick="closeModal('attachAdvanceModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="advance-list">
+                    <div class="advance-item" data-advance-id="ADV001">
+                        <div class="advance-radio">
+                            <input type="radio" name="selectedAdvance" id="advance-ADV001" value="ADV001">
+                        </div>
+                        <div class="advance-info">
+                            <div class="advance-details">
+                                <strong>ADV-2024-001</strong>
+                                <span class="advance-purpose">Business Trip to Bali</span>
+                                <span class="advance-date">Approved: Feb 10, 2024</span>
+                            </div>
+                        </div>
+                        <div class="advance-amount">
+                            <span class="amount">IDR 5,000,000</span>
+                            <span class="status outstanding">Outstanding</span>
+                        </div>
+                    </div>
+                    
+                    <div class="advance-item" data-advance-id="ADV002">
+                        <div class="advance-radio">
+                            <input type="radio" name="selectedAdvance" id="advance-ADV002" value="ADV002">
+                        </div>
+                        <div class="advance-info">
+                            <div class="advance-details">
+                                <strong>ADV-2024-002</strong>
+                                <span class="advance-purpose">Conference Jakarta</span>
+                                <span class="advance-date">Approved: Feb 5, 2024</span>
+                            </div>
+                        </div>
+                        <div class="advance-amount">
+                            <span class="amount">IDR 3,500,000</span>
+                            <span class="status outstanding">Outstanding</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advance-settlement-preview" id="settlementPreview" style="display: none;">
+                    <h4>Settlement Preview</h4>
+                    <div class="settlement-row">
+                        <span>Advance Amount:</span>
+                        <span id="advanceAmount">IDR 0</span>
+                    </div>
+                    <div class="settlement-row">
+                        <span>Report Total:</span>
+                        <span id="reportTotal">IDR 7,500,000</span>
+                    </div>
+                    <div class="settlement-row total">
+                        <span>Net Reimbursable:</span>
+                        <span id="netReimbursable">IDR 0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('attachAdvanceModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="attachSelectedAdvance()" disabled id="attachAdvanceBtn">Attach Advance</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add from Receipt Modal -->
+    <div class="modal" id="addFromReceiptModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-camera"></i> Add from Receipt</h3>
+                <button class="modal-close" onclick="closeModal('addFromReceiptModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="receipt-upload-options">
+                    <div class="upload-option">
+                        <div class="upload-area" onclick="document.getElementById('receiptFile').click()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h4>Upload Receipt</h4>
+                            <p>Select image or PDF file</p>
+                            <input type="file" id="receiptFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                        </div>
+                    </div>
+                    <div class="upload-option">
+                        <div class="upload-area" onclick="startCameraCapture()">
+                            <i class="fas fa-camera"></i>
+                            <h4>Take Photo</h4>
+                            <p>Use camera to capture receipt</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="receipt-preview" id="receiptPreview" style="display: none;">
+                    <h4>Receipt Preview</h4>
+                    <div class="preview-image">
+                        <img id="previewImg" src="" alt="Receipt preview">
+                    </div>
+                    <div class="extracted-data">
+                        <h5>Extracted Information</h5>
+                        <div class="form-group">
+                            <label>Merchant</label>
+                            <input type="text" id="extractedMerchant" placeholder="Auto-detected merchant name">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="extractedAmount" placeholder="Auto-detected amount" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="extractedDate">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="extractedCategory">
+                                <option value="">Select category</option>
+                                <option value="meals">Meals</option>
+                                <option value="fuel">Fuel</option>
+                                <option value="parking">Parking/Toll</option>
+                                <option value="taxi">Taxi/Ride-hailing</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addFromReceiptModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="processReceipt()" id="processReceiptBtn" style="display: none;">Add Expense</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Policy Details Modal -->
+    <div class="modal" id="policyDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-shield-alt"></i> Policy Details</h3>
+                <button class="modal-close" onclick="closeModal('policyDetailsModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="policy-details-content" id="policyDetailsContent">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('policyDetailsModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function showAddItemModal(type) {
+            closeAllModals();
+            if (type === 'flight') {
+                document.getElementById('addFlightModal').style.display = 'flex';
+            } else if (type === 'hotel') {
+                document.getElementById('addHotelModal').style.display = 'flex';
+            }
+        }
+        
+        function showAddFromBookingsModal() {
+            closeAllModals();
+            document.getElementById('addFromBookingsModal').style.display = 'flex';
+        }
+        
+        function showAttachAdvanceModal() {
+            closeAllModals();
+            document.getElementById('attachAdvanceModal').style.display = 'flex';
+        }
+        
+        function showAddFromReceiptModal() {
+            closeAllModals();
+            document.getElementById('addFromReceiptModal').style.display = 'flex';
+        }
+        
+        function showPolicyDetails(type) {
+            closeAllModals();
+            
+            // Mock policy data - in real app this would come from backend
+            const policyData = {
+                ok: {
+                    title: 'Policy Compliant Items',
+                    items: [
+                        { type: 'Flight', description: 'CGK-SUB Economy Class', amount: 'IDR 1,200,000', status: 'Within policy limits' },
+                        { type: 'Hotel', description: 'Surabaya 2 nights', amount: 'IDR 800,000', status: 'Standard rate approved' },
+                        { type: 'Meals', description: 'Business dinner', amount: 'IDR 350,000', status: 'Within per-diem limit' }
+                    ]
+                },
+                warning: {
+                    title: 'Policy Warnings',
+                    items: [
+                        { 
+                            type: 'Flight', 
+                            description: 'CGK-DPS Business Class', 
+                            amount: 'IDR 4,500,000', 
+                            status: 'High fare amount',
+                            details: 'Fare exceeds recommended limit but within maximum threshold'
+                        }
+                    ]
+                },
+                violation: {
+                    title: 'Policy Violations',
+                    items: [
+                        { 
+                            type: 'Hotel', 
+                            description: 'Jakarta Luxury Suite', 
+                            amount: 'IDR 2,800,000', 
+                            status: 'Exceeds accommodation limit',
+                            details: 'Rate exceeds maximum allowed IDR 2,000,000 per night',
+                            justification: {
+                                reason: 'Client Request',
+                                notes: 'Client specifically requested this hotel for important meeting',
+                                timestamp: '2024-02-18 14:30'
+                            }
+                        }
+                    ]
+                }
+            };
+            
+            const data = policyData[type];
+            const content = document.getElementById('policyDetailsContent');
+            
+            let html = `<h4>${data.title}</h4>`;
+            
+            data.items.forEach(item => {
+                html += `
+                    <div class="policy-item ${type}">
+                        <div class="policy-item-header">
+                            <div class="item-info">
+                                <strong>${item.type}</strong> - ${item.description}
+                                <span class="item-amount">${item.amount}</span>
+                            </div>
+                            <div class="policy-status ${type}">
+                                <i class="fas ${type === 'ok' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-times-circle'}"></i>
+                                ${item.status}
+                            </div>
+                        </div>
+                        ${item.details ? `<div class="policy-details">${item.details}</div>` : ''}
+                        ${item.justification ? `
+                            <div class="justification-info">
+                                <strong>Justification:</strong> ${item.justification.reason}<br>
+                                <em>${item.justification.notes}</em><br>
+                                <small>Submitted: ${item.justification.timestamp}</small>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = html;
+            document.getElementById('policyDetailsModal').style.display = 'flex';
+        }
+        
+        // Receipt processing functions
+        function startCameraCapture() {
+            // Mock camera capture - in real app would use camera API
+            alert('Camera capture would be implemented here using device camera API');
+        }
+        
+        function processReceipt() {
+            const merchant = document.getElementById('extractedMerchant').value;
+            const amount = parseFloat(document.getElementById('extractedAmount').value);
+            const date = document.getElementById('extractedDate').value;
+            const category = document.getElementById('extractedCategory').value;
+            
+            if (!merchant || !amount || !date || !category) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Category icon mapping
+            const categoryConfig = {
+                meals: { icon: 'fa-utensils', title: 'MEALS' },
+                fuel: { icon: 'fa-gas-pump', title: 'FUEL' },
+                parking: { icon: 'fa-parking', title: 'PARKING' },
+                taxi: { icon: 'fa-taxi', title: 'TAXI' },
+                others: { icon: 'fa-receipt', title: 'OTHERS' }
+            };
+            
+            const config = categoryConfig[category] || { icon: 'fa-receipt', title: 'EXPENSE' };
+            
+            // Create expense item
+            const expenseItem = document.createElement('div');
+            expenseItem.className = 'expense-item-card';
+            expenseItem.innerHTML = `
+                <div class="item-header">
+                    <div class="item-type">
+                        <i class="fas ${config.icon} item-icon"></i>
+                        <span class="item-type-label">${config.title}</span>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-icon" onclick="editItem(this)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon" onclick="deleteItem(this)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <div class="item-main-info">
+                        <h4>${merchant} · ${new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</h4>
+                        <div class="item-amount">IDR ${amount.toLocaleString()}</div>
+                    </div>
+                    <div class="item-details">
+                        <span class="detail-tag">From Receipt</span>
+                        <span class="detail-tag receipt-attached">
+                            <i class="fas fa-paperclip"></i> Receipt attached
+                        </span>
+                    </div>
+                    <div class="item-footer">
+                        <div class="policy-status ok">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Policy OK</span>
+                        </div>
+                        <div class="item-meta">
+                            <span class="receipt-status">Receipt Attached</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add to expense items list
+            const expenseItemsSection = document.querySelector('.expense-items');
+            expenseItemsSection.appendChild(expenseItem);
+            
+            // Update totals
+            updateExpenseTotals();
+            
+            // Close modal and reset
+            closeModal('addFromReceiptModal');
+            
+            // Reset form
+            document.getElementById('receiptPreview').style.display = 'none';
+            document.getElementById('processReceiptBtn').style.display = 'none';
+            document.getElementById('extractedMerchant').value = '';
+            document.getElementById('extractedAmount').value = '';
+            document.getElementById('extractedDate').value = '';
+            document.getElementById('extractedCategory').value = '';
+            
+            // Show success notification
+            showNotification(`${config.title} item added from receipt successfully!`, 'success');
+        }
+        
+        // File upload handler for receipts
+        document.getElementById('receiptFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('receiptPreview').style.display = 'block';
+                    document.getElementById('processReceiptBtn').style.display = 'block';
+                    
+                    // Mock OCR extraction - in real app would call OCR service
+                    setTimeout(() => {
+                        document.getElementById('extractedMerchant').value = 'Restaurant ABC';
+                        document.getElementById('extractedAmount').value = '125000';
+                        document.getElementById('extractedDate').value = '2024-02-18';
+                        document.getElementById('extractedCategory').value = 'meals';
+                    }, 1000);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Add from Bookings E2E functionality
+        function addSelectedBookings() {
+            const selectedCheckboxes = document.querySelectorAll('#addFromBookingsModal input[type="checkbox"]:checked');
+            const expenseItemsList = document.getElementById('expenseItems');
+            
+            selectedCheckboxes.forEach(checkbox => {
+                const bookingId = checkbox.value;
+                const bookingItem = document.querySelector(`[data-booking-id="${bookingId}"]`);
+                
+                // Extract booking data
+                const bookingType = bookingItem.querySelector('.booking-type').textContent.trim();
+                const bookingDetails = bookingItem.querySelector('.booking-details strong').textContent;
+                const bookingDate = bookingItem.querySelector('.booking-date').textContent;
+                const bookingAmount = bookingItem.querySelector('.amount').textContent;
+                
+                // Create expense item
+                const expenseItem = document.createElement('div');
+                expenseItem.className = 'expense-item';
+                expenseItem.innerHTML = `
+                    <div class="item-header">
+                        <div class="item-type">
+                            <i class="fas ${bookingType.includes('Flight') ? 'fa-plane' : bookingType.includes('Hotel') ? 'fa-bed' : 'fa-train'}"></i>
+                            <span>${bookingType}</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-icon" onclick="editExpenseItem(this)" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon" onclick="deleteExpenseItem(this)" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="item-details">
+                        <div class="item-info">
+                            <strong>${bookingDetails}</strong>
+                            <div class="item-meta">
+                                <span class="item-date">${bookingDate}</span>
+                                <span class="item-source">Source: Booking ${bookingId}</span>
+                            </div>
+                        </div>
+                        <div class="item-amount">
+                            <span class="amount">${bookingAmount}</span>
+                            <div class="policy-status ok">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Policy OK</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                expenseItemsList.appendChild(expenseItem);
+            });
+            
+            // Update totals
+            updateExpenseTotals();
+            
+            // Close modal and reset
+            closeModal('addFromBookingsModal');
+            resetBookingSelection();
+            
+            // Show success message
+            alert(`${selectedCheckboxes.length} booking(s) added to expense report`);
+        }
+        
+        function resetBookingSelection() {
+            const checkboxes = document.querySelectorAll('#addFromBookingsModal input[type="checkbox"]');
+            checkboxes.forEach(cb => cb.checked = false);
+            updateBookingSelection();
+        }
+        
+        function updateBookingSelection() {
+            const selectedCheckboxes = document.querySelectorAll('#addFromBookingsModal input[type="checkbox"]:checked');
+            const countElement = document.getElementById('selectedBookingsCount');
+            const totalElement = document.getElementById('selectedBookingsTotal');
+            const addButton = document.getElementById('addBookingsBtn');
+            
+            let total = 0;
+            selectedCheckboxes.forEach(checkbox => {
+                const bookingItem = document.querySelector(`[data-booking-id="${checkbox.value}"]`);
+                const amountText = bookingItem.querySelector('.amount').textContent;
+                const amount = parseInt(amountText.replace(/[^0-9]/g, ''));
+                total += amount;
+            });
+            
+            countElement.textContent = selectedCheckboxes.length;
+            totalElement.textContent = `IDR ${total.toLocaleString()}`;
+            addButton.disabled = selectedCheckboxes.length === 0;
+        }
+        
+        // Add event listeners for booking checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingCheckboxes = document.querySelectorAll('#addFromBookingsModal input[type="checkbox"]');
+            bookingCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateBookingSelection);
+            });
+        });
+        
+        function updateExpenseTotals() {
+            // Get all expense items (both .expense-item and .expense-item-card)
+            const expenseItems = document.querySelectorAll('.expense-item, .expense-item-card');
+            let personalTotal = 0;
+            let corporateTotal = 0;
+            let companyPaidTotal = 0;
+            let grandTotal = 0;
+            
+            expenseItems.forEach(item => {
+                // Try different selectors for amount
+                const amountElement = item.querySelector('.amount') || item.querySelector('.item-amount');
+                if (amountElement) {
+                    const amountText = amountElement.textContent;
+                    const amount = parseInt(amountText.replace(/[^0-9]/g, ''));
+                    if (!isNaN(amount)) {
+                        grandTotal += amount;
+                        
+                        // For now, assume all are personal (in real app, would check payment method)
+                        personalTotal += amount;
+                    }
+                }
+            });
+            
+            // Update sidebar totals
+            const personalElement = document.querySelector('.total-item:nth-child(1) .total-amount');
+            const corporateElement = document.querySelector('.total-item:nth-child(2) .total-amount');
+            const companyPaidElement = document.querySelector('.total-item:nth-child(3) .total-amount');
+            const grandTotalElement = document.querySelector('.grand-total .total-amount');
+            
+            if (personalElement) personalElement.textContent = `IDR ${personalTotal.toLocaleString()}`;
+            if (corporateElement) corporateElement.textContent = `IDR ${corporateTotal.toLocaleString()}`;
+            if (companyPaidElement) companyPaidElement.textContent = `IDR ${companyPaidTotal.toLocaleString()}`;
+            if (grandTotalElement) grandTotalElement.textContent = `IDR ${grandTotal.toLocaleString()}`;
+            
+            // Update settlement calculation if advance is attached
+            const advanceAmountElement = document.querySelector('.advance-settlement .advance-amount');
+            if (advanceAmountElement) {
+                const advanceAmount = parseInt(advanceAmountElement.textContent.replace(/[^0-9]/g, '')) || 0;
+                updateSettlementCalculation(grandTotal, advanceAmount);
+            }
+            
+            // Update submission checklist
+            updateSubmissionChecklist();
+        }
+        
+        function editExpenseItem(button) {
+            // Mock edit functionality
+            alert('Edit expense item functionality would be implemented here');
+        }
+        
+        function deleteExpenseItem(button) {
+            if (confirm('Are you sure you want to delete this expense item?')) {
+                const expenseItem = button.closest('.expense-item');
+                expenseItem.remove();
+                updateExpenseTotals();
+            }
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        function closeAllModals() {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => modal.style.display = 'none');
+        }
+        
+        // Add Item Dropdown functionality
+        function toggleAddItemDropdown() {
+            const dropdown = document.getElementById('addItemDropdown');
+            const isVisible = dropdown.style.display === 'block';
+            
+            // Close all other dropdowns first
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+            
+            // Toggle current dropdown
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.style.display = 'none';
+                });
+            }
+        });
+        
+        // Enhanced showAddItemModal function
+        function showAddItemModal(type) {
+            closeAllModals();
+            
+            // Close dropdown
+            document.getElementById('addItemDropdown').style.display = 'none';
+            
+            switch(type) {
+                case 'flight':
+                    document.getElementById('addFlightModal').style.display = 'flex';
+                    break;
+                case 'hotel':
+                    document.getElementById('addHotelModal').style.display = 'flex';
+                    break;
+                case 'train':
+                    document.getElementById('addTrainModal').style.display = 'flex';
+                    break;
+                case 'bus':
+                    document.getElementById('addBusModal').style.display = 'flex';
+                    break;
+                case 'fuel':
+                    document.getElementById('addFuelModal').style.display = 'flex';
+                    break;
+                case 'parking':
+                    document.getElementById('addParkingModal').style.display = 'flex';
+                    break;
+                case 'mileage':
+                    document.getElementById('addMileageModal').style.display = 'flex';
+                    break;
+                case 'taxi':
+                    document.getElementById('addTaxiModal').style.display = 'flex';
+                    break;
+                case 'meals':
+                    document.getElementById('addMealsModal').style.display = 'flex';
+                    break;
+                case 'perdiem':
+                    document.getElementById('addPerdiemModal').style.display = 'flex';
+                    break;
+                case 'others':
+                    document.getElementById('addOthersModal').style.display = 'flex';
+                    break;
+                default:
+                    alert(`Add ${type} functionality will be implemented soon`);
+            }
+        }
+        
+        function showGenericExpenseModal(type) {
+            // Create a generic modal for other expense types
+            const typeConfig = {
+                train: { icon: 'fa-train', title: 'Train' },
+                bus: { icon: 'fa-bus', title: 'Bus/Ferry' },
+                fuel: { icon: 'fa-gas-pump', title: 'Fuel' },
+                parking: { icon: 'fa-parking', title: 'Parking/Toll' },
+                mileage: { icon: 'fa-route', title: 'Mileage' },
+                taxi: { icon: 'fa-taxi', title: 'Taxi/Ride-hailing' },
+                meals: { icon: 'fa-utensils', title: 'Meals' },
+                perdiem: { icon: 'fa-calendar-day', title: 'Per-diem' },
+                others: { icon: 'fa-receipt', title: 'Others' }
+            };
+            
+            const config = typeConfig[type] || { icon: 'fa-receipt', title: 'Expense' };
+            
+            // Create modal HTML dynamically
+            const modalHTML = `
+                <div class="modal" id="add${type.charAt(0).toUpperCase() + type.slice(1)}Modal" style="display: flex;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3><i class="fas ${config.icon}"></i> Add ${config.title}</h3>
+                            <button class="modal-close" onclick="closeModal('add${type.charAt(0).toUpperCase() + type.slice(1)}Modal')">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="${type}Form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="${type}Date">Date</label>
+                                        <input type="date" id="${type}Date" name="date" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="${type}Amount">Amount</label>
+                                        <input type="number" id="${type}Amount" name="amount" placeholder="0" step="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="${type}Description">Description</label>
+                                    <input type="text" id="${type}Description" name="description" placeholder="Enter description" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="${type}Notes">Notes (Optional)</label>
+                                    <textarea id="${type}Notes" name="notes" rows="2" placeholder="Additional notes..."></textarea>
+                                </div>
+                                <div class="modal-actions">
+                                    <button type="button" class="btn btn-secondary" onclick="closeModal('add${type.charAt(0).toUpperCase() + type.slice(1)}Modal')">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Add ${config.title}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById(`add${type.charAt(0).toUpperCase() + type.slice(1)}Modal`);
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            
+            // Add form submit handler
+            document.getElementById(`${type}Form`).addEventListener('submit', function(e) {
+                e.preventDefault();
+                addGenericExpenseItem(type, this);
+            });
+        }
+        
+        function addGenericExpenseItem(type, form) {
+            const formData = new FormData(form);
+            const typeConfig = {
+                train: { icon: 'fa-train', title: 'TRAIN' },
+                bus: { icon: 'fa-bus', title: 'BUS/FERRY' },
+                fuel: { icon: 'fa-gas-pump', title: 'FUEL' },
+                parking: { icon: 'fa-parking', title: 'PARKING/TOLL' },
+                mileage: { icon: 'fa-route', title: 'MILEAGE' },
+                taxi: { icon: 'fa-taxi', title: 'TAXI' },
+                meals: { icon: 'fa-utensils', title: 'MEALS' },
+                perdiem: { icon: 'fa-calendar-day', title: 'PER-DIEM' },
+                others: { icon: 'fa-receipt', title: 'OTHERS' }
+            };
+            
+            const config = typeConfig[type] || { icon: 'fa-receipt', title: 'EXPENSE' };
+            const amount = parseFloat(formData.get('amount'));
+            const description = formData.get('description');
+            const date = formData.get('date');
+            const notes = formData.get('notes');
+            
+            // Create expense item
+            const expenseItem = document.createElement('div');
+            expenseItem.className = 'expense-item-card';
+            expenseItem.innerHTML = `
+                <div class="item-header">
+                    <div class="item-type">
+                        <i class="fas ${config.icon} item-icon"></i>
+                        <span class="item-type-label">${config.title}</span>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-icon" onclick="editItem(this)" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon" onclick="deleteItem(this)" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="item-content">
+                    <div class="item-main-info">
+                        <h4>${description} · ${new Date(date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</h4>
+                        <div class="item-amount">IDR ${amount.toLocaleString()}</div>
+                    </div>
+                    ${notes ? `<div class="item-notes">${notes}</div>` : ''}
+                    <div class="item-footer">
+                        <div class="policy-status ok">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Policy OK</span>
+                        </div>
+                        <div class="item-meta">
+                            <span class="receipt-status">No Receipt</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add to expense items list
+            const expenseItemsSection = document.querySelector('.expense-items');
+            expenseItemsSection.appendChild(expenseItem);
+            
+            // Update totals
+            updateExpenseTotals();
+            
+            // Close modal and show success
+            closeModal(`add${type.charAt(0).toUpperCase() + type.slice(1)}Modal`);
+            alert(`${config.title} item added successfully!`);
+        }
+        
+        // Attach Advance E2E functionality
+        function attachSelectedAdvance() {
+            const selectedRadio = document.querySelector('#attachAdvanceModal input[type="radio"]:checked');
+            if (!selectedRadio) {
+                alert('Please select a cash advance to attach');
+                return;
+            }
+            
+            const advanceId = selectedRadio.value;
+            const advanceItem = document.querySelector(`[data-advance-id="${advanceId}"]`);
+            const advanceNumber = advanceItem.querySelector('.advance-details strong').textContent;
+            const advancePurpose = advanceItem.querySelector('.advance-purpose').textContent;
+            const advanceAmount = advanceItem.querySelector('.amount').textContent;
+            
+            // Update advance display in report header
+            const advanceSection = document.querySelector('.advance-info') || createAdvanceSection();
+            advanceSection.innerHTML = `
+                <div class="advance-attached">
+                    <div class="advance-header">
+                        <i class="fas fa-link"></i>
+                        <span>Attached Cash Advance</span>
+                        <button class="btn-icon" onclick="detachAdvance()" title="Detach Advance">
+                            <i class="fas fa-unlink"></i>
+                        </button>
+                    </div>
+                    <div class="advance-details">
+                        <strong>${advanceNumber}</strong>
+                        <span>${advancePurpose}</span>
+                        <div class="advance-amount">${advanceAmount}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Update settlement calculation
+            updateSettlementCalculation(advanceAmount);
+            
+            // Close modal
+            closeModal('attachAdvanceModal');
+            
+            // Show success message
+            alert(`Cash advance ${advanceNumber} attached successfully`);
+        }
+        
+        function createAdvanceSection() {
+            const advanceSection = document.createElement('div');
+            advanceSection.className = 'advance-info';
+            
+            // Insert after report header
+            const reportHeader = document.querySelector('.report-header');
+            reportHeader.parentNode.insertBefore(advanceSection, reportHeader.nextSibling);
+            
+            return advanceSection;
+        }
+        
+        function detachAdvance() {
+            if (confirm('Are you sure you want to detach the cash advance?')) {
+                const advanceSection = document.querySelector('.advance-info');
+                if (advanceSection) {
+                    advanceSection.remove();
+                }
+                
+                // Reset settlement calculation
+                updateSettlementCalculation('IDR 0');
+                
+                alert('Cash advance detached successfully');
+            }
+        }
+        
+        function updateSettlementCalculation(reportTotal, advanceAmount) {
+            const reportTotalElement = document.querySelector('.advance-settlement .advance-item:nth-child(2) .advance-amount');
+            const netReimbursableElement = document.querySelector('.settlement-total .advance-amount');
+            const settlementStatus = document.querySelector('.settlement-status');
+            
+            if (reportTotalElement && netReimbursableElement) {
+                // Update report total in settlement section
+                reportTotalElement.textContent = `IDR ${reportTotal.toLocaleString()}`;
+                
+                // Calculate net reimbursable
+                const netReimbursable = reportTotal - advanceAmount;
+                
+                netReimbursableElement.textContent = `IDR ${Math.abs(netReimbursable).toLocaleString()}`;
+                
+                // Update settlement status and styling
+                if (settlementStatus) {
+                    if (netReimbursable > 0) {
+                        settlementStatus.textContent = 'Reimbursement Due';
+                        settlementStatus.className = 'settlement-status positive';
+                        netReimbursableElement.parentElement.querySelector('.advance-label').textContent = 'Net Reimbursable:';
+                    } else if (netReimbursable < 0) {
+                        settlementStatus.textContent = 'Refund to Company';
+                        settlementStatus.className = 'settlement-status negative';
+                        netReimbursableElement.parentElement.querySelector('.advance-label').textContent = 'Refund Due:';
+                    } else {
+                        settlementStatus.textContent = 'Fully Settled';
+                        settlementStatus.className = 'settlement-status neutral';
+                        netReimbursableElement.parentElement.querySelector('.advance-label').textContent = 'Net Amount:';
+                    }
+                }
+            }
+        }
+        
+        // Add event listeners for advance radio buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const advanceRadios = document.querySelectorAll('#attachAdvanceModal input[type="radio"]');
+            const attachButton = document.getElementById('attachAdvanceBtn');
+            
+            advanceRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    attachButton.disabled = false;
+                });
+            });
+        });
+        
+        // Submit for Approval functionality
+        function submitForApproval() {
+            const expenseItems = document.querySelectorAll('.expense-item-card');
+            if (expenseItems.length === 0) {
+                alert('Please add at least one expense item before submitting');
+                return;
+            }
+            
+            if (confirm('Are you sure you want to submit this expense report for approval?')) {
+                // Mock submission
+                alert('Expense report submitted for approval successfully!');
+                
+                // In real app, would redirect to submitted reports page
+                // window.location.href = 'expenses.html';
+            }
+        }
+        
+        // Export to PDF functionality
+        function exportToPDF() {
+            alert('PDF export functionality will be implemented soon');
+        }
+        
+        // Receipt Upload functionality
+        function uploadReceipt(expenseItemElement) {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*,.pdf';
+            fileInput.multiple = true;
+            
+            fileInput.onchange = function(event) {
+                const files = event.target.files;
+                if (files.length > 0) {
+                    handleReceiptUpload(files, expenseItemElement);
+                }
+            };
+            
+            fileInput.click();
+        }
+        
+        function handleReceiptUpload(files, expenseItemElement) {
+            const receiptStatus = expenseItemElement.querySelector('.receipt-status');
+            const receipts = [];
+            
+            for (let file of files) {
+                receipts.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    url: URL.createObjectURL(file)
+                });
+            }
+            
+            // Update receipt status
+            receiptStatus.textContent = `${receipts.length} Receipt${receipts.length > 1 ? 's' : ''}`;
+            receiptStatus.className = 'receipt-status has-receipt';
+            
+            // Add receipt icon
+            const receiptIcon = document.createElement('i');
+            receiptIcon.className = 'fas fa-paperclip';
+            receiptIcon.style.marginLeft = '5px';
+            receiptStatus.appendChild(receiptIcon);
+            
+            // Store receipts data (in real app, would upload to server)
+            expenseItemElement.dataset.receipts = JSON.stringify(receipts);
+            
+            alert(`${receipts.length} receipt(s) uploaded successfully`);
+        }
+        
+        function captureReceipt(expenseItemElement) {
+            // Check if device supports camera
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                alert('Camera not supported on this device');
+                return;
+            }
+            
+            // In a real app, would open camera interface
+            alert('Camera capture functionality will open camera interface');
+        }
+        
+        // Add receipt upload buttons to existing expense items
+        function addReceiptButtons() {
+            const expenseItems = document.querySelectorAll('.expense-item-card');
+            expenseItems.forEach(item => {
+                const itemActions = item.querySelector('.item-actions');
+                if (itemActions && !itemActions.querySelector('.receipt-btn')) {
+                    const receiptBtn = document.createElement('button');
+                    receiptBtn.className = 'btn-icon receipt-btn';
+                    receiptBtn.title = 'Upload Receipt';
+                    receiptBtn.innerHTML = '<i class="fas fa-camera"></i>';
+                    receiptBtn.onclick = () => uploadReceipt(item);
+                    
+                    itemActions.insertBefore(receiptBtn, itemActions.firstChild);
+                }
+            });
+        }
+        
+        // Policy Validation functionality
+        function validateExpensePolicy(expenseItem) {
+            const amount = parseFloat(expenseItem.querySelector('.item-amount').textContent.replace(/[^0-9.]/g, ''));
+            const type = expenseItem.querySelector('.item-type-label').textContent;
+            const policyStatus = expenseItem.querySelector('.policy-status');
+            
+            // Mock policy rules
+            const policyRules = {
+                'MEALS': { maxAmount: 500000, requiresReceipt: true },
+                'TAXI': { maxAmount: 200000, requiresReceipt: false },
+                'HOTEL': { maxAmount: 2000000, requiresReceipt: true },
+                'FLIGHT': { maxAmount: 5000000, requiresReceipt: true },
+                'FUEL': { maxAmount: 300000, requiresReceipt: true }
+            };
+            
+            const rule = policyRules[type] || { maxAmount: 1000000, requiresReceipt: true };
+            const hasReceipt = expenseItem.dataset.receipts && JSON.parse(expenseItem.dataset.receipts).length > 0;
+            
+            let isValid = true;
+            let message = 'Policy OK';
+            let iconClass = 'fa-check-circle';
+            let statusClass = 'ok';
+            
+            if (amount > rule.maxAmount) {
+                isValid = false;
+                message = `Exceeds limit (IDR ${rule.maxAmount.toLocaleString()})`;
+                iconClass = 'fa-exclamation-triangle';
+                statusClass = 'warning';
+            } else if (rule.requiresReceipt && !hasReceipt) {
+                isValid = false;
+                message = 'Receipt required';
+                iconClass = 'fa-exclamation-triangle';
+                statusClass = 'warning';
+            }
+            
+            policyStatus.className = `policy-status ${statusClass}`;
+            policyStatus.innerHTML = `<i class="fas ${iconClass}"></i><span>${message}</span>`;
+            
+            return isValid;
+        }
+        
+        // Auto-save functionality
+        let autoSaveTimer;
+        function triggerAutoSave() {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                autoSaveExpenseReport();
+            }, 2000); // Auto-save after 2 seconds of inactivity
+        }
+        
+        function autoSaveExpenseReport() {
+            const reportData = {
+                reportNumber: document.querySelector('.report-number').textContent,
+                purpose: document.querySelector('.report-purpose').textContent,
+                items: [],
+                timestamp: new Date().toISOString()
+            };
+            
+            // Collect expense items
+            const expenseItems = document.querySelectorAll('.expense-item-card');
+            expenseItems.forEach(item => {
+                const itemData = {
+                    type: item.querySelector('.item-type-label').textContent,
+                    description: item.querySelector('.item-main-info h4').textContent,
+                    amount: item.querySelector('.item-amount').textContent,
+                    receipts: item.dataset.receipts || '[]'
+                };
+                reportData.items.push(itemData);
+            });
+            
+            // Save to localStorage (in real app, would save to server)
+            localStorage.setItem('expense_report_draft', JSON.stringify(reportData));
+            
+            // Show auto-save indicator
+            showAutoSaveIndicator();
+        }
+        
+        function showAutoSaveIndicator() {
+            const indicator = document.getElementById('autoSaveIndicator') || createAutoSaveIndicator();
+            indicator.style.display = 'block';
+            indicator.textContent = 'Draft saved';
+            
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 2000);
+        }
+        
+        function createAutoSaveIndicator() {
+            const indicator = document.createElement('div');
+            indicator.id = 'autoSaveIndicator';
+            indicator.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 4px;
+                font-size: 14px;
+                z-index: 1000;
+                display: none;
+            `;
+            document.body.appendChild(indicator);
+            return indicator;
+        }
+        
+        // Initialize auto-save listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add event listeners for form changes
+            document.addEventListener('input', triggerAutoSave);
+            document.addEventListener('change', triggerAutoSave);
+            
+            // Add receipt buttons to existing items
+            addReceiptButtons();
+            
+            // Initialize submission checklist
+            updateSubmissionChecklist();
+        });
+        
+        // Flight form calculations and real-time policy validation
+        document.getElementById('fareBase').addEventListener('input', function() {
+            calculateFlightTotal();
+            checkPolicyInRealTime();
+        });
+        document.getElementById('taxesFees').addEventListener('input', function() {
+            calculateFlightTotal();
+            checkPolicyInRealTime();
+        });
+        document.getElementById('flightClass').addEventListener('change', checkPolicyInRealTime);
+        
+        function checkPolicyInRealTime() {
+            const fareBase = parseFloat(document.getElementById('fareBase').value) || 0;
+            const taxesFees = parseFloat(document.getElementById('taxesFees').value) || 0;
+            const flightClass = document.getElementById('flightClass').value;
+            
+            if (fareBase > 0 || taxesFees > 0) {
+                const mockFormData = new FormData();
+                mockFormData.set('fareBase', fareBase);
+                mockFormData.set('taxesFees', taxesFees);
+                mockFormData.set('flightClass', flightClass);
+                
+                const policyCheck = checkPolicyViolation(mockFormData);
+                const hasViolations = policyCheck.violations.length > 0;
+                
+                showJustificationFields(hasViolations);
+                
+                // Show policy indicators
+                updatePolicyIndicators(policyCheck);
+            }
+        }
+        
+        function updatePolicyIndicators(policyCheck) {
+            // Remove existing policy indicators
+            const existingIndicators = document.querySelectorAll('.policy-indicator');
+            existingIndicators.forEach(indicator => indicator.remove());
+            
+            const totalField = document.getElementById('flightTotal');
+            
+            if (policyCheck.violations.length > 0) {
+                const indicator = document.createElement('div');
+                indicator.className = 'policy-indicator violation';
+                indicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Policy Violation';
+                totalField.parentNode.appendChild(indicator);
+            } else if (policyCheck.warnings.length > 0) {
+                const indicator = document.createElement('div');
+                indicator.className = 'policy-indicator warning';
+                indicator.innerHTML = '<i class="fas fa-exclamation-circle"></i> Policy Warning';
+                totalField.parentNode.appendChild(indicator);
+            }
+        }
+        
+        function calculateFlightTotal() {
+            const fareBase = parseFloat(document.getElementById('fareBase').value) || 0;
+            const taxesFees = parseFloat(document.getElementById('taxesFees').value) || 0;
+            const total = fareBase + taxesFees;
+            document.getElementById('flightTotal').value = total.toFixed(2);
+        }
+        
+        // Hotel form calculations
+        function calculateNights() {
+            const checkIn = new Date(document.getElementById('checkIn').value);
+            const checkOut = new Date(document.getElementById('checkOut').value);
+            
+            if (checkIn && checkOut && checkOut > checkIn) {
+                const timeDiff = checkOut.getTime() - checkIn.getTime();
+                const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                document.getElementById('nights').value = nights;
+                calculateHotelTotal();
+            }
+        }
+        
+        function calculateHotelTotal() {
+            const nights = parseInt(document.getElementById('nights').value) || 0;
+            const nightlyRate = parseFloat(document.getElementById('nightlyRate').value) || 0;
+            const taxesFees = parseFloat(document.getElementById('hotelTaxesFees').value) || 0;
+            const total = (nights * nightlyRate) + taxesFees;
+            document.getElementById('hotelTotal').value = total.toFixed(2);
+        }
+        
+        // Dropdown toggle
+        function toggleAddItemDropdown() {
+            const dropdown = document.getElementById('addItemDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.getElementById('addItemDropdown').style.display = 'none';
+            }
+        });
+        
+        // Form submissions
+        document.getElementById('flightForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Check for policy violations
+            const policyCheck = checkPolicyViolation(formData);
+            const hasViolations = policyCheck.violations.length > 0;
+            
+            // If there are violations, validate justification
+            if (hasViolations) {
+                const justificationCheck = validateJustification();
+                if (!justificationCheck.valid) {
+                    alert(justificationCheck.message);
+                    return;
+                }
+            }
+            
+            // Create expense item with policy status
+            const expenseItem = {
+                type: 'flight',
+                data: Object.fromEntries(formData),
+                policyStatus: hasViolations ? 'violation' : (policyCheck.warnings.length > 0 ? 'warning' : 'ok'),
+                violations: policyCheck.violations,
+                warnings: policyCheck.warnings,
+                justification: hasViolations ? {
+                    reason: formData.get('violationReason'),
+                    customReason: formData.get('customReason'),
+                    notes: formData.get('justificationNotes'),
+                    timestamp: new Date().toISOString()
+                } : null
+            };
+            
+            console.log('Adding flight item:', expenseItem);
+            
+            // In real app, this would save to backend
+            alert('Flight item added successfully!');
+            closeModal('addFlightModal');
+            
+            // Reset form and justification fields
+            e.target.reset();
+            showJustificationFields(false);
+            
+            // Refresh the page to show new item (in real app, would update DOM)
+            // location.reload();
+        });
+        
+        document.getElementById('hotelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add hotel item logic here
+            alert('Hotel item added successfully!');
+            closeModal('addHotelModal');
+        });
+        
+        // Add event listeners for all new modal forms
+        document.getElementById('trainForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Train item added successfully!');
+            closeModal('addTrainModal');
+        });
+        
+        document.getElementById('busForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Bus/Ferry item added successfully!');
+            closeModal('addBusModal');
+        });
+        
+        document.getElementById('fuelForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Fuel item added successfully!');
+            closeModal('addFuelModal');
+        });
+        
+        document.getElementById('parkingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Parking/Toll item added successfully!');
+            closeModal('addParkingModal');
+        });
+        
+        document.getElementById('mileageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Mileage item added successfully!');
+            closeModal('addMileageModal');
+        });
+        
+        document.getElementById('taxiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Taxi/Ride-hailing item added successfully!');
+            closeModal('addTaxiModal');
+        });
+        
+        document.getElementById('mealsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Meals item added successfully!');
+            closeModal('addMealsModal');
+        });
+        
+        document.getElementById('perdiemForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Per-diem item added successfully!');
+            closeModal('addPerdiemModal');
+        });
+        
+        document.getElementById('othersForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Others item added successfully!');
+            closeModal('addOthersModal');
+        });
+        
+        // Policy validation (mock)
+        function validatePolicy() {
+            // This would contain actual policy validation logic
+            // For now, just show/hide justification fields based on mock conditions
+        }
+        
+        // Jump to item
+        function jumpToItem(itemId) {
+            const element = document.querySelector(`[data-item-id="${itemId}"]`);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                element.classList.add('highlight');
+                setTimeout(() => element.classList.remove('highlight'), 2000);
+            }
+        }
+        
+        // Booking selection functions
+        function updateBookingSelection() {
+            const checkboxes = document.querySelectorAll('.booking-item input[type="checkbox"]:checked');
+            const count = checkboxes.length;
+            let total = 0;
+            
+            checkboxes.forEach(checkbox => {
+                const item = checkbox.closest('.booking-item');
+                const amountText = item.querySelector('.amount').textContent;
+                const amount = parseInt(amountText.replace(/[^0-9]/g, ''));
+                total += amount;
+            });
+            
+            document.getElementById('selectedBookingsCount').textContent = count;
+            document.getElementById('selectedBookingsTotal').textContent = 'IDR ' + total.toLocaleString('id-ID');
+            document.getElementById('addBookingsBtn').disabled = count === 0;
+        }
+        
+        // Add event listeners for booking checkboxes
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingCheckboxes = document.querySelectorAll('.booking-item input[type="checkbox"]');
+            bookingCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateBookingSelection);
+            });
+            
+            // Advance selection
+            const advanceRadios = document.querySelectorAll('input[name="selectedAdvance"]');
+            advanceRadios.forEach(radio => {
+                radio.addEventListener('change', updateAdvanceSelection);
+            });
+        });
+        
+        // Function already implemented above - removed duplicate
+        
+        // Policy violation and justification functions
+        function toggleCustomReason() {
+            const reasonSelect = document.getElementById('violationReason');
+            const customReasonGroup = document.getElementById('customReasonGroup');
+            const justificationNotesGroup = document.getElementById('justificationNotesGroup');
+            const evidenceGroup = document.getElementById('evidenceGroup');
+            
+            if (reasonSelect.value === 'other') {
+                customReasonGroup.style.display = 'block';
+            } else {
+                customReasonGroup.style.display = 'none';
+                document.getElementById('customReason').value = '';
+            }
+            
+            // Show additional fields when a reason is selected
+            if (reasonSelect.value) {
+                justificationNotesGroup.style.display = 'block';
+                evidenceGroup.style.display = 'block';
+            } else {
+                justificationNotesGroup.style.display = 'none';
+                evidenceGroup.style.display = 'none';
+            }
+        }
+        
+        function checkPolicyViolation(formData) {
+            // Mock policy validation - in real app this would call backend
+            const fare = parseFloat(formData.get('fareBase')) || 0;
+            const taxesFees = parseFloat(formData.get('taxesFees')) || 0;
+            const total = fare + taxesFees;
+            const flightClass = formData.get('flightClass');
+            
+            let violations = [];
+            let warnings = [];
+            
+            // Example policy rules
+            if (total > 5000000) { // > 5M IDR
+                violations.push('Fare exceeds maximum allowed amount');
+            }
+            if (flightClass === 'business' && total > 10000000) {
+                violations.push('Business class fare exceeds limit');
+            }
+            if (total > 3000000) { // > 3M IDR
+                warnings.push('High fare amount - requires justification');
+            }
+            
+            return { violations, warnings };
+        }
+        
+        function showJustificationFields(hasViolations) {
+            const justificationGroup = document.getElementById('justificationGroup');
+            
+            if (hasViolations) {
+                justificationGroup.style.display = 'block';
+                // Make violation reason required
+                document.getElementById('violationReason').required = true;
+            } else {
+                justificationGroup.style.display = 'none';
+                document.getElementById('violationReason').required = false;
+                // Clear justification fields
+                document.getElementById('violationReason').value = '';
+                document.getElementById('customReason').value = '';
+                document.getElementById('justificationNotes').value = '';
+                toggleCustomReason();
+            }
+        }
+        
+        function validateJustification() {
+            const reasonSelect = document.getElementById('violationReason');
+            const customReason = document.getElementById('customReason');
+            const justificationNotes = document.getElementById('justificationNotes');
+            
+            if (!reasonSelect.value) {
+                return { valid: false, message: 'Please select a reason for policy violation' };
+            }
+            
+            if (reasonSelect.value === 'other' && !customReason.value.trim()) {
+                return { valid: false, message: 'Please specify the custom reason' };
+            }
+            
+            if (!justificationNotes.value.trim()) {
+                return { valid: false, message: 'Please provide additional details for the violation' };
+            }
+            
+            return { valid: true };
+        }
+        
+        // Advance selection functions
+        function updateAdvanceSelection() {
+            const selectedRadio = document.querySelector('input[name="selectedAdvance"]:checked');
+            const preview = document.getElementById('settlementPreview');
+            const attachBtn = document.getElementById('attachAdvanceBtn');
+            
+            if (selectedRadio) {
+                const advanceItem = selectedRadio.closest('.advance-item');
+                const amountText = advanceItem.querySelector('.amount').textContent;
+                const advanceAmount = parseInt(amountText.replace(/[^0-9]/g, ''));
+                const reportTotal = 7500000; // Current report total
+                const netReimbursable = reportTotal - advanceAmount;
+                
+                document.getElementById('advanceAmount').textContent = 'IDR ' + advanceAmount.toLocaleString('id-ID');
+                document.getElementById('netReimbursable').textContent = 'IDR ' + netReimbursable.toLocaleString('id-ID');
+                
+                preview.style.display = 'block';
+                attachBtn.disabled = false;
+            } else {
+                preview.style.display = 'none';
+                attachBtn.disabled = true;
+            }
+        }
+        
+        function attachSelectedAdvance() {
+            const selectedRadio = document.querySelector('input[name="selectedAdvance"]:checked');
+            
+            if (selectedRadio) {
+                const advanceId = selectedRadio.value;
+                // Here you would attach the advance to the expense report
+                console.log('Attaching advance:', advanceId);
+                
+                alert('Cash advance attached successfully!');
+                closeModal('attachAdvanceModal');
+                // Refresh the page to show updated settlement info
+                location.reload();
+            }
+        }
+        
+        // Submit for approval with gating logic
+        function submitForApproval() {
+            const issues = checkSubmissionReadiness();
+            
+            if (issues.length > 0) {
+                showSubmissionGateDialog(issues);
+                return;
+            }
+            
+            if (confirm('Submit this expense report for approval?')) {
+                // Proceed with submission
+                showNotification('Expense report submitted for approval', 'success');
+                // Redirect or update UI as needed
+                setTimeout(() => {
+                    window.location.href = 'expenses.html';
+                }, 1500);
+            }
+        }
+        
+        // Check submission readiness
+        function checkSubmissionReadiness() {
+            const issues = [];
+            
+            // Check for missing receipts
+            const missingReceipts = document.querySelectorAll('.detail-tag:not(.receipt-attached)');
+            if (missingReceipts.length > 0) {
+                issues.push({
+                    type: 'missing_receipt',
+                    message: `${missingReceipts.length} item(s) missing receipt`,
+                    action: 'Upload receipts for all expense items'
+                });
+            }
+            
+            // Check for violations without justification
+            const violations = document.querySelectorAll('.policy-badge.violation');
+            violations.forEach(violation => {
+                const itemCard = violation.closest('.expense-item-card');
+                const hasJustification = itemCard.dataset.hasJustification === 'true';
+                if (!hasJustification) {
+                    issues.push({
+                        type: 'missing_justification',
+                        message: 'Policy violation requires justification',
+                        action: 'Provide justification for policy violations'
+                    });
+                }
+            });
+            
+            return issues;
+        }
+        
+        // Show submission gate dialog
+        function showSubmissionGateDialog(issues) {
+            let issuesList = issues.map(issue => `<li>${issue.message}: ${issue.action}</li>`).join('');
+            
+            const dialog = document.createElement('div');
+            dialog.className = 'modal-overlay';
+            dialog.innerHTML = `
+                <div class="modal submission-gate-modal">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Cannot Submit Report</h3>
+                        <button class="modal-close" onclick="closeSubmissionGate()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please resolve the following issues before submitting:</p>
+                        <ul class="issues-list">${issuesList}</ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="closeSubmissionGate()">Got it</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(dialog);
+            dialog.style.display = 'flex';
+        }
+        
+        function closeSubmissionGate() {
+            const dialog = document.querySelector('.submission-gate-modal').closest('.modal-overlay');
+            if (dialog) {
+                dialog.remove();
+            }
+        }
+        
+        // Update submission checklist
+        function updateSubmissionChecklist() {
+            const expenseItems = document.querySelectorAll('.expense-item, .expense-item-card');
+            const checklistItems = document.querySelectorAll('.checklist-item');
+            
+            // Count missing receipts
+            const missingReceipts = document.querySelectorAll('.detail-tag:not(.receipt-attached)').length;
+            
+            // Count violations without justification
+            let violationsNeedingJustification = 0;
+            const violations = document.querySelectorAll('.policy-badge.violation');
+            violations.forEach(violation => {
+                const itemCard = violation.closest('.expense-item-card');
+                const hasJustification = itemCard && itemCard.dataset.hasJustification === 'true';
+                if (!hasJustification) {
+                    violationsNeedingJustification++;
+                }
+            });
+            
+            // Update checklist items
+            if (checklistItems.length >= 3) {
+                // Update "All required fields complete" item
+                const fieldsItem = checklistItems[0];
+                const hasItems = expenseItems.length > 0;
+                fieldsItem.className = hasItems ? 'checklist-item completed' : 'checklist-item pending';
+                fieldsItem.innerHTML = `
+                    <i class="fas fa-${hasItems ? 'check-circle' : 'clock'}"></i>
+                    <span>${hasItems ? 'All required fields complete' : 'No expense items added'}</span>
+                `;
+                
+                // Update "Receipt missing" item
+                const receiptItem = checklistItems[1];
+                const hasReceiptIssues = missingReceipts > 0;
+                receiptItem.className = hasReceiptIssues ? 'checklist-item pending' : 'checklist-item completed';
+                receiptItem.innerHTML = `
+                    <i class="fas fa-${hasReceiptIssues ? 'clock' : 'check-circle'}"></i>
+                    <span>${hasReceiptIssues ? `${missingReceipts} receipt${missingReceipts > 1 ? 's' : ''} missing` : 'All receipts attached'}</span>
+                `;
+                
+                // Update "Violation needs justification" item
+                const violationItem = checklistItems[2];
+                const hasViolationIssues = violationsNeedingJustification > 0;
+                violationItem.className = hasViolationIssues ? 'checklist-item pending' : 'checklist-item completed';
+                violationItem.innerHTML = `
+                    <i class="fas fa-${hasViolationIssues ? 'exclamation-triangle' : 'check-circle'}"></i>
+                    <span>${hasViolationIssues ? `${violationsNeedingJustification} violation${violationsNeedingJustification > 1 ? 's' : ''} need${violationsNeedingJustification === 1 ? 's' : ''} justification` : 'All violations justified'}</span>
+                `;
+            }
+            
+            // Update progress indicator
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.querySelector('.progress-text');
+            
+            if (progressFill && progressText) {
+                let completedItems = 0;
+                const totalItems = 3;
+                
+                if (expenseItems.length > 0) completedItems++;
+                if (missingReceipts === 0) completedItems++;
+                if (violationsNeedingJustification === 0) completedItems++;
+                
+                const percentage = Math.round((completedItems / totalItems) * 100);
+                progressFill.style.width = `${percentage}%`;
+                progressText.textContent = `${percentage}% complete`;
+            }
+        }
+        
+        // Show notification
+        function deleteItem(itemIdOrButton) {
+            if (confirm('Are you sure you want to delete this expense item?')) {
+                let expenseItem;
+                if (typeof itemIdOrButton === 'string') {
+                    // Called with item ID
+                    expenseItem = document.querySelector(`[data-item-id="${itemIdOrButton}"]`);
+                } else {
+                    // Called with button element
+                    expenseItem = itemIdOrButton.closest('.expense-item-card');
+                }
+                
+                if (expenseItem) {
+                    expenseItem.remove();
+                    updateExpenseTotals();
+                    showNotification('Expense item deleted successfully', 'success');
+                }
+            }
+        }
+        
+        function editItem(itemIdOrButton) {
+            // Mock edit functionality
+            showNotification('Edit expense item functionality would be implemented here', 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
