@@ -6,6 +6,10 @@
     --brand-ink:     #2A37A2;   /* dark text */
     --brand-teal:    #0F766E;   /* success/links alt */
     --brand-bg:      #0A2533;   /* page bg */
+
+    /* Primary Theme Colors */
+    --primary-color: #3d0974;   /* main brand color */
+    --primary-dark:  #4a0b8a;   /* darker hover state */
     
     /* UI Colors */
     --ink-900: #0F172A;         /* primary text */
@@ -66,7 +70,7 @@ body {
 }
 
 .btn-primary {
-    background: var(--brand-primary);
+    background: var(--primary-color);
     color: var(--bg-0);
     border: none;
     padding: 12px 24px;
@@ -81,7 +85,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: #4a0b8a;
+    background: var(--primary-dark);
     box-shadow: 0 4px 12px rgba(61, 9, 116, 0.4);
     transform: translateY(-1px);
 }
@@ -717,13 +721,13 @@ textarea:focus {
 }
 
 .btn-primary {
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
-    border: 1px solid #007bff;
+    border: 1px solid var(--primary-color);
 }
 
 .btn-primary:hover {
-    background: #0056b3;
+    background: var(--primary-dark);
     transform: translateY(-1px);
 }
 
@@ -2024,7 +2028,7 @@ textarea:focus {
 
         .btn-primary {
             padding: 0.5rem 1rem;
-            background-color: #007bff;
+            background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 6px;
@@ -2034,7 +2038,7 @@ textarea:focus {
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
+            background-color: var(--primary-dark);
         }
 
         .btn-primary:disabled {
@@ -5986,49 +5990,6 @@ textarea:focus,input:focus,select:focus{outline:2px solid #94b5ff;outline-offset
     border-top: 1px solid var(--border-color);
 }
 
-.btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.btn-primary {
-    background: var(--primary-color);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-}
-
-.btn-secondary {
-    background: var(--background-light);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
-}
-
-.btn-secondary:hover {
-    background: var(--border-color);
-}
-
-.btn-outline {
-    background: transparent;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
-}
-
-.btn-outline:hover {
-    background: var(--primary-color);
-    color: white;
-}
 
 /* Responsive Design for Form */
 @media (max-width: 768px) {
