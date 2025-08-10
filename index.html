@@ -148,41 +148,41 @@
             <!-- Quick Stats for Main Menus -->
             <section class="quick-stats">
                 <div class="summary-grid">
-                    <div class="dashboard-card stat-card mwp-stat" onclick="window.location.href='mwp.html'">
+                    <a href="mwp.html" class="dashboard-card stat-card mwp-stat">
                         <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
                         <div class="stat-info">
                             <span class="stat-title">MWP</span>
                             <span class="stat-value">3 drafts</span>
                         </div>
-                    </div>
-                    <div class="dashboard-card stat-card travel-stat" onclick="window.location.href='travel.html'">
+                    </a>
+                    <a href="travel.html" class="dashboard-card stat-card travel-stat">
                         <div class="stat-icon"><i class="fas fa-plane"></i></div>
                         <div class="stat-info">
                             <span class="stat-title">Travel</span>
                             <span class="stat-value">1 upcoming</span>
                         </div>
-                    </div>
-                    <div class="dashboard-card stat-card vehicle-stat" onclick="window.location.href='vehicle.html'">
+                    </a>
+                    <a href="vehicle.html" class="dashboard-card stat-card vehicle-stat">
                         <div class="stat-icon"><i class="fas fa-car"></i></div>
                         <div class="stat-info">
                             <span class="stat-title">Vehicle</span>
                             <span class="stat-value">3 pending</span>
                         </div>
-                    </div>
-                    <div class="dashboard-card stat-card expense-stat" onclick="window.location.href='expenses.html'">
+                    </a>
+                    <a href="expenses.html" class="dashboard-card stat-card expense-stat">
                         <div class="stat-icon"><i class="fas fa-receipt"></i></div>
                         <div class="stat-info">
                             <span class="stat-title">Expenses</span>
                             <span class="stat-value">2 drafts</span>
                         </div>
-                    </div>
-                    <div class="dashboard-card stat-card approval-stat" onclick="window.location.href='approvals.html'">
+                    </a>
+                    <a href="approvals.html" class="dashboard-card stat-card approval-stat">
                         <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
                         <div class="stat-info">
                             <span class="stat-title">Approvals</span>
                             <span class="stat-value">5 pending</span>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </section>
 
@@ -190,7 +190,7 @@
             <section class="hero-row">
                 <div class="card-grid">
                     <!-- Your Approvals -->
-                    <div class="dashboard-card approvals-card" onclick="window.location.href='approvals.html'">
+                    <div class="dashboard-card approvals-card" tabindex="0" onclick="window.location.href='approvals.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='approvals.html';}">
                         <div class="card-header">
                             <h3><i class="fas fa-check-circle"></i> Your Approvals</h3>
                             <span class="badge pending-badge">3</span>
@@ -208,7 +208,7 @@
                     </div>
     
                     <!-- My Reports -->
-                    <div class="dashboard-card reports-card" onclick="window.location.href='expenses.html'">
+                    <div class="dashboard-card reports-card" tabindex="0" onclick="window.location.href='expenses.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='expenses.html';}">
                         <div class="card-header">
                             <h3><i class="fas fa-file-alt"></i> My Reports</h3>
                         </div>
@@ -227,7 +227,7 @@
                     </div>
     
                     <!-- Vehicle Logs -->
-                    <div class="dashboard-card vehicle-card" onclick="window.location.href='vehicle.html'">
+                    <div class="dashboard-card vehicle-card" tabindex="0" onclick="window.location.href='vehicle.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='vehicle.html';}">
                         <div class="card-header">
                             <h3><i class="fas fa-car"></i> Vehicle Logs</h3>
                             <span class="badge pending-badge">3</span>
@@ -247,7 +247,7 @@
                     </div>
 
                     <!-- NEW: KPI tile "Vehicle logs this month" (deep-links to vehicle.html) -->
-                    <div class="dashboard-card" onclick="window.location.href='vehicle.html'">
+                    <div class="dashboard-card" tabindex="0" onclick="window.location.href='vehicle.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='vehicle.html';}">
                         <div class="card-header">
                             <h3><i class="fas fa-tachometer-alt"></i> Vehicle logs this month</h3>
                         </div>
@@ -265,7 +265,7 @@
                     </div>
 
                     <!-- NEW: KPI tile "Outstanding advances" (deep-links to cash-advance.html) -->
-                    <div class="dashboard-card" onclick="window.location.href='cash-advance.html'">
+                    <div class="dashboard-card" tabindex="0" onclick="window.location.href='cash-advance.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='cash-advance.html';}">
                         <div class="card-header">
                             <h3><i class="fas fa-exclamation-triangle"></i> Outstanding advances</h3>
                         </div>
