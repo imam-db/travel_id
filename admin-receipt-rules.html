@@ -7,6 +7,81 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+    <style>
+        .rule-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: white;
+        }
+        .rule-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .rule-stats {
+            display: flex;
+            gap: 30px;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        /* Enhanced form styling */
+        .form-section {
+            border-left: 3px solid #2c5aa0;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        .form-section h6 {
+            color: #2c5aa0;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .advanced-settings {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .settings-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .settings-header i {
+            margin-right: 8px;
+            color: #2c5aa0;
+        }
+        .tolerance-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .grace-badge {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -15,7 +90,7 @@
             <div class="logo">
                 <img 
                     class="brand-logo" 
-                    src="/assets/brand/trevid_logo.png" 
+                    src="assets/brand/trevid_logo.png" 
                     srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
                     alt="TrevID – Business Companion" 
                     width="140" height="36" />
@@ -45,11 +120,11 @@
                     <p>Configure receipt requirements and validation rules</p>
                 </div>
                 <div>
-                    <button class="btn btn-outline-primary me-2" onclick="exportRules()">
-                        <i class="fas fa-download me-1"></i>Export
+                    <button class="btn btn-outline-primary me-2" onclick="exportRules()" aria-label="Export receipt rules to file">
+                        <i class="fas fa-download me-1" aria-hidden="true"></i>Export
                     </button>
-                    <button class="btn btn-primary" onclick="showAddRuleModal()">
-                        <i class="fas fa-plus me-1"></i>Add Rule
+                    <button class="btn btn-primary" onclick="showAddRuleModal()" aria-label="Add new receipt rule">
+                        <i class="fas fa-plus me-1" aria-hidden="true"></i>Add Rule
                     </button>
                 </div>
             </div>
@@ -145,6 +220,8 @@
                                 <th>Type</th>
                                 <th>Condition</th>
                                 <th>Requirement</th>
+                                <th>Grace Period</th>
+                                <th>Tolerance</th>
                                 <th>Priority</th>
                                 <th>Status</th>
                                 <th>Actions</th>
@@ -169,57 +246,113 @@
                 </div>
                 <div class="modal-body">
                     <form id="ruleForm">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Rule Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="ruleName" placeholder="Enter rule name" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Rule Type <span class="text-danger">*</span></label>
-                                <select class="form-select" id="ruleType" onchange="updateConditionFields()" required>
-                                    <option value="">Select Type</option>
-                                    <option value="amount">Amount Threshold</option>
-                                    <option value="category">Category</option>
-                                    <option value="format">Format</option>
-                                    <option value="time">Time</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Dynamic condition fields -->
-                            <div id="conditionFields" class="col-12">
-                                <!-- Fields will be populated based on rule type -->
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label class="form-label">Requirement <span class="text-danger">*</span></label>
-                                <select class="form-select" id="requirement" required>
-                                    <option value="">Select Requirement</option>
-                                    <option value="mandatory">Receipt Mandatory</option>
-                                    <option value="optional">Receipt Optional</option>
-                                    <option value="justification">Justification Required</option>
-                                    <option value="approval">Manager Approval Required</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Priority <span class="text-danger">*</span></label>
-                                <select class="form-select" id="priority" required>
-                                    <option value="">Select Priority</option>
-                                    <option value="high">High</option>
-                                    <option value="medium">Medium</option>
-                                    <option value="low">Low</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="isActive" checked>
-                                    <label class="form-check-label" for="isActive">
-                                        Active
-                                    </label>
+                        <!-- Basic Rule Information -->
+                        <div class="form-section">
+                            <h6><i class="fas fa-info-circle"></i> Basic Information</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Rule Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="ruleName" placeholder="Enter rule name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Rule Type <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="ruleType" onchange="updateConditionFields()" required>
+                                        <option value="">Select Type</option>
+                                        <option value="amount">Amount Threshold</option>
+                                        <option value="category">Category</option>
+                                        <option value="format">Format</option>
+                                        <option value="time">Time</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Dynamic condition fields -->
+                                <div id="conditionFields" class="col-12">
+                                    <!-- Fields will be populated based on rule type -->
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label class="form-label">Requirement <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="requirement" required>
+                                        <option value="">Select Requirement</option>
+                                        <option value="mandatory">Receipt Mandatory</option>
+                                        <option value="optional">Receipt Optional</option>
+                                        <option value="justification">Justification Required</option>
+                                        <option value="approval">Manager Approval Required</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Priority <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="priority" required>
+                                        <option value="">Select Priority</option>
+                                        <option value="high">High</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="low">Low</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label">Description</label>
-                                <textarea class="form-control" id="description" rows="3" placeholder="Rule description and additional notes..."></textarea>
+                        </div>
+                            
+                        <!-- Advanced Settings -->
+                        <div class="form-section">
+                            <h6><i class="fas fa-cogs"></i> Advanced Settings</h6>
+                            <div class="row g-3">
+                                <!-- Grace Period Settings -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Grace Period (Days)</label>
+                                    <input type="number" class="form-control" id="gracePeriod" placeholder="0" min="0" max="365">
+                                    <small class="form-text text-muted">Days allowed for late receipt submission</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Amount Tolerance (%)</label>
+                                    <input type="number" class="form-control" id="amountTolerance" placeholder="0" min="0" max="100" step="0.1">
+                                    <small class="form-text text-muted">Acceptable variance between receipt and expense amount</small>
+                                </div>
+                                
+                                <!-- Status Tracking -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Auto-Status Progression</label>
+                                    <select class="form-select" id="autoStatus">
+                                        <option value="disabled">Disabled</option>
+                                        <option value="enabled">Enabled</option>
+                                    </select>
+                                    <small class="form-text text-muted">Automatically progress receipt status based on conditions</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Violation Action</label>
+                                    <select class="form-select" id="violationAction">
+                                        <option value="flag">Flag for Review</option>
+                                        <option value="reject">Auto-Reject</option>
+                                        <option value="escalate">Escalate to Manager</option>
+                                        <option value="notify">Notify Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                            
+                        <!-- Rule Status & Description -->
+                        <div class="form-section">
+                            <h6><i class="fas fa-toggle-on"></i> Status & Description</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                        <label class="form-check-label" for="isActive">
+                                            Active
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="enableNotifications">
+                                        <label class="form-check-label" for="enableNotifications">
+                                            Enable Email Notifications
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" rows="3" placeholder="Rule description and additional notes..."></textarea>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -243,8 +376,13 @@
                 condition: 'amount > 1000000',
                 conditionData: { operator: '>', amount: 1000000, currency: 'IDR' },
                 requirement: 'mandatory',
+                gracePeriod: '7 days',
+                tolerance: '5%',
                 priority: 'high',
                 status: 'active',
+                autoStatus: 'enabled',
+                violationAction: 'flag',
+                notifications: true,
                 description: 'Receipt mandatory for expenses above 1M IDR'
             },
             {
@@ -254,8 +392,13 @@
                 condition: 'category = Meals',
                 conditionData: { category: 'Meals' },
                 requirement: 'optional',
+                gracePeriod: '14 days',
+                tolerance: '10%',
                 priority: 'low',
                 status: 'active',
+                autoStatus: 'disabled',
+                violationAction: 'notify',
+                notifications: false,
                 description: 'Receipt optional for meal expenses under certain amount'
             },
             {
@@ -265,8 +408,13 @@
                 condition: 'category = Transportation',
                 conditionData: { category: 'Transportation' },
                 requirement: 'mandatory',
+                gracePeriod: '3 days',
+                tolerance: '2%',
                 priority: 'medium',
                 status: 'active',
+                autoStatus: 'enabled',
+                violationAction: 'escalate',
+                notifications: true,
                 description: 'Receipt always required for transportation expenses'
             },
             {
@@ -276,8 +424,13 @@
                 condition: 'format = PDF',
                 conditionData: { formats: ['PDF'] },
                 requirement: 'mandatory',
+                gracePeriod: 'N/A',
+                tolerance: 'N/A',
                 priority: 'medium',
                 status: 'active',
+                autoStatus: 'enabled',
+                violationAction: 'reject',
+                notifications: true,
                 description: 'Only PDF receipts accepted for certain categories'
             },
             {
@@ -287,8 +440,13 @@
                 condition: 'submission within 1 day',
                 conditionData: { timeframe: 1, unit: 'days' },
                 requirement: 'justification',
+                gracePeriod: '5 days',
+                tolerance: 'N/A',
                 priority: 'high',
                 status: 'active',
+                autoStatus: 'enabled',
+                violationAction: 'flag',
+                notifications: true,
                 description: 'Justification required if not submitted within 1 day'
             }
         ];
@@ -299,6 +457,24 @@
         function renderRulesTable() {
             const tbody = document.getElementById('rulesTableBody');
             tbody.innerHTML = '';
+
+            if (filteredRules.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.innerHTML = `
+                    <td colspan="9" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="fas fa-receipt fa-3x mb-3 d-block" style="opacity: 0.3;"></i>
+                            <h5>No Receipt Rules Found</h5>
+                            <p>No rules match your current filters. Try adjusting your search criteria or add a new rule.</p>
+                            <button class="btn btn-primary" onclick="showAddRuleModal()">
+                                <i class="fas fa-plus me-1"></i>Add First Rule
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(emptyRow);
+                return;
+            }
 
             filteredRules.forEach(rule => {
                 const row = document.createElement('tr');
@@ -321,6 +497,12 @@
                         </span>
                     </td>
                     <td>
+                        <span class="text-muted">${rule.gracePeriod || 'N/A'}</span>
+                    </td>
+                    <td>
+                        <span class="text-muted">${rule.tolerance || 'N/A'}</span>
+                    </td>
+                    <td>
                         <span class="badge bg-${getPriorityBadgeColor(rule.priority)}">
                             ${rule.priority.charAt(0).toUpperCase() + rule.priority.slice(1)}
                         </span>
@@ -331,12 +513,17 @@
                         </span>
                     </td>
                     <td>
-                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editRule(${rule.id})">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteRule(${rule.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editRule(${rule.id})" aria-label="Edit rule ${rule.name}" title="Edit Rule">
+                                <i class="fas fa-edit" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-info" onclick="viewFlaggedReceipts('${rule.name}')" aria-label="View flagged receipts for ${rule.name}" title="View Flagged Receipts">
+                                <i class="fas fa-flag" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteRule(${rule.id})" aria-label="Delete rule ${rule.name}" title="Delete Rule">
+                                <i class="fas fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -525,6 +712,15 @@
             document.getElementById('ruleModalTitle').textContent = 'Add Receipt Rule';
             document.getElementById('ruleForm').reset();
             document.getElementById('conditionFields').innerHTML = '';
+            
+            // Reset new fields to default values
+            document.getElementById('gracePeriod').value = '';
+            document.getElementById('amountTolerance').value = '';
+            document.getElementById('autoStatus').value = 'disabled';
+            document.getElementById('violationAction').value = 'flag';
+            document.getElementById('enableNotifications').checked = false;
+            document.getElementById('isActive').checked = true;
+            
             new bootstrap.Modal(document.getElementById('ruleModal')).show();
         }
 
@@ -541,6 +737,16 @@
             document.getElementById('priority').value = rule.priority;
             document.getElementById('isActive').checked = rule.status === 'active';
             document.getElementById('description').value = rule.description || '';
+            
+            // Populate new fields
+            const gracePeriodValue = rule.gracePeriod && rule.gracePeriod !== 'N/A' ? rule.gracePeriod.replace(' days', '') : '';
+            const toleranceValue = rule.tolerance && rule.tolerance !== 'N/A' ? rule.tolerance.replace('%', '') : '';
+            
+            document.getElementById('gracePeriod').value = gracePeriodValue;
+            document.getElementById('amountTolerance').value = toleranceValue;
+            document.getElementById('autoStatus').value = rule.autoStatus || 'disabled';
+            document.getElementById('violationAction').value = rule.violationAction || 'flag';
+            document.getElementById('enableNotifications').checked = rule.notifications || false;
 
             updateConditionFields();
             
@@ -611,14 +817,37 @@
                     break;
             }
 
+            // Get additional form values
+            const gracePeriod = document.getElementById('gracePeriod').value;
+            const amountTolerance = document.getElementById('amountTolerance').value;
+            const autoStatus = document.getElementById('autoStatus').value;
+            const violationAction = document.getElementById('violationAction').value;
+            const enableNotifications = document.getElementById('enableNotifications').checked;
+
+            // Validate grace period and tolerance values
+            if (gracePeriod && (gracePeriod < 0 || gracePeriod > 365)) {
+                alert('Grace period must be between 0 and 365 days');
+                return;
+            }
+
+            if (amountTolerance && (amountTolerance < 0 || amountTolerance > 100)) {
+                alert('Amount tolerance must be between 0 and 100 percent');
+                return;
+            }
+
             const ruleData = {
                 name: document.getElementById('ruleName').value,
                 type: ruleType,
                 condition: condition,
                 conditionData: conditionData,
                 requirement: document.getElementById('requirement').value,
+                gracePeriod: gracePeriod ? `${gracePeriod} days` : 'N/A',
+                tolerance: amountTolerance ? `${amountTolerance}%` : 'N/A',
                 priority: document.getElementById('priority').value,
                 status: document.getElementById('isActive').checked ? 'active' : 'inactive',
+                autoStatus: autoStatus,
+                violationAction: violationAction,
+                notifications: enableNotifications,
                 description: document.getElementById('description').value
             };
 
@@ -635,7 +864,7 @@
 
             bootstrap.Modal.getInstance(document.getElementById('ruleModal')).hide();
             filterRules();
-            showNotification(editingRuleId ? 'Rule updated successfully!' : 'Rule added successfully!', 'success');
+            showNotification(editingRuleId ? 'Rule updated successfully with advanced settings!' : 'Rule added successfully with advanced settings!', 'success');
         }
 
         function deleteRule(id) {
@@ -644,6 +873,17 @@
                 filterRules();
                 showNotification('Rule deleted successfully!', 'success');
             }
+        }
+
+        function viewFlaggedReceipts(ruleName) {
+            // Build URL with filter for flagged receipts by this rule
+            const params = new URLSearchParams({
+                'filter_status': 'flagged',
+                'filter_rule': ruleName,
+                'from_rules': 'true'
+            });
+            
+            window.location.href = `receipts.html?${params.toString()}`;
         }
 
         function exportRules() {

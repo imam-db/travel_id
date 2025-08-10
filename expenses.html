@@ -17,7 +17,7 @@
             <div class="logo">
                 <img 
                     class="brand-logo" 
-                    src="/assets/brand/trevid_logo.png" 
+                    src="assets/brand/trevid_logo.png" 
                     srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
                     alt="TrevID – Business Companion" 
                     width="140" height="36" />
@@ -794,6 +794,382 @@
         document.getElementById('searchInput').addEventListener('input', filterExpenses);
         
         function filterExpenses() {
+            showLoadingState();
+            
+            // Simulate loading with potential errors
+            setTimeout(() => {
+                const success = Math.random() > 0.05; // 95% success rate
+                
+                if (success) {
+                    hideLoadingState();
+                    performFilter();
+                } else {
+                    showErrorState('Failed to load expense data. Please check your connection and try again.');
+                }
+            }, 800);
+        }
+        
+        function performFilter() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const periodFilter = document.getElementById('periodFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('.expense-card');
+            
+            // Continue with existing filter logic
+            cards.forEach(card => {
+                const status = card.dataset.status;
+                const period = card.dataset.period;
+                const text = card.textContent.toLowerCase();
+                
+                const statusMatch = statusFilter === 'all' || status === statusFilter;
+                const periodMatch = periodFilter === 'all' || period === periodFilter;
+                const searchMatch = searchTerm === '' || text.includes(searchTerm);
+                
+                if (statusMatch && periodMatch && searchMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        function showLoadingState() {
+            const expenseGrid = document.querySelector('.expense-grid');
+            if (expenseGrid) {
+                expenseGrid.innerHTML = `
+                    <div class="col-12 text-center py-5 loading-state">
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <h5>Loading expenses...</h5>
+                        <p class="text-muted">Please wait while we fetch your expense data.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function hideLoadingState() {
+            // Restore original expense cards - in real app this would reload from data
+            const expenseCards = document.querySelector('.expense-cards');
+            if (expenseCards) {
+                // Restore the original expense cards HTML
+                expenseCards.innerHTML = getOriginalExpenseCardsHTML();
+            }
+        }
+        
+        function getOriginalExpenseCardsHTML() {
+            return `
+                <!-- Expense Report 1 -->
+                <div class="expense-card" data-status="pending" data-period="2024-02" onclick="viewExpense('expense-detail.html')">
+                    <div class="expense-header">
+                        <div class="expense-title">
+                            <h4>Expense Report - Jakarta Trip</h4>
+                            <span class="expense-code">#EXP-2024-001</span>
+                        </div>
+                        <div class="expense-status pending">
+                            <i class="fas fa-clock"></i>
+                            Pending
+                        </div>
+                    </div>
+                    
+                    <div class="expense-content">
+                        <div class="expense-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Periode:</span>
+                                <span class="detail-value">15-17 Feb 2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Amount:</span>
+                                <span class="detail-value amount">$2,450</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Items:</span>
+                                <span class="detail-value">8 items</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-categories">
+                            <span class="category-tag">Transportation</span>
+                            <span class="category-tag">Accommodation</span>
+                            <span class="category-tag">Meals</span>
+                            <span class="category-more">+2 more</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expense-footer">
+                        <div class="expense-timestamps">
+                            <span class="timestamp">
+                                <i class="fas fa-clock"></i>
+                                Created • Submitted • Pending
+                            </span>
+                        </div>
+                        <div class="expense-actions">
+                            <button class="btn-action primary" onclick="event.stopPropagation(); recallExpense('EXP-2024-001')" title="Recall submission">
+                                <i class="fas fa-undo"></i> Recall
+                            </button>
+                            <div class="dropdown-actions">
+                                <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu">
+                                    <button onclick="event.stopPropagation(); viewExpenseDetail('EXP-2024-001')">View Details</button>
+                                    <button onclick="event.stopPropagation(); exportExpense('EXP-2024-001')">Export</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Report 2 -->
+                <div class="expense-card" data-status="approved" data-period="2024-01" onclick="viewExpense('expense-detail.html')">
+                    <div class="expense-header">
+                        <div class="expense-title">
+                            <h4>Expense Report - Surabaya Training</h4>
+                            <span class="expense-code">#EXP-2024-002</span>
+                        </div>
+                        <div class="expense-status queued">
+                            <i class="fas fa-clock"></i>
+                            Queued for Payment
+                        </div>
+                    </div>
+                    
+                    <div class="expense-content">
+                        <div class="expense-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Periode:</span>
+                                <span class="detail-value">22-24 Jan 2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Amount:</span>
+                                <span class="detail-value amount">$1,850</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Items:</span>
+                                <span class="detail-value">6 items</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-categories">
+                            <span class="category-tag">Flight</span>
+                            <span class="category-tag">Hotel</span>
+                            <span class="category-tag">Meals</span>
+                            <span class="category-tag">+1 more</span>
+                        </div>
+                        
+                        <div class="completeness-meter">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%;"></div>
+                            </div>
+                            <span class="completeness-text" onclick="event.stopPropagation(); showReceiptDetails('EXP-2024-002')" title="Click to view receipt details">
+                                Receipts: 6/8 • Policy flags: 0
+                            </span>
+                        </div>
+                        
+                        <div class="currency-info">
+                            <span class="amount-breakdown">$1,850 (~IDR 29.6jt)</span>
+                            <span class="exchange-rate" title="Rates as of transaction date">💱</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expense-footer">
+                        <div class="expense-timestamps">
+                            <span class="timestamp">
+                                <i class="fas fa-clock"></i>
+                                Created • Submitted • Approved
+                            </span>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-batch">
+                                <span class="batch-label">Payment batch:</span>
+                                <span class="batch-id" onclick="event.stopPropagation(); showPaymentBatch('RBV-2024-001')">RBV-2024-001</span>
+                            </div>
+                        </div>
+                        <div class="expense-actions">
+                            <a href="expense-detail.html" class="btn-action primary" onclick="event.stopPropagation();" title="View details">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <div class="dropdown-actions">
+                                <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu">
+                                    <button onclick="event.stopPropagation(); exportExpense('EXP-2024-002')">Export</button>
+                                    <button onclick="event.stopPropagation(); showPaymentHistory('EXP-2024-002')">Payment History</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Report 3 -->
+                <div class="expense-card" data-status="paid" data-period="2024-01" onclick="viewExpense('expense-detail.html')">
+                    <div class="expense-header">
+                        <div class="expense-title">
+                            <h4>Expense Report - Bandung Meeting</h4>
+                            <span class="expense-code">#EXP-2024-003</span>
+                        </div>
+                        <div class="expense-status paid">
+                            <i class="fas fa-money-check-alt"></i>
+                            Paid
+                        </div>
+                    </div>
+                    
+                    <div class="expense-content">
+                        <div class="expense-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Periode:</span>
+                                <span class="detail-value">10-11 Jan 2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Amount:</span>
+                                <span class="detail-value amount">$1,200</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Items:</span>
+                                <span class="detail-value">5 items</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-categories">
+                            <span class="category-tag">Car Rental</span>
+                            <span class="category-tag">Fuel</span>
+                            <span class="category-tag">Meals</span>
+                            <span class="category-tag">Parking</span>
+                        </div>
+                    </div>
+                    
+                    <div class="expense-footer">
+                        <div class="expense-timestamps">
+                            <span class="timestamp">
+                                <i class="fas fa-clock"></i>
+                                Created • Submitted • Approved • Paid
+                            </span>
+                        </div>
+                        <div class="payment-info">
+                            <div class="payment-details">
+                                <span class="payment-date">Paid on: 15 Jan 2024</span>
+                                <span class="payment-ref">Ref: PAY-2024-001</span>
+                                <span class="payment-method">Method: Bank Transfer</span>
+                            </div>
+                        </div>
+                        <div class="expense-actions">
+                            <a href="expense-detail.html" class="btn-action primary" onclick="event.stopPropagation();" title="View details">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <div class="dropdown-actions">
+                                <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu">
+                                    <button onclick="event.stopPropagation(); exportExpense('EXP-2024-003')">Export</button>
+                                    <button onclick="event.stopPropagation(); downloadReceipt('EXP-2024-003')">Download Receipt</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Report 4 -->
+                <div class="expense-card" data-status="draft" data-period="2024-02" onclick="viewExpense('expense-detail.html')">
+                    <div class="expense-header">
+                        <div class="expense-title">
+                            <h4>Expense Report - Yogyakarta Conference</h4>
+                            <span class="expense-code">#EXP-2024-004</span>
+                        </div>
+                        <div class="expense-status draft">
+                            <i class="fas fa-edit"></i>
+                            Draft
+                        </div>
+                    </div>
+                    
+                    <div class="expense-content">
+                        <div class="expense-details">
+                            <div class="detail-item">
+                                <span class="detail-label">Periode:</span>
+                                <span class="detail-value">25-27 Feb 2024</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Total Amount:</span>
+                                <span class="detail-value amount">$1,750</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Items:</span>
+                                <span class="detail-value">4 items</span>
+                            </div>
+                        </div>
+                        
+                        <div class="expense-categories">
+                            <span class="category-tag">Flight</span>
+                            <span class="category-tag">Hotel</span>
+                            <span class="category-tag">Conference Fee</span>
+                        </div>
+                        
+                        <div class="completeness-meter">
+                            <div class="progress-bar">
+                                <div class="progress-fill error" style="width: 50%;"></div>
+                            </div>
+                            <span class="completeness-text error" onclick="event.stopPropagation(); showReceiptDetails('EXP-2024-004')" title="Click to view receipt details">
+                                Receipts: 2/4 • Policy flags: 1
+                            </span>
+                        </div>
+                        
+                        <div class="cash-advance-info">
+                            <span class="advance-chip settlement" onclick="event.stopPropagation(); showAdvanceBreakdown('EXP-2024-004')" title="Click to view settlement breakdown">
+                                Settles Advance: $300
+                            </span>
+                            <span class="advance-chip outstanding" onclick="event.stopPropagation(); showAdvanceBreakdown('EXP-2024-004')" title="Click to view outstanding balance">
+                                Outstanding: $120
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="expense-footer">
+                        <div class="expense-timestamps">
+                            <span class="timestamp">
+                                <i class="fas fa-clock"></i>
+                                Created • Last modified: 1 Mar 2024
+                            </span>
+                        </div>
+                        <div class="expense-actions">
+                            <button class="btn-action primary" onclick="event.stopPropagation(); editExpense('EXP-2024-004')" title="Edit expense">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-action secondary" onclick="event.stopPropagation(); addItems('EXP-2024-004')" title="Add items">
+                                <i class="fas fa-plus"></i> Add Items
+                            </button>
+                            <div class="dropdown-actions">
+                                <button class="btn-action secondary" onclick="event.stopPropagation(); toggleActionMenu(this)" title="More actions">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <div class="action-menu">
+                                    <button onclick="event.stopPropagation(); importFromBooking('EXP-2024-004')">Import from Booking</button>
+                                    <button onclick="event.stopPropagation(); submitForApproval('EXP-2024-004')">Submit for Approval</button>
+                                    <button onclick="event.stopPropagation(); deleteExpense('EXP-2024-004')" class="danger">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function showErrorState(message) {
+            const expenseGrid = document.querySelector('.expense-grid');
+            if (expenseGrid) {
+                expenseGrid.innerHTML = `
+                    <div class="col-12 text-center py-5 error-state">
+                        <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                        <h5 class="text-danger">Error Loading Data</h5>
+                        <p class="text-muted mb-3">${message}</p>
+                        <button class="btn btn-primary" onclick="location.reload()">
+                            <i class="fas fa-redo me-1"></i>Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        function originalFilterExpenses() {
             const statusFilter = document.getElementById('statusFilter').value;
             const periodFilter = document.getElementById('periodFilter').value;
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();

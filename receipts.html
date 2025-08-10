@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipts Inbox - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="assets/brand/favicon.ico">
+</head>
+<body>
+    <!-- Navigation -->
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    srcset="assets/brand/trevid_logo.png 1x, assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="cash-advance.html" class="nav-item">
+            <i class="fas fa-money-bill"></i>
+            <span>Cash Advance</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="receipts.html" class="nav-item active">
+            <i class="fas fa-file-image"></i>
+            <span>Receipts</span>
+        </a>
+    </nav>
+
+    <main class="container-fluid py-4">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1">Receipts Inbox</h1>
+                    <p class="text-muted mb-0">Upload, capture, and manage your receipts</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="showUploadModal()">
+                        <i class="fas fa-upload me-1"></i>Upload Files
+                    </button>
+                    <button class="btn btn-primary" onclick="openCamera()">
+                        <i class="fas fa-camera me-1"></i>Take Photo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-inbox text-warning"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Unread</h6>
+                                    <h4 class="mb-0 text-warning">5</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-info bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-search text-info"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Parsed</h6>
+                                    <h4 class="mb-0 text-info">12</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-success bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-link text-success"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Matched</h6>
+                                    <h4 class="mb-0 text-success">28</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-danger bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-flag text-danger"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0">Flagged</h6>
+                                    <h4 class="mb-0 text-danger">3</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="card mb-4" id="uploadZone">
+                <div class="card-body text-center py-5" style="border: 2px dashed #dee2e6; background: #f8f9fa;">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                    <h5>Drop receipts here or click to upload</h5>
+                    <p class="text-muted mb-3">Supports JPG, PNG, PDF files up to 10MB each</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-plus me-1"></i>Choose Files
+                    </button>
+                    <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="handleFileUpload(event)">
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="card">
+                <div class="card-header border-0">
+                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#unread" onclick="filterReceipts('unread')">
+                                <i class="fas fa-inbox me-1"></i>Unread <span class="badge bg-warning ms-1">5</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#parsed" onclick="filterReceipts('parsed')">
+                                <i class="fas fa-search me-1"></i>Parsed <span class="badge bg-info ms-1">12</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#matched" onclick="filterReceipts('matched')">
+                                <i class="fas fa-link me-1"></i>Matched <span class="badge bg-success ms-1">28</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#flagged" onclick="filterReceipts('flagged')">
+                                <i class="fas fa-flag me-1"></i>Flagged <span class="badge bg-danger ms-1">3</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#all" onclick="filterReceipts('all')">
+                                <i class="fas fa-list me-1"></i>All
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card-body">
+                    <!-- Search and Filter -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" placeholder="Search receipts..." id="searchInput" oninput="searchReceipts()">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-2">
+                                <select class="form-select" id="dateFilter" onchange="filterByDate()">
+                                    <option value="all">All Dates</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                </select>
+                                <select class="form-select" id="typeFilter" onchange="filterByType()">
+                                    <option value="all">All Types</option>
+                                    <option value="meal">Meals</option>
+                                    <option value="transport">Transport</option>
+                                    <option value="hotel">Hotel</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Receipts List -->
+                    <div id="receiptsList">
+                        <!-- Sample Receipt Items -->
+                        <div class="receipt-item" data-status="unread" data-type="meal" data-date="2024-03-15">
+                            <div class="row align-items-center py-3 border-bottom">
+                                <div class="col-md-2">
+                                    <div class="receipt-thumbnail">
+                                        <img src="https://via.placeholder.com/80x100/f8f9fa/6c757d?text=PDF" alt="Receipt" class="img-fluid rounded">
+                                        <span class="badge bg-warning position-absolute top-0 end-0">Unread</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-1">Restaurant ABC - Dinner</h6>
+                                    <p class="text-muted mb-1">March 15, 2024 • 7:30 PM</p>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-light text-dark">Meal</span>
+                                        <span class="badge bg-light text-dark">$45.50</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-center">
+                                        <div class="text-muted small">OCR Confidence</div>
+                                        <div class="progress mt-1" style="height: 6px;">
+                                            <div class="progress-bar bg-success" style="width: 95%"></div>
+                                        </div>
+                                        <small class="text-success">95%</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewReceipt('receipt-1')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="createExpenseFromReceipt('receipt-1')" title="Create Expense">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="matchReceipt('receipt-1')" title="Match to Existing">
+                                            <i class="fas fa-link"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteReceipt('receipt-1')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="receipt-item" data-status="parsed" data-type="transport" data-date="2024-03-14">
+                            <div class="row align-items-center py-3 border-bottom">
+                                <div class="col-md-2">
+                                    <div class="receipt-thumbnail">
+                                        <img src="https://via.placeholder.com/80x100/e3f2fd/1976d2?text=IMG" alt="Receipt" class="img-fluid rounded">
+                                        <span class="badge bg-info position-absolute top-0 end-0">Parsed</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-1">Uber Trip - Airport</h6>
+                                    <p class="text-muted mb-1">March 14, 2024 • 6:15 AM</p>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-light text-dark">Transport</span>
+                                        <span class="badge bg-light text-dark">$28.75</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-center">
+                                        <div class="text-muted small">OCR Confidence</div>
+                                        <div class="progress mt-1" style="height: 6px;">
+                                            <div class="progress-bar bg-warning" style="width: 78%"></div>
+                                        </div>
+                                        <small class="text-warning">78%</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewReceipt('receipt-2')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="createExpenseFromReceipt('receipt-2')" title="Create Expense">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="matchReceipt('receipt-2')" title="Match to Existing">
+                                            <i class="fas fa-link"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteReceipt('receipt-2')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="receipt-item" data-status="matched" data-type="hotel" data-date="2024-03-13">
+                            <div class="row align-items-center py-3 border-bottom">
+                                <div class="col-md-2">
+                                    <div class="receipt-thumbnail">
+                                        <img src="https://via.placeholder.com/80x100/e8f5e8/2e7d32?text=PDF" alt="Receipt" class="img-fluid rounded">
+                                        <span class="badge bg-success position-absolute top-0 end-0">Matched</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-1">Grand Hotel - 2 Nights</h6>
+                                    <p class="text-muted mb-1">March 13-15, 2024</p>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-light text-dark">Hotel</span>
+                                        <span class="badge bg-light text-dark">$320.00</span>
+                                        <span class="badge bg-success">Matched to EXP-2024-0315</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-center">
+                                        <div class="text-muted small">OCR Confidence</div>
+                                        <div class="progress mt-1" style="height: 6px;">
+                                            <div class="progress-bar bg-success" style="width: 92%"></div>
+                                        </div>
+                                        <small class="text-success">92%</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewReceipt('receipt-3')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" onclick="viewExpense('EXP-2024-0315')" title="View Expense">
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteReceipt('receipt-3')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="receipt-item" data-status="flagged" data-type="meal" data-date="2024-03-12">
+                            <div class="row align-items-center py-3 border-bottom">
+                                <div class="col-md-2">
+                                    <div class="receipt-thumbnail">
+                                        <img src="https://via.placeholder.com/80x100/ffebee/c62828?text=IMG" alt="Receipt" class="img-fluid rounded">
+                                        <span class="badge bg-danger position-absolute top-0 end-0">Flagged</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-1">Cafe XYZ - Lunch</h6>
+                                    <p class="text-muted mb-1">March 12, 2024 • 12:30 PM</p>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-light text-dark">Meal</span>
+                                        <span class="badge bg-light text-dark">$15.50</span>
+                                        <span class="badge bg-danger">Duplicate detected</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="text-center">
+                                        <div class="text-muted small">OCR Confidence</div>
+                                        <div class="progress mt-1" style="height: 6px;">
+                                            <div class="progress-bar bg-danger" style="width: 45%"></div>
+                                        </div>
+                                        <small class="text-danger">45%</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="d-flex gap-1">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewReceipt('receipt-4')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-success" onclick="createExpenseFromReceipt('receipt-4')" title="Create Expense">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-warning" onclick="resolveFlag('receipt-4')" title="Resolve Flag">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteReceipt('receipt-4')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="text-center py-5" style="display: none;">
+                        <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No receipts found</h5>
+                        <p class="text-muted">Upload your first receipt to get started</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Receipts</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-area text-center p-4 border-2 border-dashed rounded" style="border-color: #dee2e6;">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h6>Drag and drop files here</h6>
+                        <p class="text-muted">or click to browse</p>
+                        <input type="file" id="modalFileInput" multiple accept=".jpg,.jpeg,.png,.pdf" class="d-none">
+                        <button class="btn btn-primary" onclick="document.getElementById('modalFileInput').click()">
+                            Choose Files
+                        </button>
+                    </div>
+                    <div id="uploadProgress" class="mt-3" style="display: none;">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipt Viewer Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Receipt Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="receipt-preview text-center">
+                                <img id="receiptImage" src="" alt="Receipt" class="img-fluid" style="max-height: 600px;">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="receipt-details">
+                                <h6>Extracted Information</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Vendor</label>
+                                    <input type="text" class="form-control" id="vendor" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Amount</label>
+                                    <input type="text" class="form-control" id="amount" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control" id="receiptDate" readonly>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <select class="form-select" id="category">
+                                        <option value="meal">Meals</option>
+                                        <option value="transport">Transport</option>
+                                        <option value="hotel">Hotel</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Notes</label>
+                                    <textarea class="form-control" id="notes" rows="3"></textarea>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-success" onclick="matchToExpense()">
+                                        <i class="fas fa-link me-1"></i>Match to Expense
+                                    </button>
+                                    <button class="btn btn-primary" onclick="createExpense()">
+                                        <i class="fas fa-plus me-1"></i>Create New Expense
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // File upload handling
+        function handleFileUpload(event) {
+            const files = event.target.files;
+            for (let file of files) {
+                processFile(file);
+            }
+        }
+
+        function processFile(file) {
+            // Validate file type and size
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            
+            if (!allowedTypes.includes(file.type)) {
+                showErrorState('Invalid file type. Please upload JPG, PNG, or PDF files.');
+                return;
+            }
+            
+            if (file.size > maxSize) {
+                showErrorState('File too large. Maximum size is 10MB.');
+                return;
+            }
+            
+            // Show upload progress
+            showLoadingState(`Uploading ${file.name}...`);
+            
+            // Simulate upload and processing with potential errors
+            setTimeout(() => {
+                const success = Math.random() > 0.1; // 90% success rate
+                
+                if (success) {
+                    hideLoadingState();
+                    showNotification(`${file.name} uploaded and processed successfully!`, 'success');
+                    // In real app, this would add the receipt to the list
+                    addReceiptToList(file);
+                } else {
+                    hideLoadingState();
+                    showErrorState(`Failed to process ${file.name}. Please try again or contact support.`);
+                }
+            }, 2000);
+        }
+
+        function showLoadingState(message) {
+            const uploadZone = document.getElementById('uploadZone');
+            uploadZone.innerHTML = `
+                <div class="card-body text-center py-5 loading-state">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5>${message}</h5>
+                    <p class="text-muted">Please wait while we process your file...</p>
+                </div>
+            `;
+        }
+
+        function hideLoadingState() {
+            const uploadZone = document.getElementById('uploadZone');
+            uploadZone.innerHTML = `
+                <div class="card-body text-center py-5" style="border: 2px dashed #dee2e6; background: #f8f9fa;">
+                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                    <h5>Drop receipts here or click to upload</h5>
+                    <p class="text-muted mb-3">Supports JPG, PNG, PDF files up to 10MB each</p>
+                    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-plus me-1"></i>Choose Files
+                    </button>
+                    <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="handleFileUpload(event)">
+                </div>
+            `;
+        }
+
+        function showErrorState(message) {
+            const uploadZone = document.getElementById('uploadZone');
+            uploadZone.innerHTML = `
+                <div class="card-body text-center py-5 error-state">
+                    <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                    <h5 class="text-danger">Upload Error</h5>
+                    <p class="text-muted mb-3">${message}</p>
+                    <button class="btn btn-primary" onclick="hideLoadingState()">
+                        <i class="fas fa-redo me-1"></i>Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        function addReceiptToList(file) {
+            // Add new receipt item to the list
+            console.log('Adding receipt to list:', file.name);
+        }
+
+        // Camera functionality
+        function openCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(stream) {
+                        showCameraModal(stream);
+                    })
+                    .catch(function(error) {
+                        showNotification('Camera access denied', 'error');
+                    });
+            } else {
+                showNotification('Camera not supported on this device', 'error');
+            }
+        }
+
+        function showCameraModal(stream) {
+            // Create camera modal
+            const modal = document.createElement('div');
+            modal.className = 'modal fade show';
+            modal.style.display = 'block';
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Capture Receipt</h5>
+                            <button type="button" class="btn-close" onclick="closeCameraModal()"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <video id="cameraVideo" width="100%" height="400" autoplay></video>
+                            <canvas id="cameraCanvas" style="display: none;"></canvas>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" onclick="capturePhoto()">
+                                <i class="fas fa-camera me-1"></i>Capture
+                            </button>
+                            <button class="btn btn-secondary" onclick="closeCameraModal()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            const video = document.getElementById('cameraVideo');
+            video.srcObject = stream;
+        }
+
+        function capturePhoto() {
+            const video = document.getElementById('cameraVideo');
+            const canvas = document.getElementById('cameraCanvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+                const file = new File([blob], `receipt_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                processFile(file);
+                closeCameraModal();
+            });
+        }
+
+        function closeCameraModal() {
+            const video = document.getElementById('cameraVideo');
+            if (video && video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+            document.querySelector('.modal.show').remove();
+        }
+
+        // Filter functions
+        function filterReceipts(status) {
+            const items = document.querySelectorAll('.receipt-item');
+            items.forEach(item => {
+                if (status === 'all' || item.dataset.status === status) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function searchReceipts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.receipt-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        function filterByDate() {
+            const filter = document.getElementById('dateFilter').value;
+            const items = document.querySelectorAll('.receipt-item');
+            const today = new Date();
+            
+            items.forEach(item => {
+                const itemDate = new Date(item.dataset.date);
+                let show = true;
+                
+                switch(filter) {
+                    case 'today':
+                        show = itemDate.toDateString() === today.toDateString();
+                        break;
+                    case 'week':
+                        const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        show = itemDate >= weekAgo;
+                        break;
+                    case 'month':
+                        show = itemDate.getMonth() === today.getMonth() && itemDate.getFullYear() === today.getFullYear();
+                        break;
+                }
+                
+                item.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        function filterByType() {
+            const filter = document.getElementById('typeFilter').value;
+            const items = document.querySelectorAll('.receipt-item');
+            
+            items.forEach(item => {
+                if (filter === 'all' || item.dataset.type === filter) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Receipt actions
+        function viewReceipt(receiptId) {
+            // Show receipt in modal
+            const modal = new bootstrap.Modal(document.getElementById('receiptModal'));
+            
+            // Load receipt data (demo)
+            document.getElementById('receiptImage').src = 'https://via.placeholder.com/400x600/f8f9fa/6c757d?text=Receipt+Image';
+            document.getElementById('vendor').value = 'Restaurant ABC';
+            document.getElementById('amount').value = '$45.50';
+            document.getElementById('receiptDate').value = '2024-03-15';
+            document.getElementById('category').value = 'meal';
+            
+            modal.show();
+        }
+
+        function matchReceipt(receiptId) {
+            // Show expense matching interface
+            showNotification('Opening expense matching...', 'info');
+            // In real app, this would open a modal to select/create expense
+        }
+
+        function deleteReceipt(receiptId) {
+            if (confirm('Are you sure you want to delete this receipt?')) {
+                // Remove receipt from list
+                showNotification('Receipt deleted', 'success');
+            }
+        }
+
+        function resolveFlag(receiptId) {
+            showNotification('Flag resolved', 'success');
+        }
+
+        function viewExpense(expenseId) {
+            window.open(`expense-detail.html?id=${expenseId}`, '_blank');
+        }
+
+        function matchToExpense() {
+            showNotification('Feature coming soon: Match to existing expense', 'info');
+        }
+
+        function createExpense() {
+            window.open('expense-form.html', '_blank');
+        }
+
+        function createExpenseFromReceipt(receiptId) {
+            // Get receipt data (in real app, this would fetch from API)
+            const receiptData = getReceiptData(receiptId);
+            
+            // Build URL with pre-filled data
+            const params = new URLSearchParams({
+                'receipt_id': receiptId,
+                'vendor': receiptData.vendor || '',
+                'amount': receiptData.amount || '',
+                'date': receiptData.date || '',
+                'category': receiptData.category || '',
+                'currency': receiptData.currency || 'USD',
+                'return_to': 'receipts'
+            });
+            
+            window.location.href = `expense-form.html?${params.toString()}`;
+        }
+
+        function getReceiptData(receiptId) {
+            // Demo data - in real app, this would fetch from API
+            const receiptMap = {
+                'receipt-1': {
+                    vendor: 'Restaurant ABC',
+                    amount: '45.50',
+                    date: '2024-03-15',
+                    category: 'meal',
+                    currency: 'USD'
+                },
+                'receipt-2': {
+                    vendor: 'Taxi Service',
+                    amount: '25.00',
+                    date: '2024-03-14',
+                    category: 'transport',
+                    currency: 'USD'
+                },
+                'receipt-4': {
+                    vendor: 'Cafe XYZ',
+                    amount: '15.50',
+                    date: '2024-03-12',
+                    category: 'meal',
+                    currency: 'USD'
+                }
+            };
+            
+            return receiptMap[receiptId] || {};
+        }
+
+        function showUploadModal() {
+            const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+            modal.show();
+        }
+
+        // Drag and drop functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadZone = document.getElementById('uploadZone');
+            
+            uploadZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadZone.classList.add('border-primary');
+            });
+            
+            uploadZone.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('border-primary');
+            });
+            
+            uploadZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadZone.classList.remove('border-primary');
+                
+                const files = e.dataTransfer.files;
+                for (let file of files) {
+                    processFile(file);
+                }
+            });
+        });
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

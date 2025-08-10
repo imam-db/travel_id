@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Log - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="assets/brand/favicon.ico">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    srcset="assets/brand/trevid_logo.png 1x, assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="cash-advance.html" class="nav-item">
+            <i class="fas fa-money-bill"></i>
+            <span>Cash Advance</span>
+        </a>
+        <a href="approvals.html" class="nav-item">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="audit-log.html" class="nav-item active">
+            <i class="fas fa-history"></i>
+            <span>Audit Log</span>
+        </a>
+    </nav>
+
+    <main class="container-fluid py-4">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1">Audit Log</h1>
+                    <p class="text-muted mb-0">System activity tracking and compliance monitoring</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="exportAuditLog()">
+                        <i class="fas fa-download me-1"></i>Export Log
+                    </button>
+                    <button class="btn btn-primary" onclick="refreshAuditLog()">
+                        <i class="fas fa-sync-alt me-1"></i>Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-list text-primary"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0 text-muted">Total Events</h6>
+                                    <h4 class="mb-0" id="totalEvents">1,247</h4>
+                                    <small class="text-muted">Last 30 days</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-success bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-check-circle text-success"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0 text-muted">Successful Actions</h6>
+                                    <h4 class="mb-0" id="successfulActions">1,198</h4>
+                                    <small class="text-success">96.1% success rate</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-warning bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-exclamation-triangle text-warning"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0 text-muted">Failed Actions</h6>
+                                    <h4 class="mb-0" id="failedActions">49</h4>
+                                    <small class="text-warning">3.9% failure rate</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="bg-info bg-opacity-10 p-3 rounded">
+                                        <i class="fas fa-users text-info"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-0 text-muted">Active Users</h6>
+                                    <h4 class="mb-0" id="activeUsers">87</h4>
+                                    <small class="text-muted">Today</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <label class="form-label">Date Range</label>
+                            <select class="form-select" id="dateRangeFilter" onchange="filterAuditLog()">
+                                <option value="today">Today</option>
+                                <option value="yesterday">Yesterday</option>
+                                <option value="week" selected>Last 7 days</option>
+                                <option value="month">Last 30 days</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Action Type</label>
+                            <select class="form-select" id="actionTypeFilter" onchange="filterAuditLog()">
+                                <option value="all">All Actions</option>
+                                <option value="login">Login/Logout</option>
+                                <option value="expense">Expense Actions</option>
+                                <option value="approval">Approvals</option>
+                                <option value="admin">Admin Actions</option>
+                                <option value="system">System Events</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">User</label>
+                            <select class="form-select" id="userFilter" onchange="filterAuditLog()">
+                                <option value="all">All Users</option>
+                                <option value="john.smith">John Smith</option>
+                                <option value="mary.johnson">Mary Johnson</option>
+                                <option value="robert.brown">Robert Brown</option>
+                                <option value="sarah.davis">Sarah Davis</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="statusFilter" onchange="filterAuditLog()">
+                                <option value="all">All Status</option>
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="warning">Warning</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Search</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" placeholder="Search events..." id="searchInput" oninput="searchAuditLog()">
+                                <button class="btn btn-outline-secondary" onclick="clearSearch()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3 mt-2" id="customDateRange" style="display: none;">
+                        <div class="col-md-3">
+                            <label class="form-label">From Date</label>
+                            <input type="datetime-local" class="form-control" id="fromDateTime" onchange="filterAuditLog()">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">To Date</label>
+                            <input type="datetime-local" class="form-control" id="toDateTime" onchange="filterAuditLog()">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Log Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Audit Events</h5>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-muted small" id="resultsCount">Showing 1-50 of 1,247 events</span>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-secondary" onclick="toggleAutoRefresh()" id="autoRefreshBtn">
+                                    <i class="fas fa-play"></i> Auto Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="auditTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 140px;">Timestamp</th>
+                                    <th style="width: 120px;">User</th>
+                                    <th style="width: 100px;">Action</th>
+                                    <th>Description</th>
+                                    <th style="width: 100px;">IP Address</th>
+                                    <th style="width: 80px;">Status</th>
+                                    <th style="width: 60px;">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditTableBody">
+                                <!-- Sample audit entries -->
+                                <tr data-action="expense" data-user="john.smith" data-status="success" data-timestamp="2024-03-15T14:30:25">
+                                    <td>
+                                        <div class="small">
+                                            <div>2024-03-15</div>
+                                            <div class="text-muted">14:30:25</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                JS
+                                            </div>
+                                            <div class="small">
+                                                <div>John Smith</div>
+                                                <div class="text-muted">Sales</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-info">Expense Created</span></td>
+                                    <td>
+                                        <div class="small">
+                                            <div>Created expense report EXP-2024-0315</div>
+                                            <div class="text-muted">Amount: $125.50 • Category: Meals</div>
+                                        </div>
+                                    </td>
+                                    <td class="small text-muted">192.168.1.105</td>
+                                    <td><span class="badge bg-success">Success</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-001')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-action="approval" data-user="mary.johnson" data-status="success" data-timestamp="2024-03-15T14:25:12">
+                                    <td>
+                                        <div class="small">
+                                            <div>2024-03-15</div>
+                                            <div class="text-muted">14:25:12</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                MJ
+                                            </div>
+                                            <div class="small">
+                                                <div>Mary Johnson</div>
+                                                <div class="text-muted">Manager</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-success">Approved</span></td>
+                                    <td>
+                                        <div class="small">
+                                            <div>Approved expense report EXP-2024-0314</div>
+                                            <div class="text-muted">Submitted by: Robert Brown • Amount: $450.00</div>
+                                        </div>
+                                    </td>
+                                    <td class="small text-muted">192.168.1.108</td>
+                                    <td><span class="badge bg-success">Success</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-002')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-action="login" data-user="robert.brown" data-status="success" data-timestamp="2024-03-15T14:20:45">
+                                    <td>
+                                        <div class="small">
+                                            <div>2024-03-15</div>
+                                            <div class="text-muted">14:20:45</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                RB
+                                            </div>
+                                            <div class="small">
+                                                <div>Robert Brown</div>
+                                                <div class="text-muted">Marketing</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-secondary">Login</span></td>
+                                    <td>
+                                        <div class="small">
+                                            <div>User logged in successfully</div>
+                                            <div class="text-muted">Session ID: sess_abc123def456</div>
+                                        </div>
+                                    </td>
+                                    <td class="small text-muted">192.168.1.112</td>
+                                    <td><span class="badge bg-success">Success</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-003')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-action="admin" data-user="sarah.davis" data-status="success" data-timestamp="2024-03-15T14:15:30">
+                                    <td>
+                                        <div class="small">
+                                            <div>2024-03-15</div>
+                                            <div class="text-muted">14:15:30</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                SD
+                                            </div>
+                                            <div class="small">
+                                                <div>Sarah Davis</div>
+                                                <div class="text-muted">Admin</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-danger">Policy Updated</span></td>
+                                    <td>
+                                        <div class="small">
+                                            <div>Updated meal allowance policy</div>
+                                            <div class="text-muted">Changed daily limit from $50 to $60</div>
+                                        </div>
+                                    </td>
+                                    <td class="small text-muted">192.168.1.101</td>
+                                    <td><span class="badge bg-success">Success</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-004')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-action="system" data-user="system" data-status="warning" data-timestamp="2024-03-15T14:10:15">
+                                    <td>
+                                        <div class="small">
+                                            <div>2024-03-15</div>
+                                            <div class="text-muted">14:10:15</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                SYS
+                                            </div>
+                                            <div class="small">
+                                                <div>System</div>
+                                                <div class="text-muted">Automated</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-warning">Auto Reminder</span></td>
+                                    <td>
+                                        <div class="small">
+                                            <div>Sent expense submission reminder</div>
+                                            <div class="text-muted">5 users with pending expenses > 7 days</div>
+                                        </div>
+                                    </td>
+                                    <td class="small text-muted">127.0.0.1</td>
+                                    <td><span class="badge bg-warning">Warning</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-005')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr data-action="login" data-user="tom.wilson" data-status="failed" data-timestamp="2024-03-15T14:05:22">
+                                    <td>
+                                        <div class="small">
+                                            <div>2024-03-15</div>
+                                            <div class="text-muted">14:05:22</div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                                TW
+                                            </div>
+                                            <div class="small">
+                                                <div>Tom Wilson</div>
+                                                <div class="text-muted">Sales</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-secondary">Login Failed</span></td>
+                                    <td>
+                                        <div class="small">
+                                            <div>Failed login attempt</div>
+                                            <div class="text-muted">Reason: Invalid password (3rd attempt)</div>
+                                        </div>
+                                    </td>
+                                    <td class="small text-muted">192.168.1.115</td>
+                                    <td><span class="badge bg-danger">Failed</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-006')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center p-3 border-top">
+                        <div class="text-muted small">
+                            Showing <span id="showingFrom">1</span> to <span id="showingTo">50</span> of <span id="totalRecords">1,247</span> entries
+                        </div>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#">Previous</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Audit Details Modal -->
+    <div class="modal fade" id="auditDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Audit Event Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Event Information</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>Event ID:</strong></td>
+                                    <td id="eventId">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Timestamp:</strong></td>
+                                    <td id="eventTimestamp">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Action:</strong></td>
+                                    <td id="eventAction">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Status:</strong></td>
+                                    <td id="eventStatus">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>User Information</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td><strong>User:</strong></td>
+                                    <td id="eventUser">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Role:</strong></td>
+                                    <td id="eventRole">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>IP Address:</strong></td>
+                                    <td id="eventIP">-</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>User Agent:</strong></td>
+                                    <td id="eventUserAgent" class="small">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h6>Event Details</h6>
+                            <div class="bg-light p-3 rounded">
+                                <pre id="eventDetails" class="mb-0 small">-</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3" id="relatedEventsSection" style="display: none;">
+                        <div class="col-12">
+                            <h6>Related Events</h6>
+                            <div class="list-group" id="relatedEventsList">
+                                <!-- Related events will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" onclick="exportEventDetails()">
+                        <i class="fas fa-download me-1"></i>Export Details
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let autoRefreshInterval = null;
+        let isAutoRefreshEnabled = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show/hide custom date range
+            document.getElementById('dateRangeFilter').addEventListener('change', function() {
+                const customRange = document.getElementById('customDateRange');
+                if (this.value === 'custom') {
+                    customRange.style.display = 'block';
+                } else {
+                    customRange.style.display = 'none';
+                }
+            });
+
+            // Initialize with current date/time for custom range
+            const now = new Date();
+            const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            document.getElementById('fromDateTime').value = yesterday.toISOString().slice(0, 16);
+            document.getElementById('toDateTime').value = now.toISOString().slice(0, 16);
+        });
+
+        function filterAuditLog() {
+            const dateRange = document.getElementById('dateRangeFilter').value;
+            const actionType = document.getElementById('actionTypeFilter').value;
+            const user = document.getElementById('userFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            const rows = document.querySelectorAll('#auditTableBody tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                // Filter by action type
+                if (actionType !== 'all' && !row.dataset.action.includes(actionType)) {
+                    show = false;
+                }
+                
+                // Filter by user
+                if (user !== 'all' && !row.dataset.user.includes(user)) {
+                    show = false;
+                }
+                
+                // Filter by status
+                if (status !== 'all' && !row.dataset.status.includes(status)) {
+                    show = false;
+                }
+                
+                // Filter by date range (simplified)
+                if (dateRange !== 'week') {
+                    // In a real implementation, this would check actual dates
+                }
+                
+                row.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+            
+            updateResultsCount(visibleCount);
+            showNotification(`Filtered to ${visibleCount} events`, 'info');
+        }
+
+        function searchAuditLog() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#auditTableBody tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const show = text.includes(searchTerm);
+                row.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+            
+            updateResultsCount(visibleCount);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            searchAuditLog();
+        }
+
+        function updateResultsCount(count) {
+            document.getElementById('resultsCount').textContent = `Showing 1-${Math.min(count, 50)} of ${count} events`;
+        }
+
+        function loadAuditLogs() {
+            showLoadingState();
+            
+            // Simulate loading audit logs with potential errors
+            setTimeout(() => {
+                const success = Math.random() > 0.05; // 95% success rate
+                
+                if (success) {
+                    hideLoadingState();
+                    renderAuditTable();
+                } else {
+                    showErrorState('Failed to load audit logs. Please check your connection and try again.');
+                }
+            }, 1000);
+        }
+
+        function showLoadingState() {
+            const tableContainer = document.querySelector('.table-responsive');
+            tableContainer.innerHTML = `
+                <div class="text-center py-5 loading-state">
+                    <div class="spinner-border text-primary mb-3" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h5>Loading audit logs...</h5>
+                    <p class="text-muted">Please wait while we fetch the latest audit data.</p>
+                </div>
+            `;
+        }
+
+        function hideLoadingState() {
+            const tableContainer = document.querySelector('.table-responsive');
+            tableContainer.innerHTML = `
+                <table class="table table-hover mb-0" id="auditTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 140px;">Timestamp</th>
+                            <th style="width: 120px;">User</th>
+                            <th style="width: 100px;">Action</th>
+                            <th>Description</th>
+                            <th style="width: 100px;">IP Address</th>
+                            <th style="width: 80px;">Status</th>
+                            <th style="width: 60px;">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditTableBody">
+                        <!-- Table content will be populated here -->
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function showErrorState(message) {
+            const tableContainer = document.querySelector('.table-responsive');
+            tableContainer.innerHTML = `
+                <div class="text-center py-5 error-state">
+                    <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>
+                    <h5 class="text-danger">Error Loading Data</h5>
+                    <p class="text-muted mb-3">${message}</p>
+                    <button class="btn btn-primary" onclick="loadAuditLogs()">
+                        <i class="fas fa-redo me-1"></i>Retry
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderAuditTable() {
+            // Restore original table content
+            const tableBody = document.getElementById('auditTableBody');
+            if (tableBody) {
+                // Add sample audit entries back
+                tableBody.innerHTML = `
+                    <tr data-action="expense" data-user="john.smith" data-status="success" data-timestamp="2024-03-15T14:30:25">
+                        <td>
+                            <div class="small">
+                                <div>2024-03-15</div>
+                                <div class="text-muted">14:30:25</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                    JS
+                                </div>
+                                <div class="small">
+                                    <div>John Smith</div>
+                                    <div class="text-muted">Sales</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-info">Expense Created</span></td>
+                        <td>
+                            <div class="small">
+                                <div>Created expense report EXP-2024-0315</div>
+                                <div class="text-muted">Amount: $125.50 • Category: Meals</div>
+                            </div>
+                        </td>
+                        <td class="small text-muted">192.168.1.105</td>
+                        <td><span class="badge bg-success">Success</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewAuditDetails('audit-001')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function refreshAuditLog() {
+            showNotification('Refreshing audit log...', 'info');
+            loadAuditLogs();
+        }
+
+        function toggleAutoRefresh() {
+            const btn = document.getElementById('autoRefreshBtn');
+            
+            if (isAutoRefreshEnabled) {
+                clearInterval(autoRefreshInterval);
+                btn.innerHTML = '<i class="fas fa-play"></i> Auto Refresh';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-secondary');
+                isAutoRefreshEnabled = false;
+                showNotification('Auto refresh disabled', 'info');
+            } else {
+                autoRefreshInterval = setInterval(refreshAuditLog, 30000); // Refresh every 30 seconds
+                btn.innerHTML = '<i class="fas fa-pause"></i> Auto Refresh';
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-success');
+                isAutoRefreshEnabled = true;
+                showNotification('Auto refresh enabled (30s interval)', 'success');
+            }
+        }
+
+        function exportAuditLog() {
+            showNotification('Exporting audit log...', 'info');
+            // Simulate export
+            setTimeout(() => {
+                showNotification('Audit log exported successfully', 'success');
+            }, 2000);
+        }
+
+        function viewAuditDetails(auditId) {
+            // Populate modal with sample data
+            document.getElementById('eventId').textContent = auditId;
+            document.getElementById('eventTimestamp').textContent = '2024-03-15 14:30:25 UTC';
+            document.getElementById('eventAction').textContent = 'Expense Created';
+            document.getElementById('eventStatus').innerHTML = '<span class="badge bg-success">Success</span>';
+            document.getElementById('eventUser').textContent = 'John Smith (john.smith@company.com)';
+            document.getElementById('eventRole').textContent = 'Employee - Sales Department';
+            document.getElementById('eventIP').textContent = '192.168.1.105';
+            document.getElementById('eventUserAgent').textContent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+            
+            const eventDetails = {
+                "action": "expense_created",
+                "expense_id": "EXP-2024-0315",
+                "amount": 125.50,
+                "currency": "USD",
+                "category": "meals",
+                "description": "Client dinner at Restaurant ABC",
+                "receipt_attached": true,
+                "policy_violations": [],
+                "metadata": {
+                    "browser": "Chrome 122.0",
+                    "device": "Desktop",
+                    "location": "New York, NY"
+                }
+            };
+            
+            document.getElementById('eventDetails').textContent = JSON.stringify(eventDetails, null, 2);
+            
+            const modal = new bootstrap.Modal(document.getElementById('auditDetailsModal'));
+            modal.show();
+        }
+
+        function exportEventDetails() {
+            showNotification('Exporting event details...', 'info');
+            setTimeout(() => {
+                showNotification('Event details exported successfully', 'success');
+            }, 1000);
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+
+    <style>
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            font-size: 12px;
+        }
+        
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            border: 1px solid rgba(0, 0, 0, 0.125);
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: #495057;
+            background-color: #f8f9fa;
+        }
+        
+        .table td {
+            vertical-align: middle;
+        }
+        
+        .badge {
+            font-size: 0.75em;
+        }
+        
+        pre {
+            font-size: 0.8em;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .list-group-item {
+            border-left: none;
+            border-right: none;
+        }
+        
+        .list-group-item:first-child {
+            border-top: none;
+        }
+        
+        .list-group-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</body>
+</html>

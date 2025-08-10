@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Templates - TrevID</title>
+    <style>
+        /* Email template styles */
+        .email-template {
+            max-width: 600px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .email-body {
+            padding: 30px 20px;
+            background: #ffffff;
+        }
+        
+        .email-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .btn-success {
+            background: #28a745;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .expense-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .expense-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .expense-details td {
+            padding: 8px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .expense-details td:first-child {
+            font-weight: bold;
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding: 20px; background: #f8f9fa;">
+        <h1>TrevID Email Templates</h1>
+        <p>Collection of email templates for various system notifications</p>
+        
+        <!-- Template 1: Missing Receipt Reminder -->
+        <div style="margin: 40px 0; border: 2px solid #dee2e6; border-radius: 8px;">
+            <h2 style="background: #007bff; color: white; padding: 10px; margin: 0;">1. Missing Receipt Reminder</h2>
+            <div class="email-template">
+                <div class="email-header">
+                    <img src="assets/brand/trevid_icon_32.png" alt="TrevID" style="height: 32px; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Receipt Required</h2>
+                </div>
+                <div class="email-body">
+                    <p>Hi <strong>{{employee_name}}</strong>,</p>
+                    
+                    <p>You have expense items that require receipts to be uploaded:</p>
+                    
+                    <div class="expense-details">
+                        <table>
+                            <tr>
+                                <td>Expense Report:</td>
+                                <td><strong>{{expense_report_id}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Amount:</td>
+                                <td><strong>{{total_amount}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Due Date:</td>
+                                <td><strong>{{due_date}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Days Remaining:</td>
+                                <td><strong>{{days_remaining}}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Action Required:</strong> Please upload receipts for the following items:
+                        <ul>
+                            {{#missing_receipts}}
+                            <li>{{description}} - {{amount}} ({{date}})</li>
+                            {{/missing_receipts}}
+                        </ul>
+                    </div>
+                    
+                    <p style="text-align: center;">
+                        <a href="{{expense_detail_url}}" class="btn">Upload Receipts</a>
+                    </p>
+                    
+                    <p><small>If you don't upload receipts by {{due_date}}, your expense report may be rejected or delayed.</small></p>
+                </div>
+                <div class="email-footer">
+                    <p>This is an automated message from TrevID Expense Management System.<br>
+                    If you have questions, contact your administrator.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Template 2: Approval SLA Reminder -->
+        <div style="margin: 40px 0; border: 2px solid #dee2e6; border-radius: 8px;">
+            <h2 style="background: #ffc107; color: #212529; padding: 10px; margin: 0;">2. Approval SLA Reminder</h2>
+            <div class="email-template">
+                <div class="email-header">
+                    <img src="assets/brand/trevid_icon_32.png" alt="TrevID" style="height: 32px; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Approval Required</h2>
+                </div>
+                <div class="email-body">
+                    <p>Hi <strong>{{approver_name}}</strong>,</p>
+                    
+                    <p>You have expense reports pending approval that are nearing their SLA deadline:</p>
+                    
+                    <div class="alert alert-warning">
+                        <strong>{{pending_count}} expense reports</strong> require your approval within <strong>{{hours_remaining}} hours</strong>
+                    </div>
+                    
+                    {{#expense_reports}}
+                    <div class="expense-details">
+                        <table>
+                            <tr>
+                                <td>Report ID:</td>
+                                <td><strong>{{report_id}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Employee:</td>
+                                <td>{{employee_name}} ({{department}})</td>
+                            </tr>
+                            <tr>
+                                <td>Amount:</td>
+                                <td><strong>{{amount}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Submitted:</td>
+                                <td>{{submitted_date}}</td>
+                            </tr>
+                            <tr>
+                                <td>SLA Deadline:</td>
+                                <td><strong style="color: #dc3545;">{{sla_deadline}}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    {{/expense_reports}}
+                    
+                    <p style="text-align: center;">
+                        <a href="{{approval_queue_url}}" class="btn btn-warning">Review & Approve</a>
+                    </p>
+                    
+                    <p><small>Late approvals may impact employee reimbursement timelines and SLA metrics.</small></p>
+                </div>
+                <div class="email-footer">
+                    <p>This is an automated message from TrevID Expense Management System.<br>
+                    If you have questions, contact your administrator.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Template 3: Payment Posted Notification -->
+        <div style="margin: 40px 0; border: 2px solid #dee2e6; border-radius: 8px;">
+            <h2 style="background: #28a745; color: white; padding: 10px; margin: 0;">3. Payment Posted Notification</h2>
+            <div class="email-template">
+                <div class="email-header">
+                    <img src="assets/brand/trevid_icon_32.png" alt="TrevID" style="height: 32px; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Payment Processed</h2>
+                </div>
+                <div class="email-body">
+                    <p>Hi <strong>{{employee_name}}</strong>,</p>
+                    
+                    <p>Great news! Your expense reimbursement has been processed and payment has been initiated.</p>
+                    
+                    <div class="expense-details">
+                        <table>
+                            <tr>
+                                <td>Expense Report:</td>
+                                <td><strong>{{expense_report_id}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Payment Amount:</td>
+                                <td><strong>{{payment_amount}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Payment Method:</td>
+                                <td>{{payment_method}}</td>
+                            </tr>
+                            <tr>
+                                <td>Payment Date:</td>
+                                <td><strong>{{payment_date}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Reference Number:</td>
+                                <td>{{payment_reference}}</td>
+                            </tr>
+                            <tr>
+                                <td>Expected in Account:</td>
+                                <td><strong>{{expected_date}}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <strong>Payment Details:</strong><br>
+                        The payment will be deposited to your registered bank account ending in {{bank_account_last4}}.
+                        Processing time is typically 1-3 business days.
+                    </div>
+                    
+                    <p style="text-align: center;">
+                        <a href="{{expense_detail_url}}" class="btn btn-success">View Details</a>
+                    </p>
+                    
+                    <p><small>If you don't receive the payment by {{expected_date}}, please contact your administrator.</small></p>
+                </div>
+                <div class="email-footer">
+                    <p>This is an automated message from TrevID Expense Management System.<br>
+                    If you have questions, contact your administrator.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Template 4: Policy Violation Alert -->
+        <div style="margin: 40px 0; border: 2px solid #dee2e6; border-radius: 8px;">
+            <h2 style="background: #dc3545; color: white; padding: 10px; margin: 0;">4. Policy Violation Alert</h2>
+            <div class="email-template">
+                <div class="email-header">
+                    <img src="assets/brand/trevid_icon_32.png" alt="TrevID" style="height: 32px; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Policy Violation Detected</h2>
+                </div>
+                <div class="email-body">
+                    <p>Hi <strong>{{employee_name}}</strong>,</p>
+                    
+                    <p>Your expense report contains items that violate company policy:</p>
+                    
+                    <div class="expense-details">
+                        <table>
+                            <tr>
+                                <td>Expense Report:</td>
+                                <td><strong>{{expense_report_id}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Total Amount:</td>
+                                <td><strong>{{total_amount}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Violation Count:</td>
+                                <td><strong>{{violation_count}}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-danger">
+                        <strong>Policy Violations:</strong>
+                        <ul>
+                            {{#violations}}
+                            <li><strong>{{item_description}}</strong> - {{amount}}<br>
+                                <small>Violation: {{violation_reason}} (Policy limit: {{policy_limit}})</small>
+                            </li>
+                            {{/violations}}
+                        </ul>
+                    </div>
+                    
+                    <p><strong>Action Required:</strong></p>
+                    <ul>
+                        <li>Review the flagged items above</li>
+                        <li>Provide justification for policy exceptions</li>
+                        <li>Remove or modify non-compliant items</li>
+                        <li>Resubmit your expense report</li>
+                    </ul>
+                    
+                    <p style="text-align: center;">
+                        <a href="{{expense_edit_url}}" class="btn btn-danger">Review & Fix</a>
+                    </p>
+                    
+                    <p><small>Reports with policy violations require manager approval and may delay reimbursement.</small></p>
+                </div>
+                <div class="email-footer">
+                    <p>This is an automated message from TrevID Expense Management System.<br>
+                    If you have questions about company policies, contact your administrator.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Template 5: Weekly Expense Summary -->
+        <div style="margin: 40px 0; border: 2px solid #dee2e6; border-radius: 8px;">
+            <h2 style="background: #6f42c1; color: white; padding: 10px; margin: 0;">5. Weekly Expense Summary</h2>
+            <div class="email-template">
+                <div class="email-header">
+                    <img src="assets/brand/trevid_icon_32.png" alt="TrevID" style="height: 32px; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Weekly Expense Summary</h2>
+                </div>
+                <div class="email-body">
+                    <p>Hi <strong>{{manager_name}}</strong>,</p>
+                    
+                    <p>Here's your team's expense activity summary for the week of {{week_start}} - {{week_end}}:</p>
+                    
+                    <div class="expense-details">
+                        <table>
+                            <tr>
+                                <td>Total Expenses:</td>
+                                <td><strong>{{total_expenses}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Reports Submitted:</td>
+                                <td>{{reports_submitted}}</td>
+                            </tr>
+                            <tr>
+                                <td>Reports Approved:</td>
+                                <td>{{reports_approved}}</td>
+                            </tr>
+                            <tr>
+                                <td>Pending Approval:</td>
+                                <td><strong>{{pending_approval}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Policy Violations:</td>
+                                <td>{{policy_violations}}</td>
+                            </tr>
+                            <tr>
+                                <td>Average Approval Time:</td>
+                                <td>{{avg_approval_time}} hours</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    {{#top_spenders}}
+                    <h4>Top Spenders This Week:</h4>
+                    <div class="expense-details">
+                        <table>
+                            {{#employees}}
+                            <tr>
+                                <td>{{name}}</td>
+                                <td><strong>{{amount}}</strong></td>
+                            </tr>
+                            {{/employees}}
+                        </table>
+                    </div>
+                    {{/top_spenders}}
+                    
+                    {{#pending_approval}}
+                    <div class="alert alert-warning">
+                        <strong>{{pending_count}} reports</strong> are waiting for your approval.
+                    </div>
+                    {{/pending_approval}}
+                    
+                    <p style="text-align: center;">
+                        <a href="{{reports_dashboard_url}}" class="btn">View Full Report</a>
+                        <a href="{{approval_queue_url}}" class="btn btn-warning">Review Pending</a>
+                    </p>
+                </div>
+                <div class="email-footer">
+                    <p>This is an automated weekly summary from TrevID Expense Management System.<br>
+                    To modify your notification preferences, visit your profile settings.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Template 6: System Maintenance Notification -->
+        <div style="margin: 40px 0; border: 2px solid #dee2e6; border-radius: 8px;">
+            <h2 style="background: #6c757d; color: white; padding: 10px; margin: 0;">6. System Maintenance Notification</h2>
+            <div class="email-template">
+                <div class="email-header">
+                    <img src="assets/brand/trevid_icon_32.png" alt="TrevID" style="height: 32px; margin-bottom: 10px;">
+                    <h2 style="margin: 0;">Scheduled Maintenance</h2>
+                </div>
+                <div class="email-body">
+                    <p>Hi <strong>{{user_name}}</strong>,</p>
+                    
+                    <p>We will be performing scheduled maintenance on the TrevID system:</p>
+                    
+                    <div class="expense-details">
+                        <table>
+                            <tr>
+                                <td>Maintenance Date:</td>
+                                <td><strong>{{maintenance_date}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Start Time:</td>
+                                <td><strong>{{start_time}}</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Expected Duration:</td>
+                                <td>{{duration}}</td>
+                            </tr>
+                            <tr>
+                                <td>Expected End Time:</td>
+                                <td><strong>{{end_time}}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <strong>What to Expect:</strong>
+                        <ul>
+                            <li>The system will be temporarily unavailable</li>
+                            <li>You won't be able to submit or approve expenses</li>
+                            <li>Mobile app access will be limited</li>
+                            <li>Email notifications may be delayed</li>
+                        </ul>
+                    </div>
+                    
+                    <p><strong>What You Can Do:</strong></p>
+                    <ul>
+                        <li>Complete any urgent expense submissions before {{start_time}}</li>
+                        <li>Save any work in progress</li>
+                        <li>Plan accordingly for the downtime</li>
+                    </ul>
+                    
+                    <p>We apologize for any inconvenience and appreciate your patience as we work to improve the system.</p>
+                </div>
+                <div class="email-footer">
+                    <p>This is an automated message from TrevID System Administration.<br>
+                    For urgent issues during maintenance, contact IT support at {{support_email}}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Template variables documentation
+        const templateVariables = {
+            'Missing Receipt Reminder': {
+                'employee_name': 'Employee full name',
+                'expense_report_id': 'Expense report ID (e.g., EXP-2024-0315)',
+                'total_amount': 'Total expense amount with currency',
+                'due_date': 'Receipt submission due date',
+                'days_remaining': 'Number of days until due date',
+                'missing_receipts': 'Array of missing receipt items',
+                'expense_detail_url': 'URL to expense detail page'
+            },
+            'Approval SLA Reminder': {
+                'approver_name': 'Approver full name',
+                'pending_count': 'Number of pending approvals',
+                'hours_remaining': 'Hours until SLA breach',
+                'expense_reports': 'Array of pending expense reports',
+                'approval_queue_url': 'URL to approval queue'
+            },
+            'Payment Posted': {
+                'employee_name': 'Employee full name',
+                'expense_report_id': 'Expense report ID',
+                'payment_amount': 'Payment amount with currency',
+                'payment_method': 'Payment method (e.g., Bank Transfer)',
+                'payment_date': 'Date payment was processed',
+                'payment_reference': 'Payment reference number',
+                'expected_date': 'Expected date in bank account',
+                'bank_account_last4': 'Last 4 digits of bank account',
+                'expense_detail_url': 'URL to expense detail page'
+            },
+            'Policy Violation': {
+                'employee_name': 'Employee full name',
+                'expense_report_id': 'Expense report ID',
+                'total_amount': 'Total expense amount',
+                'violation_count': 'Number of policy violations',
+                'violations': 'Array of violation details',
+                'expense_edit_url': 'URL to edit expense report'
+            },
+            'Weekly Summary': {
+                'manager_name': 'Manager full name',
+                'week_start': 'Week start date',
+                'week_end': 'Week end date',
+                'total_expenses': 'Total expense amount for week',
+                'reports_submitted': 'Number of reports submitted',
+                'reports_approved': 'Number of reports approved',
+                'pending_approval': 'Number of reports pending approval',
+                'policy_violations': 'Number of policy violations',
+                'avg_approval_time': 'Average approval time in hours',
+                'top_spenders': 'Array of top spending employees',
+                'reports_dashboard_url': 'URL to reports dashboard',
+                'approval_queue_url': 'URL to approval queue'
+            },
+            'System Maintenance': {
+                'user_name': 'User full name',
+                'maintenance_date': 'Maintenance date',
+                'start_time': 'Maintenance start time',
+                'duration': 'Expected maintenance duration',
+                'end_time': 'Expected maintenance end time',
+                'support_email': 'IT support email address'
+            }
+        };
+        
+        console.log('Email Templates loaded with variables:', templateVariables);
+    </script>
+</body>
+</html>

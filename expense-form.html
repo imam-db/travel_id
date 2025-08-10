@@ -9,6 +9,64 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icon-192.svg">
+    <style>
+        .policy-indicator {
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .policy-indicator.violation {
+            background: #fce8e6;
+            color: #ea4335;
+            border: 1px solid #f28b82;
+        }
+        
+        .policy-indicator.warning {
+            background: #fef7e0;
+            color: #f9ab00;
+            border: 1px solid #fbbc04;
+        }
+        
+        .policy-indicator.ok {
+            background: #e8f5e8;
+            color: #34a853;
+            border: 1px solid #81c995;
+        }
+        
+        .justification-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: #fef7e0;
+            border: 1px solid #fbbc04;
+            border-radius: 8px;
+        }
+        
+        .justification-section .form-group {
+            margin-bottom: 12px;
+        }
+        
+        .justification-section .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .justification-section label {
+            font-weight: 600;
+            color: #ea4335;
+        }
+        
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #ea4335;
+            box-shadow: 0 0 0 2px rgba(234, 67, 53, 0.1);
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -17,7 +75,7 @@
             <div class="logo">
                 <img 
                     class="brand-logo" 
-                    src="/assets/brand/trevid_logo.png" 
+                    src="assets/brand/trevid_logo.png" 
                     srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
                     alt="TrevID – Business Companion" />
             </div>
@@ -225,7 +283,32 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="hotelAmount">Estimated Amount</label>
-                                            <input type="number" id="hotelAmount" name="hotelAmount" placeholder="0" step="0.01">
+                                            <input type="number" id="hotelAmount" name="hotelAmount" placeholder="0" step="0.01" oninput="checkHotelPolicy()">
+                                            <div class="policy-indicator" id="hotelPolicyIndicator" style="display: none;"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Hotel Policy Justification -->
+                                    <div class="justification-section" id="hotelJustification" style="display: none;">
+                                        <div class="form-group">
+                                            <label for="hotelViolationReason">Violation Reason *</label>
+                                            <select id="hotelViolationReason" name="hotelViolationReason" onchange="toggleHotelCustomReason()">
+                                                <option value="">Select reason for policy violation</option>
+                                                <option value="client_request">Client Request</option>
+                                                <option value="no_lower_rate">No Lower Rate Available</option>
+                                                <option value="location_constraint">Location Constraint</option>
+                                                <option value="last_minute_booking">Last Minute Booking</option>
+                                                <option value="business_necessity">Business Necessity</option>
+                                                <option value="other">Other (specify below)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="hotelCustomReasonGroup" style="display: none;">
+                                            <label for="hotelCustomReason">Custom Reason</label>
+                                            <input type="text" id="hotelCustomReason" name="hotelCustomReason" placeholder="Please specify the reason...">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hotelJustificationNotes">Additional Details</label>
+                                            <textarea id="hotelJustificationNotes" name="hotelJustificationNotes" rows="2" placeholder="Provide additional details or context for this violation..."></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -297,14 +380,132 @@
                 }
             });
             
+            // Validate policy justifications
             if (isValid) {
-                // Simulate creating report and redirect to detail page
-                alert('Expense report created successfully!');
-                window.location.href = 'expense-detail.html';
-            } else {
-                alert('Please fill in all required fields.');
+                const hotelJustification = validateHotelJustification();
+                if (!hotelJustification.valid) {
+                    alert(hotelJustification.message);
+                    return;
+                }
+            }
+            
+            if (isValid) {
+                submitExpenseForm();
             }
         });
+        
+        function submitExpenseForm() {
+            const submitBtn = document.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+            submitBtn.disabled = true;
+            
+            // Disable other buttons
+            document.querySelectorAll('.form-actions button').forEach(btn => {
+                if (btn !== submitBtn) btn.disabled = true;
+            });
+            
+            // Simulate form submission with potential errors
+            setTimeout(() => {
+                const success = Math.random() > 0.1; // 90% success rate
+                
+                if (success) {
+                    // Show success message
+                    showSuccessMessage('Expense report created successfully!');
+                    setTimeout(() => {
+                        window.location.href = 'expenses.html';
+                    }, 1500);
+                } else {
+                    // Show error state
+                    showErrorMessage('Failed to create expense report. Please check your data and try again.');
+                    
+                    // Restore buttons
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                    document.querySelectorAll('.form-actions button').forEach(btn => {
+                        btn.disabled = false;
+                    });
+                }
+            }, 2000);
+        }
+        
+        function saveDraft() {
+            const draftBtn = document.querySelector('[onclick="saveDraft()"]');
+            const originalText = draftBtn.textContent;
+            
+            // Show loading state
+            draftBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+            draftBtn.disabled = true;
+            
+            // Simulate save draft with potential errors
+            setTimeout(() => {
+                const success = Math.random() > 0.05; // 95% success rate
+                
+                if (success) {
+                    showSuccessMessage('Draft saved successfully!');
+                } else {
+                    showErrorMessage('Failed to save draft. Please try again.');
+                }
+                
+                // Restore button
+                draftBtn.innerHTML = originalText;
+                draftBtn.disabled = false;
+            }, 1000);
+        }
+        
+        function showSuccessMessage(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success';
+            alert.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                ${message}
+            `;
+            alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+        
+        function showErrorMessage(message) {
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-danger';
+            alert.innerHTML = `
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                ${message}
+            `;
+            alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        function continueWithPolicyViolations() {
+            // Show policy summary if there are violations
+            const hotelAmount = parseFloat(document.getElementById('hotelAmount').value) || 0;
+            const hotelNights = parseInt(document.getElementById('hotelNights').value) || 1;
+            const perNightAmount = hotelAmount / hotelNights;
+            
+            let policyMessage = '';
+            if (hotelAmount > 0 && perNightAmount > 2000000) {
+                const reason = document.getElementById('hotelViolationReason').value;
+                const customReason = document.getElementById('hotelCustomReason').value;
+                const notes = document.getElementById('hotelJustificationNotes').value;
+                
+                policyMessage = `\n\nPolicy Violation Detected:\n- Hotel rate exceeds policy (IDR ${perNightAmount.toLocaleString('id-ID')}/night)\n- Reason: ${reason === 'other' ? customReason : reason}\n- Notes: ${notes || 'None'}`;
+            }
+            
+            // Simulate creating report and redirect to detail page
+            alert('Expense report created successfully!' + policyMessage);
+            window.location.href = 'expense-detail.html';
+        }
         
         // Save as draft
         function saveDraft() {
@@ -341,6 +542,85 @@
                 endDateField.value = end.toISOString().split('T')[0];
             }
         });
+        
+        // Policy validation functions
+        function checkHotelPolicy() {
+            const amount = parseFloat(document.getElementById('hotelAmount').value) || 0;
+            const nights = parseInt(document.getElementById('hotelNights').value) || 1;
+            const perNightAmount = amount / nights;
+            
+            const indicator = document.getElementById('hotelPolicyIndicator');
+            const justificationSection = document.getElementById('hotelJustification');
+            
+            if (amount === 0) {
+                indicator.style.display = 'none';
+                justificationSection.style.display = 'none';
+                return;
+            }
+            
+            // Mock policy rules for hotel
+            let status = 'ok';
+            let message = '';
+            let icon = 'check_circle';
+            
+            if (perNightAmount > 2000000) { // > 2M IDR per night
+                status = 'violation';
+                message = `Hotel rate exceeds maximum allowed (IDR 2,000,000/night). Current: IDR ${perNightAmount.toLocaleString('id-ID')}/night`;
+                icon = 'error';
+                justificationSection.style.display = 'block';
+                document.getElementById('hotelViolationReason').required = true;
+            } else if (perNightAmount > 1500000) { // > 1.5M IDR per night
+                status = 'warning';
+                message = `Hotel rate is high (IDR ${perNightAmount.toLocaleString('id-ID')}/night). Consider justification.`;
+                icon = 'warning';
+                justificationSection.style.display = 'none';
+                document.getElementById('hotelViolationReason').required = false;
+            } else {
+                status = 'ok';
+                message = `Hotel rate is within policy (IDR ${perNightAmount.toLocaleString('id-ID')}/night)`;
+                icon = 'check_circle';
+                justificationSection.style.display = 'none';
+                document.getElementById('hotelViolationReason').required = false;
+            }
+            
+            indicator.className = `policy-indicator ${status}`;
+            indicator.innerHTML = `<i class="material-icons" style="font-size: 16px;">${icon}</i> ${message}`;
+            indicator.style.display = 'flex';
+        }
+        
+        function toggleHotelCustomReason() {
+            const reasonSelect = document.getElementById('hotelViolationReason');
+            const customReasonGroup = document.getElementById('hotelCustomReasonGroup');
+            
+            if (reasonSelect.value === 'other') {
+                customReasonGroup.style.display = 'block';
+                document.getElementById('hotelCustomReason').required = true;
+            } else {
+                customReasonGroup.style.display = 'none';
+                document.getElementById('hotelCustomReason').required = false;
+                document.getElementById('hotelCustomReason').value = '';
+            }
+        }
+        
+        function validateHotelJustification() {
+            const justificationSection = document.getElementById('hotelJustification');
+            if (justificationSection.style.display === 'none') {
+                return { valid: true };
+            }
+            
+            const reasonSelect = document.getElementById('hotelViolationReason');
+            const customReason = document.getElementById('hotelCustomReason');
+            
+            if (!reasonSelect.value) {
+                return { valid: false, message: 'Please select a reason for hotel policy violation' };
+            }
+            
+            if (reasonSelect.value === 'other' && !customReason.value.trim()) {
+                return { valid: false, message: 'Please specify the custom reason for hotel violation' };
+            }
+            
+            return { valid: true };
+        }
     </script>
 </body>
 </html>

@@ -9,6 +9,248 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icon-192.svg">
+    <style>
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #f1f3f4;
+        }
+
+        .tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: #666;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: #1a73e8;
+            background-color: #f8f9fa;
+        }
+
+        .tab-btn.active {
+            color: #1a73e8;
+            border-bottom-color: #1a73e8;
+        }
+
+        .tab-badge {
+            background: #e8f0fe;
+            color: #1a73e8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Receipts Section */
+        .receipts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .receipts-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .receipt-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .filter-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            border-radius: 6px;
+            color: #666;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .filter-btn.active {
+            background: #1a73e8;
+            color: white;
+        }
+
+        .filter-btn .count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .filter-btn.active .count {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .receipts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .receipt-card {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .receipt-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .receipt-card.matched {
+            border-left: 4px solid #34a853;
+        }
+
+        .receipt-card.unmatched {
+            border-left: 4px solid #fbbc04;
+        }
+
+        .receipt-card.flagged {
+            border-left: 4px solid #ea4335;
+        }
+
+        .receipt-preview {
+            flex-shrink: 0;
+        }
+
+        .receipt-preview img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .receipt-info {
+            flex: 1;
+        }
+
+        .receipt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .receipt-header h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #202124;
+        }
+
+        .receipt-status {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .receipt-status.matched {
+            background: #e8f5e8;
+            color: #34a853;
+        }
+
+        .receipt-status.unmatched {
+            background: #fef7e0;
+            color: #f9ab00;
+        }
+
+        .receipt-status.flagged {
+            background: #fce8e6;
+            color: #ea4335;
+        }
+
+        .receipt-details {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .detail-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .detail-row .label {
+            font-weight: 500;
+            color: #666;
+            min-width: 80px;
+        }
+
+        .detail-row .value {
+            color: #202124;
+        }
+
+        .matched-item {
+            color: #34a853;
+            font-weight: 500;
+        }
+
+        .suggested-match {
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        .no-match {
+            color: #ea4335;
+            font-style: italic;
+        }
+
+        .receipt-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -213,11 +455,23 @@
                 </div>
             </section>
 
+            <!-- Tab Navigation -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="switchTab('items')">
+                    <i class="fas fa-list"></i> Expense Items
+                </button>
+                <button class="tab-btn" onclick="switchTab('receipts')">
+                    <i class="fas fa-receipt"></i> Receipts
+                    <span class="tab-badge" id="receiptsCount">3</span>
+                </button>
+            </div>
+
             <!-- Main Content Area -->
             <div class="report-content">
-                <!-- Items List -->
-                <section class="expense-items">
-                    <h3>Expense Items</h3>
+                <!-- Items Tab -->
+                <section class="tab-content active" id="itemsTab">
+                    <div class="expense-items">
+                        <h3>Expense Items</h3>
                     
                     <!-- Flight Item -->
                     <div class="expense-item-card">
@@ -336,6 +590,154 @@
                                 <span class="policy-badge ok">
                                     <i class="fas fa-check-circle"></i> Within policy
                                 </span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </section>
+
+                <!-- Receipts Tab -->
+                <section class="tab-content" id="receiptsTab">
+                    <div class="receipts-section">
+                        <div class="receipts-header">
+                            <h3>Receipts</h3>
+                            <div class="receipts-actions">
+                                <button class="btn btn-outline" onclick="showUploadReceiptModal()">
+                                    <i class="fas fa-plus"></i> Upload Receipt
+                                </button>
+                                <button class="btn btn-outline" onclick="autoMatchReceipts()">
+                                    <i class="fas fa-magic"></i> Auto-match All
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Receipt Status Filters -->
+                        <div class="receipt-filters">
+                            <button class="filter-btn active" onclick="filterReceipts('all')">
+                                All <span class="count">3</span>
+                            </button>
+                            <button class="filter-btn" onclick="filterReceipts('unmatched')">
+                                Unmatched <span class="count">2</span>
+                            </button>
+                            <button class="filter-btn" onclick="filterReceipts('matched')">
+                                Matched <span class="count">1</span>
+                            </button>
+                            <button class="filter-btn" onclick="filterReceipts('flagged')">
+                                Flagged <span class="count">0</span>
+                            </button>
+                        </div>
+
+                        <!-- Receipts List -->
+                        <div class="receipts-list">
+                            <!-- Matched Receipt -->
+                            <div class="receipt-card matched" data-status="matched">
+                                <div class="receipt-preview">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='80' viewBox='0 0 60 80'%3E%3Crect width='60' height='80' fill='%23f8f9fa' stroke='%23dee2e6'/%3E%3Ctext x='30' y='40' text-anchor='middle' fill='%23666' font-size='10'%3EReceipt%3C/text%3E%3C/svg%3E" alt="Receipt preview">
+                                </div>
+                                <div class="receipt-info">
+                                    <div class="receipt-header">
+                                        <h4>Garuda Indonesia</h4>
+                                        <span class="receipt-status matched">
+                                            <i class="fas fa-check-circle"></i> Matched
+                                        </span>
+                                    </div>
+                                    <div class="receipt-details">
+                                        <div class="detail-row">
+                                            <span class="label">Date:</span>
+                                            <span class="value">15 Feb 2024</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="label">Amount:</span>
+                                            <span class="value">IDR 1,850,000</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="label">Matched to:</span>
+                                            <span class="value matched-item">Flight CGK → SUB</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="receipt-actions">
+                                    <button class="btn-icon" onclick="viewReceipt('receipt-1')" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" onclick="unmatchReceipt('receipt-1')" title="Unmatch">
+                                        <i class="fas fa-unlink"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Unmatched Receipt 1 -->
+                            <div class="receipt-card unmatched" data-status="unmatched">
+                                <div class="receipt-preview">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='80' viewBox='0 0 60 80'%3E%3Crect width='60' height='80' fill='%23f8f9fa' stroke='%23dee2e6'/%3E%3Ctext x='30' y='40' text-anchor='middle' fill='%23666' font-size='10'%3EReceipt%3C/text%3E%3C/svg%3E" alt="Receipt preview">
+                                </div>
+                                <div class="receipt-info">
+                                    <div class="receipt-header">
+                                        <h4>Hotel Santika</h4>
+                                        <span class="receipt-status unmatched">
+                                            <i class="fas fa-clock"></i> Unmatched
+                                        </span>
+                                    </div>
+                                    <div class="receipt-details">
+                                        <div class="detail-row">
+                                            <span class="label">Date:</span>
+                                            <span class="value">16 Feb 2024</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="label">Amount:</span>
+                                            <span class="value">IDR 1,200,000</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="label">Suggested match:</span>
+                                            <span class="value suggested-match">Hotel Santika Surabaya</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="receipt-actions">
+                                    <button class="btn-icon" onclick="viewReceipt('receipt-2')" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="matchReceipt('receipt-2', 'hotel-1')">
+                                        <i class="fas fa-link"></i> Match
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Unmatched Receipt 2 -->
+                            <div class="receipt-card unmatched" data-status="unmatched">
+                                <div class="receipt-preview">
+                                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='80' viewBox='0 0 60 80'%3E%3Crect width='60' height='80' fill='%23f8f9fa' stroke='%23dee2e6'/%3E%3Ctext x='30' y='40' text-anchor='middle' fill='%23666' font-size='10'%3EReceipt%3C/text%3E%3C/svg%3E" alt="Receipt preview">
+                                </div>
+                                <div class="receipt-info">
+                                    <div class="receipt-header">
+                                        <h4>Starbucks Coffee</h4>
+                                        <span class="receipt-status unmatched">
+                                            <i class="fas fa-clock"></i> Unmatched
+                                        </span>
+                                    </div>
+                                    <div class="receipt-details">
+                                        <div class="detail-row">
+                                            <span class="label">Date:</span>
+                                            <span class="value">16 Feb 2024</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="label">Amount:</span>
+                                            <span class="value">IDR 85,000</span>
+                                        </div>
+                                        <div class="detail-row">
+                                            <span class="label">Status:</span>
+                                            <span class="value no-match">No matching expense item</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="receipt-actions">
+                                    <button class="btn-icon" onclick="viewReceipt('receipt-3')" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" onclick="createExpenseFromReceipt('receipt-3')">
+                                        <i class="fas fa-plus"></i> Create Item
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3184,6 +3586,112 @@
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
+
+        // Tab switching functionality
+        function switchTab(tabName) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Receipt filtering functionality
+        function filterReceipts(filter) {
+            // Remove active class from all filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked filter
+            event.target.classList.add('active');
+            
+            // Show/hide receipt cards based on filter
+            const receiptCards = document.querySelectorAll('.receipt-card');
+            receiptCards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'flex';
+                } else {
+                    if (card.classList.contains(filter)) {
+                        card.style.display = 'flex';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Receipt matching functionality
+        function matchReceipt(receiptId, expenseItemId) {
+            // This would contain actual matching logic
+            // For demo purposes, show success message
+            showNotification('Receipt matched successfully!', 'success');
+            
+            // Update receipt card status
+            const receiptCard = document.querySelector(`[data-receipt-id="${receiptId}"]`);
+            if (receiptCard) {
+                receiptCard.classList.remove('unmatched', 'flagged');
+                receiptCard.classList.add('matched');
+                
+                const statusElement = receiptCard.querySelector('.receipt-status');
+                statusElement.className = 'receipt-status matched';
+                statusElement.innerHTML = '<i class="material-icons" style="font-size: 14px;">check_circle</i> Matched';
+                
+                // Update matched item info
+                const matchedElement = receiptCard.querySelector('.matched-item');
+                if (matchedElement) {
+                    matchedElement.textContent = `Matched to: Flight - ${expenseItemId}`;
+                }
+            }
+        }
+
+        function autoMatchReceipts() {
+            // This would contain actual auto-matching logic
+            // For demo purposes, show processing message
+            showNotification('Auto-matching receipts...', 'info');
+            
+            setTimeout(() => {
+                showNotification('Auto-match completed! 2 receipts matched.', 'success');
+                // Update receipt counts in filter buttons
+                updateReceiptCounts();
+            }, 2000);
+        }
+
+        function updateReceiptCounts() {
+            const allCount = document.querySelectorAll('.receipt-card').length;
+            const matchedCount = document.querySelectorAll('.receipt-card.matched').length;
+            const unmatchedCount = document.querySelectorAll('.receipt-card.unmatched').length;
+            const flaggedCount = document.querySelectorAll('.receipt-card.flagged').length;
+            
+            document.querySelector('[onclick="filterReceipts(\'all\')"] .count').textContent = allCount;
+            document.querySelector('[onclick="filterReceipts(\'matched\')"] .count').textContent = matchedCount;
+            document.querySelector('[onclick="filterReceipts(\'unmatched\')"] .count').textContent = unmatchedCount;
+            document.querySelector('[onclick="filterReceipts(\'flagged\')"] .count').textContent = flaggedCount;
+        }
+
+        function viewReceipt(receiptId) {
+            // This would open a modal to view the full receipt
+            alert(`Viewing receipt: ${receiptId}`);
+        }
+
+        function uploadReceipt() {
+            // This would open file picker or camera
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = function(e) {
+                if (e.target.files.length > 0) {
+                    showNotification('Receipt uploaded successfully!', 'success');
+                    // Here you would process the uploaded file
+                }
+            };
+            input.click();
+        }
+
+        // Initialize receipt counts on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateReceiptCounts();
+        });
     </script>
 </body>
 </html>
