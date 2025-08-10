@@ -173,12 +173,26 @@ function updateUserInfo() {
 function initializeNavigation() {
     // Add click handlers for navigation items
     const navItems = document.querySelectorAll('.nav-item');
+
+    // Ensure the correct aria-current is set on load
+    navItems.forEach(nav => {
+        if (nav.classList.contains('active')) {
+            nav.setAttribute('aria-current', 'page');
+        } else {
+            nav.removeAttribute('aria-current');
+        }
+    });
+
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            // Remove active class from all items
-            navItems.forEach(nav => nav.classList.remove('active'));
-            // Add active class to clicked item
+            // Remove active class and aria-current from all items
+            navItems.forEach(nav => {
+                nav.classList.remove('active');
+                nav.removeAttribute('aria-current');
+            });
+            // Add active class and aria-current to clicked item
             this.classList.add('active');
+            this.setAttribute('aria-current', 'page');
         });
     });
 }
