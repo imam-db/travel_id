@@ -7259,3 +7259,23 @@ textarea:focus,input:focus,select:focus{outline:2px solid #94b5ff;outline-offset
         padding: 16px;
     }
 }
+
+/* Announcement Card */
+.announcement-card {
+    cursor: default;
+}
+
+.announcement-card h2 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+
+.announcement-content {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.announcement-btn {
+    display: inline-block;
+}
