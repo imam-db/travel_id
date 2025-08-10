@@ -24,10 +24,10 @@
                     width="140" height="36" />
             </div>
             <div class="quick-actions-desktop">
-                <button class="action-btn" onclick="showNotImplementedPopup('Add Expense')"><i class="fas fa-plus"></i> Add Expense</button>
-                <button class="action-btn" onclick="window.location.href='travel-new.html'"><i class="fas fa-plane"></i> New Trip</button>
-                <button class="action-btn" onclick="window.location.href='cash-advance.html'"><i class="fas fa-money-bill"></i> Request Advance</button>
-                <button class="action-btn" onclick="window.location.href='vehicle.html#new-log'"><i class="fas fa-road"></i> Log Mileage</button>
+                <button class="action-btn" onclick="showNotImplementedPopup('Add Expense')" aria-label="Add new expense"><i class="fas fa-plus"></i> Add Expense</button>
+                <button class="action-btn" onclick="window.location.href='travel-new.html'" aria-label="Create new trip"><i class="fas fa-plane"></i> New Trip</button>
+                <button class="action-btn" onclick="window.location.href='cash-advance.html'" aria-label="Request cash advance"><i class="fas fa-money-bill"></i> Request Advance</button>
+                <button class="action-btn" onclick="window.location.href='vehicle.html#new-log'" aria-label="Log vehicle mileage"><i class="fas fa-road"></i> Log Mileage</button>
             </div>
             <div class="user-info">
                 <span>Hello, John Doe</span>
@@ -75,6 +75,9 @@
         </a>
     </nav>
 
+    <!-- Toast Container for Accessibility -->
+    <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
     <!-- Main Content -->
     <main class="main-content">
         <div class="container">
@@ -87,64 +90,70 @@
             <!-- Global Filter -->
             <section class="global-filter">
                 <div class="filter-controls">
-                    <label for="dateRange" class="sr-only">Date range</label>
-                    <select class="filter-select" id="dateRange">
-                        <option value="this_month">This Month</option>
-                        <option value="last_month">Last Month</option>
-                        <option value="last_3_months">Last 3 Months</option>
-                        <option value="custom">Custom Range</option>
-                    </select>
+                    <div class="period-picker">
+                        <label for="dateRange" class="sr-only">Date range</label>
+                        <select class="filter-select" id="dateRange">
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="last_3_months">Last 3 Months</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                        <div class="custom-period" id="customPeriod" style="display: none;">
+                            <input type="date" class="date-picker" id="startDate" aria-label="Start date">
+                            <span>to</span>
+                            <input type="date" class="date-picker" id="endDate" aria-label="End date">
+                        </div>
+                    </div>
                     <button class="filter-toggle" id="currencyToggle" onclick="toggleCurrency()" aria-pressed="false" aria-label="Switch currency to IDR">
                         <i class="fas fa-exchange-alt"></i> USD
                     </button>
                 </div>
             </section>
 
-            <!-- Announcement Card -->
-            <section class="announcement-section">
-                <div class="dashboard-card announcement-card">
-                    <h2>Announcements</h2>
-                    <div class="announcement-content">
-                        <p>System updates will be performed this weekend.</p>
-                        <p>Please submit your expense reports before Friday.</p>
-                        <p>The new travel policy has been published.</p>
-                    </div>
-                    <a href="announcements.html" class="btn btn-primary announcement-btn">View All</a>
+            <!-- Compact Announcement Banner -->
+            <section class="announcement-banner">
+                <div class="banner-content">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>System updates this weekend • Submit expense reports before Friday</span>
+                    <a href="announcements.html" class="banner-link">View all</a>
                 </div>
             </section>
 
-            <!-- Placeholder Schedule Section -->
-            <section class="schedule-section">
-                <div class="dashboard-card schedule-card">
-                    <h2>Activity Schedule</h2>
-                    <table class="schedule-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Description</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>2024-01-01</td>
-                                <td>Sample activity 1</td>
-                                <td>Pending</td>
-                            </tr>
-                            <tr>
-                                <td>2024-02-15</td>
-                                <td>Sample activity 2</td>
-                                <td>In Progress</td>
-                            </tr>
-                            <tr>
-                                <td>2024-03-30</td>
-                                <td>Sample activity 3</td>
-                                <td>Completed</td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <!-- My Tasks Widget (Priority 1) -->
+            <section class="my-tasks-section">
+                <div class="dashboard-card tasks-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-tasks"></i> My Tasks</h3>
+                        <span class="tasks-count">4 pending</span>
+                    </div>
+                    <div class="card-content">
+                        <div class="task-chips">
+                            <button class="task-chip" onclick="window.location.href='receipts.html?filter=missing'" aria-label="View missing receipts">
+                                <i class="fas fa-receipt"></i>
+                                <span class="task-label">Missing receipts</span>
+                                <span class="task-count">2</span>
+                            </button>
+                            <button class="task-chip" onclick="window.location.href='expenses.html?filter=draft'" aria-label="View draft reports">
+                                <i class="fas fa-file-alt"></i>
+                                <span class="task-label">Draft reports</span>
+                                <span class="task-count">2</span>
+                            </button>
+                            <button class="task-chip" onclick="showNotImplementedPopup('Trips to Expense')" aria-label="View trips to expense">
+                                <i class="fas fa-plane"></i>
+                                <span class="task-label">Trips to expense</span>
+                                <span class="task-count">1</span>
+                            </button>
+                            <button class="task-chip" onclick="window.location.href='cash-advance.html?filter=settle'" aria-label="View advances to settle">
+                                <i class="fas fa-money-bill"></i>
+                                <span class="task-label">Advances to settle</span>
+                                <span class="task-count">1</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
+
+
 
             <!-- Quick Stats for Main Menus -->
             <section class="quick-stats">
@@ -247,41 +256,7 @@
                         </div>
                     </div>
 
-                    <!-- NEW: KPI tile "Vehicle logs this month" (deep-links to vehicle.html) -->
-                    <div class="dashboard-card" tabindex="0" onclick="window.location.href='vehicle.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='vehicle.html';}">
-                        <div class="card-header">
-                            <h3><i class="fas fa-tachometer-alt"></i> Vehicle logs this month</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="mwp-stats">
-                                <div class="stat-item text-center">
-                                    <span class="stat-value kpi-number" data-count="12">0</span>
-                                    <span class="stat-label">Trips logged</span>
-                                </div>
-                            </div>
-                            <button class="cta-button secondary" onclick="event.stopPropagation(); window.location.href='vehicle.html#new-log'">
-                                Log mileage
-                            </button>
-                        </div>
-                    </div>
 
-                    <!-- NEW: KPI tile "Outstanding advances" (deep-links to cash-advance.html) -->
-                    <div class="dashboard-card" tabindex="0" onclick="window.location.href='cash-advance.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='cash-advance.html';}">
-                        <div class="card-header">
-                            <h3><i class="fas fa-exclamation-triangle"></i> Outstanding advances</h3>
-                        </div>
-                        <div class="card-content">
-                            <div class="mwp-stats">
-                                <div class="stat-item text-center">
-                                    <span class="stat-value kpi-number" data-count-text="$5,500">$0</span>
-                                    <span class="stat-label">2 advances</span>
-                                </div>
-                            </div>
-                            <button class="cta-button primary" onclick="event.stopPropagation(); window.location.href='cash-advance.html'">
-                                Request advance
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -352,77 +327,163 @@
                 </div>
             </section>
 
-            <!-- Row 3: Current Month MWP -->
-            <section class="mwp-row">
-                <div class="dashboard-card mwp-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-calendar-alt"></i> Current Month MWP</h3>
-                        <div class="mwp-actions">
-                            <a href="#" onclick="showNotImplementedPopup('View All MWP'); return false;" class="view-all-link">View all</a>
-                            <div class="mwp-header-actions">
-                                <!-- Upload -->
-                                <button class="btn btn-ghost btn-sm" id="btnUpload" title="Upload MWP (XLSX/CSV)" aria-label="Upload MWP file">
-                                    <i class="i-upload"></i><span>Upload</span>
+            <!-- Row 3: Calendar/Agenda (Combined MWP + Schedule) -->
+            <section class="agenda-row">
+                <div class="card-grid agenda-grid">
+                    <!-- Calendar/Agenda Widget -->
+                    <div class="dashboard-card agenda-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-calendar-alt"></i> Calendar & Agenda</h3>
+                            <div class="agenda-actions">
+                                <button class="view-toggle" id="agendaViewToggle" onclick="toggleAgendaView()" title="Switch to calendar view" aria-label="Switch to calendar view">
+                                    <i class="fas fa-calendar"></i> Calendar view
                                 </button>
-                                <input type="file" id="mwpFile" accept=".xlsx,.csv" hidden>
-
-                                <!-- Download (split dropdown) -->
-                                <div class="btn-split" id="btnDownloadGroup">
-                                    <button class="btn btn-ghost btn-sm" id="btnDownloadMain" title="Download templates" aria-label="Download template">
-                                        <i class="i-download"></i><span>Download</span>
+                                <a href="mwp.html" class="view-all-link">View all MWP</a>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <div class="agenda-timeline">
+                                <!-- Today & This Week -->
+                                <div class="timeline-section">
+                                    <h4 class="timeline-header">This Week</h4>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot travel"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-date">Mon 13</span>
+                                            <span class="timeline-event">
+                                                <i class="fas fa-plane"></i> Jakarta Trip Start • 10:00 AM
+                                            </span>
+                                            <button class="timeline-cta" onclick="showNotImplementedPopup('Open Trip Details')">
+                                                Open trip
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot receipt"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-date">Wed 15</span>
+                                            <span class="timeline-event">
+                                                <i class="fas fa-receipt"></i> Receipt deadline • Bandung expenses
+                                            </span>
+                                            <button class="timeline-cta" onclick="window.location.href='receipts.html?filter=missing'">
+                                                Upload receipt
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot report"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-date">Fri 17</span>
+                                            <span class="timeline-event">
+                                                <i class="fas fa-file-alt"></i> Report submission due • Q1 expenses
+                                            </span>
+                                            <button class="timeline-cta" onclick="window.location.href='expenses.html?filter=draft'">
+                                                Open report
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Upcoming Trips from MWP -->
+                                <div class="timeline-section">
+                                    <h4 class="timeline-header">Upcoming Trips</h4>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot approved"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-date">May 13-15</span>
+                                            <span class="timeline-event">
+                                                <i class="fas fa-plane"></i> CGK-BDO Bandung • Est. $2,500
+                                                <span class="policy-flag warning" title="Over budget meal: $15 exceeded">Budget meal</span>
+                                            </span>
+                                            <button class="timeline-cta" onclick="convertSingleTrip('trip-bandung-001')">
+                                                Convert to Travel
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot pending"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-date">May 20-22</span>
+                                            <span class="timeline-event">
+                                                <i class="fas fa-plane"></i> BDO-CGK Jakarta • Est. $1,800
+                                            </span>
+                                            <span class="timeline-status pending">Pending approval</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Advance Repayments -->
+                                <div class="timeline-section">
+                                    <h4 class="timeline-header">Advance Repayments</h4>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot money"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-date">May 30</span>
+                                            <span class="timeline-event">
+                                                <i class="fas fa-money-bill"></i> Advance repayment due • $2,000
+                                            </span>
+                                            <button class="timeline-cta" onclick="window.location.href='cash-advance.html?filter=settle'">
+                                                Settle advance
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Calendar View (Hidden by default) -->
+                            <div class="agenda-calendar" style="display: none;">
+                                <div class="calendar-header">
+                                    <button class="btn-ghost calendar-nav" id="prevMonth" aria-label="Previous month">
+                                        <i class="fas fa-chevron-left"></i>
                                     </button>
-                                    <button class="btn btn-ghost btn-sm caret" id="btnDownloadCaret" aria-haspopup="menu" aria-expanded="false" aria-label="Open download options">
-                                        ▾
+                                    <h4 class="calendar-month" id="currentMonth">December 2024</h4>
+                                    <button class="btn-ghost calendar-nav" id="nextMonth" aria-label="Next month">
+                                        <i class="fas fa-chevron-right"></i>
                                     </button>
-                                    <ul class="menu" role="menu" aria-labelledby="btnDownloadCaret">
-                                        <li role="menuitem" data-template="travel-plan">Travel Plan (.xlsx)</li>
-                                        <li role="menuitem" data-template="traveloka">Traveloka Mapping (.csv)</li>
-                                        <li role="menuitem" data-template="sample">Sample Filled (.xlsx)</li>
-                                    </ul>
+                                </div>
+                                <div class="calendar-grid">
+                                    <div class="calendar-weekdays">
+                                        <div class="weekday">Sun</div>
+                                        <div class="weekday">Mon</div>
+                                        <div class="weekday">Tue</div>
+                                        <div class="weekday">Wed</div>
+                                        <div class="weekday">Thu</div>
+                                        <div class="weekday">Fri</div>
+                                        <div class="weekday">Sat</div>
+                                    </div>
+                                    <div class="calendar-days" id="calendarDays">
+                                        <!-- Calendar days will be generated by JavaScript -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="card-content">
-                        <div class="mwp-status">
-                            <span class="status-item">Draft <strong>2</strong></span>
-                            <span class="stat-divider">•</span>
-                            <span class="status-item">Pending <strong>1</strong></span>
-                            <span class="stat-divider">•</span>
-                            <span class="status-item">Approved <strong>3</strong></span>
+                    
+                    <!-- MWP Status Summary -->
+                    <div class="dashboard-card mwp-summary-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-calendar-check"></i> MWP Status</h3>
                         </div>
-                        <div class="mwp-upcoming">
-                            <h4>Upcoming Trips</h4>
-                            <div class="trip-item hoverable" onclick="showNotImplementedPopup('MWP Detail: Bandung Trip')" data-status="approved">
-                                <div class="trip-info">
-                                    <div class="trip-title">
-                                        <span class="airport-code">CGK-BDO</span>
-                                        Bandung 13–15 May
-                                        <span class="policy-flag warning" title="Over budget meal: $15 exceeded">Budget meal</span>
-                                    </div>
-                                    <div class="trip-details">Est. $2,500</div>
-                                </div>
-                                <div class="trip-actions">
-                                    <span class="trip-status approved">Approved</span>
-                                    <button class="convert-btn" onclick="event.stopPropagation(); convertSingleTrip('trip-bandung-001')" title="Convert this trip" aria-label="Convert this trip">
-                                        <i class="fas fa-arrow-right"></i>
+                        <div class="card-content">
+                            <div class="mwp-status">
+                                <span class="status-item">Draft <strong>2</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="status-item">Pending <strong>1</strong></span>
+                                <span class="stat-divider">•</span>
+                                <span class="status-item">Approved <strong>3</strong></span>
+                            </div>
+                            <div class="mwp-actions">
+                                <button class="cta-button primary" id="convertAllBtn" onclick="convertAllTrips()" title="Convert all approved trips">
+                                    Convert to Travel
+                                </button>
+                                <div class="mwp-upload-actions">
+                                    <button class="btn btn-ghost btn-sm" id="btnUpload" title="Upload MWP (XLSX/CSV)" aria-label="Upload MWP file">
+                                        <i class="fas fa-upload"></i> Upload
                                     </button>
-                                </div>
-                            </div>
-                            <div class="trip-item hoverable" onclick="showNotImplementedPopup('MWP Detail: Jakarta Trip')" data-status="pending">
-                                <div class="trip-info">
-                                    <div class="trip-title">
-                                        <span class="airport-code">BDO-CGK</span>
-                                        Jakarta 20–22 May
-                                    </div>
-                                    <div class="trip-details">Est. $1,800</div>
-                                </div>
-                                <div class="trip-actions">
-                                    <span class="trip-status pending">Pending</span>
+                                    <input type="file" id="mwpFile" accept=".xlsx,.csv" hidden>
                                 </div>
                             </div>
                         </div>
-                        <button class="cta-button primary" id="convertAllBtn" onclick="convertAllTrips()" title="Convert all approved trips">Convert to Trip</button>
                     </div>
                 </div>
             </section>
@@ -479,43 +540,11 @@
                 </div>
             </section>
 
-            <!-- Row 5: This Week's Schedule -->
-            <section class="schedule-row">
-                <div class="dashboard-card schedule-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-calendar-week"></i> This Week's Schedule</h3>
-                    </div>
-                    <div class="card-content">
-                        <div class="schedule-timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-date">Mon 13</span>
-                                    <span class="timeline-event">Jakarta • 10:00 AM</span>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-date">Wed 15</span>
-                                    <span class="timeline-event">Bandung • 2:00 PM</span>
-                                </div>
-                            </div>
-                            <div class="timeline-item">
-                                <div class="timeline-dot"></div>
-                                <div class="timeline-content">
-                                    <span class="timeline-date">Fri 17</span>
-                                    <span class="timeline-event">Return • 9:00 AM</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+
 
             <!-- Mobile Quick Actions -->
              <div class="quick-actions-mobile">
-                 <button class="fab-main" onclick="toggleActionSheet()">
+                 <button class="fab-main" onclick="toggleActionSheet()" aria-label="Open quick actions menu">
                      <i class="fas fa-plus"></i>
                  </button>
              </div>
@@ -588,85 +617,90 @@
             const fileInput = document.getElementById('mwpFile');
             const split = document.getElementById('btnDownloadGroup');
             const caret = document.getElementById('btnDownloadCaret');
-            const menu = split.querySelector('.menu');
+            const menu = split?.querySelector('.menu');
 
-            // Upload flow
-            uploadBtn.addEventListener('click', () => fileInput.click());
-            fileInput.addEventListener('change', async (e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                if (!/\.(xlsx|csv)$/i.test(file.name)) {
-                    return toast('Only .xlsx or .csv files are allowed');
-                }
+            // Upload flow - always available
+            if (uploadBtn && fileInput) {
+                uploadBtn.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    if (!/\.(xlsx|csv)$/i.test(file.name)) {
+                        return toast('Only .xlsx or .csv files are allowed');
+                    }
 
-                // Disable upload button and show progress
-                uploadBtn.disabled = true;
-                uploadBtn.querySelector('span').textContent = 'Uploading…';
-                
-                // Fake progress demo — replace with real upload
-                const bar = ensureInlineProgress(uploadBtn);
-                for (let p = 0; p <= 100; p += 15) {
-                    await sleep(150);
-                    bar.style.width = p + '%';
-                }
-                
-                // Simulate file validation
-                await sleep(500);
-                const validationResult = validateMWPFile(file);
-                
-                if (validationResult.isValid) {
-                    toast('MWP uploaded successfully • Data validated ✓');
-                    showUploadStatus(file.name);
-                } else {
-                    toast('Upload failed • ' + validationResult.errors.join(', '));
-                }
-                
-                // Reset upload button
-                uploadBtn.disabled = false;
-                uploadBtn.querySelector('span').textContent = 'Upload';
-                
-                // Remove progress bar
-                setTimeout(() => {
-                    const progressEl = uploadBtn.closest('.mwp-header-actions').querySelector('.inline-progress');
-                    if (progressEl) progressEl.remove();
-                }, 1000);
-            });
+                    // Disable upload button and show progress
+                    uploadBtn.disabled = true;
+                    const spanEl = uploadBtn.querySelector('span');
+                    if (spanEl) spanEl.textContent = 'Uploading…';
+                    
+                    // Fake progress demo — replace with real upload
+                    const bar = ensureInlineProgress(uploadBtn);
+                    for (let p = 0; p <= 100; p += 15) {
+                        await sleep(150);
+                        bar.style.width = p + '%';
+                    }
+                    
+                    // Simulate file validation
+                    await sleep(500);
+                    const validationResult = validateMWPFile(file);
+                    
+                    if (validationResult.isValid) {
+                        toast('MWP uploaded successfully • Data validated ✓');
+                        showUploadStatus(file.name);
+                    } else {
+                        toast('Upload failed • ' + validationResult.errors.join(', '));
+                    }
+                    
+                    // Reset upload button
+                    uploadBtn.disabled = false;
+                    if (spanEl) spanEl.textContent = 'Upload';
+                    
+                    // Remove progress bar
+                    setTimeout(() => {
+                        const progressEl = uploadBtn.closest('.mwp-header-actions')?.querySelector('.inline-progress');
+                        if (progressEl) progressEl.remove();
+                    }, 1000);
+                });
+            }
 
-            // Download options
-            caret.addEventListener('click', () => {
-                const open = split.classList.toggle('open');
-                caret.setAttribute('aria-expanded', String(open));
-            });
-            
-            menu.addEventListener('click', (e) => {
-                const li = e.target.closest('li');
-                if (!li) return;
-                const template = li.dataset.template;
-                const templateName = li.textContent.trim();
+            // Download options - guard for elements that may not exist
+            if (split && caret && menu) {
+                caret.addEventListener('click', () => {
+                    const open = split.classList.toggle('open');
+                    caret.setAttribute('aria-expanded', String(open));
+                });
                 
-                // Trigger download
-                downloadTemplate(template, templateName);
-                toast(`Downloading ${templateName}…`);
-                
-                // Close menu
-                split.classList.remove('open');
-                caret.setAttribute('aria-expanded', 'false');
-            });
-
-            // Close menu on outside click / Esc
-            document.addEventListener('click', (e) => {
-                if (!split.contains(e.target)) {
+                menu.addEventListener('click', (e) => {
+                    const li = e.target.closest('li');
+                    if (!li) return;
+                    const template = li.dataset.template;
+                    const templateName = li.textContent.trim();
+                    
+                    // Trigger download
+                    downloadTemplate(template, templateName);
+                    toast(`Downloading ${templateName}…`);
+                    
+                    // Close menu
                     split.classList.remove('open');
                     caret.setAttribute('aria-expanded', 'false');
-                }
-            });
-            
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    split.classList.remove('open');
-                    caret.setAttribute('aria-expanded', 'false');
-                }
-            });
+                });
+
+                // Close menu on outside click / Esc
+                document.addEventListener('click', (e) => {
+                    if (!split.contains(e.target)) {
+                        split.classList.remove('open');
+                        caret.setAttribute('aria-expanded', 'false');
+                    }
+                });
+                
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        split.classList.remove('open');
+                        caret.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
         }
 
         // File validation function
@@ -690,7 +724,9 @@
 
         // Show upload status
         function showUploadStatus(filename) {
-            const mwpCard = document.querySelector('.mwp-card');
+            const mwpCard = document.querySelector('.mwp-summary-card');
+            if (!mwpCard) return; // Guard if element doesn't exist
+            
             let statusEl = mwpCard.querySelector('.upload-status');
             
             if (!statusEl) {
@@ -755,8 +791,37 @@
         function initializeDashboard() {
             // Initialize filter listeners
             const dateRange = document.getElementById('dateRange');
+            const customPeriod = document.getElementById('customPeriod');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+            
             if (dateRange) {
                 dateRange.addEventListener('change', function() {
+                    if (this.value === 'custom') {
+                        customPeriod.style.display = 'flex';
+                        // Set default dates
+                        const today = new Date();
+                        const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+                        startDate.value = lastMonth.toISOString().split('T')[0];
+                        endDate.value = today.toISOString().split('T')[0];
+                    } else {
+                        customPeriod.style.display = 'none';
+                    }
+                    refreshDashboardData();
+                    saveUserPreferences();
+                });
+            }
+            
+            // Add listeners for custom date inputs
+            if (startDate) {
+                startDate.addEventListener('change', function() {
+                    refreshDashboardData();
+                    saveUserPreferences();
+                });
+            }
+            
+            if (endDate) {
+                endDate.addEventListener('change', function() {
                     refreshDashboardData();
                     saveUserPreferences();
                 });
@@ -839,7 +904,27 @@
         
         // Toast notification system (unified with new system)
         function showToast(message, type = 'info', duration = 3000) {
-            toast(message);
+            const toastContainer = document.getElementById('toastContainer');
+            if (!toastContainer) {
+                // Fallback to old system if container not found
+                toast(message);
+                return;
+            }
+            
+            const el = document.createElement('div');
+            el.className = `toast toast-${type}`;
+            el.textContent = message;
+            el.setAttribute('role', 'alert');
+            el.setAttribute('aria-live', 'polite');
+            
+            toastContainer.appendChild(el);
+            
+            // Auto-remove after duration
+            setTimeout(() => {
+                if (el.parentNode) {
+                    el.remove();
+                }
+            }, duration);
         }
         
         // LocalStorage persistence
@@ -1005,6 +1090,152 @@
             // In a real app, this would show/hide a dropdown menu
             console.log('User menu toggled');
             showToast('User menu - Coming soon!', 'info');
+        }
+        
+        // Toggle agenda view between list and calendar
+        function toggleAgendaView() {
+            const toggleBtn = document.getElementById('agendaViewToggle');
+            const timeline = document.querySelector('.agenda-timeline');
+            const calendar = document.querySelector('.agenda-calendar');
+            
+            if (toggleBtn.textContent.includes('Calendar view')) {
+                // Switch to calendar view
+                timeline.style.display = 'none';
+                calendar.style.display = 'block';
+                toggleBtn.innerHTML = '<i class="fas fa-list"></i> List view';
+                toggleBtn.title = 'Switch to list view';
+                toggleBtn.setAttribute('aria-label', 'Switch to list view');
+                generateCalendar();
+                showToast('Switched to calendar view', 'success');
+            } else {
+                // Switch to list view
+                timeline.style.display = 'block';
+                calendar.style.display = 'none';
+                toggleBtn.innerHTML = '<i class="fas fa-calendar"></i> Calendar view';
+                toggleBtn.title = 'Switch to calendar view';
+                toggleBtn.setAttribute('aria-label', 'Switch to calendar view');
+                showToast('Switched to list view', 'success');
+            }
+        }
+        
+        let currentCalendarDate = new Date();
+        
+        function generateCalendar() {
+            const currentMonth = currentCalendarDate.getMonth();
+            const currentYear = currentCalendarDate.getFullYear();
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+            const todayDate = today.getDate();
+            
+            // Update month header
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonth').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+            
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+            
+            // Sample events data
+            const events = {
+                15: [{type: 'travel', title: 'Jakarta Trip'}],
+                16: [{type: 'expense', title: 'Receipt deadline'}],
+                18: [{type: 'advance', title: 'Advance repayment'}],
+                20: [{type: 'deadline', title: 'Report due'}]
+            };
+            
+            // Add previous month's trailing days
+            for (let i = firstDay - 1; i >= 0; i--) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day other-month';
+                dayDiv.innerHTML = `<div class="day-number">${daysInPrevMonth - i}</div>`;
+                calendarDays.appendChild(dayDiv);
+            }
+            
+            // Add current month's days
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day';
+                if (isCurrentMonth && day === todayDate) dayDiv.classList.add('today');
+                
+                // Add click handler for day selection
+                dayDiv.addEventListener('click', () => showDayAgenda(currentYear, currentMonth, day));
+                
+                let dayHTML = `<div class="day-number">${day}</div>`;
+                
+                if (events[day]) {
+                    dayDiv.classList.add('has-events');
+                    dayHTML += '<div class="day-events">';
+                    events[day].forEach(event => {
+                        dayHTML += `<div class="event-item"><span class="event-dot ${event.type}"></span>${event.title}</div>`;
+                    });
+                    dayHTML += '</div>';
+                }
+                
+                dayDiv.innerHTML = dayHTML;
+                calendarDays.appendChild(dayDiv);
+            }
+            
+            // Add next month's leading days to fill the grid
+            const totalCells = calendarDays.children.length;
+            const remainingCells = 42 - totalCells; // 6 rows × 7 days
+            for (let day = 1; day <= remainingCells; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day other-month';
+                dayDiv.innerHTML = `<div class="day-number">${day}</div>`;
+                calendarDays.appendChild(dayDiv);
+            }
+        }
+        
+        function prevMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            generateCalendar();
+        }
+        
+        function nextMonth() {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            generateCalendar();
+        }
+        
+        function showDayAgenda(year, month, day) {
+            const selectedDate = new Date(year, month, day);
+            const dateStr = selectedDate.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            // Sample agenda for the selected day
+            const agendaItems = [
+                { time: '09:00', title: 'Flight to Jakarta', type: 'travel' },
+                { time: '14:00', title: 'Submit expense report', type: 'deadline' },
+                { time: '16:00', title: 'Advance repayment due', type: 'advance' }
+            ];
+            
+            let agendaHTML = `<h4>Agenda for ${dateStr}</h4>`;
+            if (agendaItems.length > 0) {
+                agendaHTML += '<div class="day-agenda-list">';
+                agendaItems.forEach(item => {
+                    agendaHTML += `
+                        <div class="agenda-item">
+                            <span class="agenda-time">${item.time}</span>
+                            <span class="event-dot ${item.type}"></span>
+                            <span class="agenda-title">${item.title}</span>
+                        </div>
+                    `;
+                });
+                agendaHTML += '</div>';
+            } else {
+                agendaHTML += '<p class="no-agenda">No events scheduled for this day.</p>';
+            }
+            
+            // Show in a simple modal or toast
+            showToast(`Selected: ${dateStr}`, 'info', 2000);
         }
     </script>
 </body>

@@ -221,6 +221,47 @@ textarea:focus {
     outline-offset: 2px;
 }
 
+/* Enhanced focus states for interactive elements */
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-ghost:focus,
+.cta-button:focus,
+.action-btn:focus,
+.fab-main:focus,
+.task-chip:focus,
+.view-toggle:focus,
+.filter-toggle:focus,
+.calendar-nav:focus {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .btn:focus,
+    .nav-item:focus,
+    input:focus,
+    select:focus,
+    textarea:focus,
+    .btn-primary:focus,
+    .btn-secondary:focus,
+    .btn-ghost:focus,
+    .cta-button:focus,
+    .action-btn:focus {
+        outline: 3px solid currentColor;
+        outline-offset: 2px;
+    }
+    
+    .dashboard-card {
+        border: 1px solid #333;
+    }
+    
+    .badge, .nav-badge {
+        border: 1px solid currentColor;
+    }
+}
+
 /* Booking Modal Styles */
 .booking-item {
     display: flex;
@@ -694,30 +735,63 @@ textarea:focus {
   background: #fff;
   color: #334155;
   border-radius: 8px;
-  padding: 6px 10px;
-  font-weight: 600;
+  padding: 8px 16px;
+  font-weight: 500;
+  font-size: 14px;
   box-shadow: 0 1px 2px rgba(0,0,0,.04);
   cursor: pointer;
   transition: all 0.2s ease;
+  text-decoration: none;
+  min-height: 40px;
+  outline: none;
 }
 
-.btn-sm {
-  padding: 6px 10px;
-  font-size: .875rem;
-}
-
-.btn-ghost:hover {
-  background: #f6f8fb;
-}
-
-.btn:focus {
-  outline: 2px solid #94b5ff;
+.btn:focus-visible {
+  outline: 2px solid var(--brand-primary);
   outline-offset: 2px;
 }
 
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+  min-height: 32px;
+}
+
+.btn-lg {
+  padding: 12px 24px;
+  font-size: 16px;
+  min-height: 48px;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary, #6c757d);
+}
+
+.btn-ghost:hover {
+  background: #f6f8fb;
+  border-color: #dfe3eb;
+  color: var(--text-color, #334155);
+}
+
+.btn-icon {
+  padding: 8px;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 50%;
+  justify-content: center;
+}
+
+.btn-icon.btn-sm {
+  padding: 6px;
+  min-width: 32px;
+  min-height: 32px;
 }
 
 .btn-primary {
@@ -1202,8 +1276,21 @@ textarea:focus {
     white-space: nowrap;
 }
 
-.custom-period .month-picker {
+.custom-period .month-picker,
+.custom-period .date-picker {
     min-width: 140px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    background: white;
+    cursor: pointer;
+}
+
+.custom-period .date-picker:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 .sort-toggle {
@@ -1327,7 +1414,8 @@ textarea:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
+    padding: 0;
 }
 
 .card-header h3 {
@@ -1345,6 +1433,7 @@ textarea:focus {
 
 .card-content {
     color: #666;
+    padding: 0;
 }
 
 /* Badge Styles */
@@ -1420,6 +1509,61 @@ textarea:focus {
 
 .cta-button.secondary:hover {
     background: #e9ecef;
+}
+
+/* Timeline CTA Buttons */
+.timeline-cta {
+    background: #f8f9fa;
+    color: #667eea;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 32px;
+}
+
+.timeline-cta:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.timeline-cta:focus {
+    outline: 2px solid #94b5ff;
+    outline-offset: 2px;
+}
+
+/* View Toggle Button */
+.view-toggle {
+    background: #f8f9fa;
+    color: #667eea;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 40px;
+}
+
+.view-toggle:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.view-toggle:focus {
+    outline: 2px solid #94b5ff;
+    outline-offset: 2px;
 }
 
 /* Budget Card Specific */
@@ -2536,6 +2680,210 @@ textarea:focus {
     flex-shrink: 0;
 }
 
+/* Calendar View */
+.agenda-calendar {
+    display: none;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+.calendar-nav {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #667eea;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-nav:hover {
+    background: #f0f4ff;
+    color: #5a67d8;
+}
+
+.calendar-nav:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+#currentMonth {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    margin-bottom: 1px;
+    background: #e9ecef;
+    border-radius: 8px 8px 0 0;
+}
+
+.weekday {
+    padding: 12px 8px;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    background: #f8f9fa;
+}
+
+.weekday:first-child {
+    border-radius: 8px 0 0 0;
+}
+
+.weekday:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #e9ecef;
+    border-radius: 0 0 8px 8px;
+}
+
+.calendar-day {
+    background: white;
+    min-height: 80px;
+    padding: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-day:hover {
+    background: #f8f9fa;
+}
+
+.calendar-day.today {
+    background: #e3f2fd;
+}
+
+.calendar-day.today .day-number {
+    background: #1976d2;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.calendar-day.other-month {
+    background: #f8f9fa;
+    color: #adb5bd;
+}
+
+.calendar-day.has-events {
+    border-left: 3px solid #667eea;
+}
+
+.day-number {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    align-self: flex-start;
+}
+
+.day-events {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: rgba(102, 126, 234, 0.1);
+    color: #495057;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.event-dot.travel {
+    background: #1976d2;
+}
+
+.event-dot.expense {
+    background: #f57c00;
+}
+
+.event-dot.advance {
+    background: #388e3c;
+}
+
+.event-dot.deadline {
+    background: #d32f2f;
+}
+
+/* Mobile Calendar Adjustments */
+@media (max-width: 768px) {
+    .calendar-day {
+        min-height: 60px;
+        padding: 4px;
+    }
+    
+    .day-number {
+        font-size: 0.8rem;
+    }
+    
+    .event-item {
+        font-size: 0.65rem;
+        padding: 1px 2px;
+    }
+    
+    .calendar-nav {
+        min-height: 40px;
+        min-width: 40px;
+        font-size: 1rem;
+    }
+    
+    #currentMonth {
+        font-size: 1rem;
+    }
+    
+    .weekday {
+        padding: 8px 4px;
+        font-size: 0.75rem;
+    }
+}
+
 .activity-icon.report {
     background: #e3f2fd;
     color: #1976d2;
@@ -2824,13 +3172,30 @@ textarea:focus {
     border: 0;
 }
 
+/* Toast Container for Accessibility */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
 /* Focus states */
 .cta-button:focus,
 .action-btn:focus,
 .fab-main:focus,
-.action-sheet-item:focus {
+.action-sheet-item:focus,
+.btn-primary:focus,
+.btn-secondary:focus,
+.btn-ghost:focus,
+.btn-icon:focus,
+.view-toggle:focus,
+.task-chip:focus,
+.calendar-nav:focus {
     outline: 2px solid #667eea;
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
 }
 
 /* High contrast mode support */
@@ -2846,12 +3211,52 @@ textarea:focus {
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-    * {
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .dashboard-card:hover {
+        transform: none;
+    }
+    
+    .fab-main:hover {
+        transform: none;
+    }
+    
+    .action-btn:hover {
+        transform: none;
     }
 }
+
+/* Minimum tap target sizes for accessibility */
+.btn,
+.nav-item,
+.action-btn,
+.fab-main,
+.task-chip,
+.view-toggle,
+.filter-toggle,
+.calendar-nav,
+.action-sheet-item {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Ensure text doesn't get cut off in small containers */
+.stat-value,
+.kpi-number,
+.badge-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
 
 /* Performance optimizations */
 .dashboard-card {
@@ -3054,12 +3459,12 @@ textarea:focus {
     }
     
     .card-grid {
-        gap: 1rem;
+        gap: 16px;
         grid-template-columns: 1fr;
     }
     
     .dashboard-card {
-        padding: 1rem;
+        padding: 16px;
         min-height: 44px;
     }
     
@@ -3865,6 +4270,69 @@ textarea:focus {
 /* Ikon kecil di chip */
 .sync-chip i, .source-chip i { font-size:.7rem; margin-left:4px; }
 
+/* Task Chips */
+.task-chips {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    row-gap: 8px;
+}
+
+.task-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 22px;
+    font-size: 0.875rem;
+    color: #495057;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    min-height: 44px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-chip:hover {
+    background: #e9ecef;
+    border-color: #dee2e6;
+    transform: translateY(-1px);
+}
+
+.task-chip:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+.task-chip i {
+    color: #667eea;
+    flex-shrink: 0;
+}
+
+.task-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-count {
+    background: #667eea;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
 /* === DASHBOARD SECTION SPACING (FINAL) ===
    Taruh PALING AKHIR file style.css
    Menambah jarak antar section & mencegah margin collapsing
@@ -4475,6 +4943,543 @@ textarea:focus,input:focus,select:focus{outline:2px solid #94b5ff;outline-offset
     flex-direction: column;
     gap: 8px;
   }
+}
+
+/* Compact Announcement Banner Styles */
+.compact-announcement {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.announcement-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.announcement-content i {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+.announcement-text {
+    flex: 1;
+}
+
+.announcement-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+}
+
+.announcement-subtitle {
+    font-size: 0.85rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+.announcement-action {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.announcement-action:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    color: white;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+    .compact-announcement {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .announcement-content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .announcement-action {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* My Tasks Widget Styles */
+.my-tasks-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.my-tasks-widget h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.my-tasks-widget h3 i {
+    color: #667eea;
+}
+
+.tasks-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-start;
+}
+
+.task-chip {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 22px;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    min-height: 44px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.task-chip:hover {
+    background: #e9ecef;
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.task-chip i {
+    font-size: 1rem;
+    color: #667eea;
+    flex-shrink: 0;
+}
+
+.task-chip .task-title {
+    font-weight: 500;
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.task-chip .task-count {
+    background: #667eea;
+    color: white;
+    border-radius: 10px;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.task-chip.urgent .task-count {
+    background: #dc3545;
+    animation: pulse 2s infinite;
+}
+
+.task-chip.warning .task-count {
+    background: #ffc107;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .tasks-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .task-chip {
+        padding: 0.75rem;
+    }
+    
+    .task-chip i {
+        font-size: 1.25rem;
+    }
+    
+    .task-chip .task-title {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tasks-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Calendar & Agenda Widget Styles */
+.calendar-agenda-widget {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.calendar-agenda-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-agenda-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.calendar-agenda-header h3 i {
+    color: #667eea;
+}
+
+.agenda-toggle-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.agenda-toggle-btn:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.agenda-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    transition: all 0.2s ease;
+}
+
+.timeline-item:hover {
+    background: #e9ecef;
+    transform: translateX(2px);
+}
+
+.timeline-date {
+    min-width: 80px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.timeline-content {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timeline-title {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.timeline-subtitle {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.timeline-action {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.timeline-action .btn-sm {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-primary-sm {
+    background: #667eea;
+    color: white;
+    border: 1px solid #667eea;
+}
+
+.btn-primary-sm:hover {
+    background: #5a67d8;
+    border-color: #5a67d8;
+}
+
+.btn-outline-sm {
+    background: transparent;
+    color: #667eea;
+    border: 1px solid #667eea;
+}
+
+.btn-outline-sm:hover {
+    background: #667eea;
+    color: white;
+}
+
+.timeline-item.trip {
+    border-left-color: #28a745;
+}
+
+.timeline-item.expense {
+    border-left-color: #ffc107;
+}
+
+.timeline-item.advance {
+    border-left-color: #17a2b8;
+}
+
+.timeline-item.deadline {
+    border-left-color: #dc3545;
+}
+
+/* Calendar View Styles */
+.agenda-calendar {
+    margin-top: 1rem;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+}
+
+.calendar-month {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.calendar-nav {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 0.5rem;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.calendar-nav:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.calendar-grid {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.weekday {
+    padding: 0.75rem 0.5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #495057;
+    border-right: 1px solid #dee2e6;
+}
+
+.weekday:last-child {
+    border-right: none;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background: white;
+}
+
+.calendar-day {
+    min-height: 80px;
+    padding: 0.5rem;
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.calendar-day:hover {
+    background: #f8f9fa;
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: none;
+}
+
+.calendar-day.other-month {
+    color: #adb5bd;
+    background: #f8f9fa;
+}
+
+.calendar-day.today {
+    background: #e3f2fd;
+    font-weight: 600;
+}
+
+.calendar-day.has-events {
+    background: #fff3e0;
+}
+
+.day-number {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.event-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.25rem;
+}
+
+.event-dot.travel {
+    background: #28a745;
+}
+
+.event-dot.expense {
+    background: #ffc107;
+}
+
+.event-dot.advance {
+    background: #17a2b8;
+}
+
+.event-dot.deadline {
+    background: #dc3545;
+}
+
+.event-item {
+    font-size: 0.7rem;
+    color: #495057;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.125rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .calendar-agenda-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .timeline-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+    
+    .timeline-date {
+        min-width: auto;
+        text-align: left;
+    }
+    
+    .timeline-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    .timeline-action {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .calendar-day {
+        min-height: 60px;
+        padding: 0.25rem;
+    }
+    
+    .day-number {
+        font-size: 0.8rem;
+    }
+    
+    .event-item {
+        font-size: 0.65rem;
+    }
 }
 
 /* Vehicle Page Specific Styles */
