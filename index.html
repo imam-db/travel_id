@@ -87,13 +87,14 @@
             <!-- Global Filter -->
             <section class="global-filter">
                 <div class="filter-controls">
+                    <label for="dateRange" class="sr-only">Date range</label>
                     <select class="filter-select" id="dateRange">
                         <option value="this_month">This Month</option>
                         <option value="last_month">Last Month</option>
                         <option value="last_3_months">Last 3 Months</option>
                         <option value="custom">Custom Range</option>
                     </select>
-                    <button class="filter-toggle" id="currencyToggle" onclick="toggleCurrency()">
+                    <button class="filter-toggle" id="currencyToggle" onclick="toggleCurrency()" aria-pressed="false" aria-label="Switch currency to IDR">
                         <i class="fas fa-exchange-alt"></i> USD
                     </button>
                 </div>
@@ -765,12 +766,16 @@
         function toggleCurrency() {
             const toggle = document.getElementById('currencyToggle');
             const currentCurrency = toggle.textContent.trim();
-            
+
             if (currentCurrency.includes('USD')) {
                 toggle.innerHTML = '<i class="fas fa-exchange-alt"></i> IDR';
+                toggle.setAttribute('aria-pressed', 'true');
+                toggle.setAttribute('aria-label', 'Switch currency to USD');
                 showNotImplementedPopup('Currency switched to IDR');
             } else {
                 toggle.innerHTML = '<i class="fas fa-exchange-alt"></i> USD';
+                toggle.setAttribute('aria-pressed', 'false');
+                toggle.setAttribute('aria-label', 'Switch currency to IDR');
                 showNotImplementedPopup('Currency switched to USD');
             }
             saveUserPreferences();
