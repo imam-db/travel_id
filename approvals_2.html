@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approvals 2.0 (Beta) - TrevID</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="apple-touch-icon" href="icon-192.svg">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+        </a>
+        <a href="cash-advance.html" class="nav-item">
+            <i class="fas fa-money-bill"></i>
+            <span>Cash Advance</span>
+        </a>
+        <a href="approvals.html" class="nav-item active">
+            <i class="fas fa-check-circle"></i>
+            <span>Approvals</span>
+        </a>
+        <a href="admin.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Admin</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4" style="max-width: 1200px;">
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div>
+                <h1 class="h3 mb-1"><i class="fas fa-check-circle me-2"></i>Approvals 2.0 (Beta)</h1>
+                <p class="text-muted mb-0">Advanced approval management with delegation, batch actions, and SLA tracking</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-secondary me-2" onclick="window.location.href='approvals.html'">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Classic View
+                </button>
+                <button class="btn btn-outline-primary me-2" onclick="showDelegationModal()">
+                    <i class="fas fa-user-friends me-1"></i>Delegation
+                </button>
+                <button class="btn btn-outline-info me-2" onclick="showSLADashboard()">
+                    <i class="fas fa-clock me-1"></i>SLA Dashboard
+                </button>
+                <button class="btn btn-primary" onclick="refreshApprovals()">
+                    <i class="fas fa-sync me-1"></i>Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- SLA Overview Cards -->
+        <div class="admin-overview-cards">
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-danger mb-2">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h5 class="card-title">Overdue</h5>
+                        <p class="card-text">Past SLA deadline</p>
+                        <span class="badge bg-danger" id="overdueCount">3 items</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-warning mb-2">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h5 class="card-title">Due Soon</h5>
+                        <p class="card-text">Within 24 hours</p>
+                        <span class="badge bg-warning" id="dueSoonCount">8 items</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-success mb-2">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h5 class="card-title">On Time</h5>
+                        <p class="card-text">Within SLA</p>
+                        <span class="badge bg-success" id="onTimeCount">24 items</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-info mb-2">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <h5 class="card-title">Delegated</h5>
+                        <p class="card-text">Auto-routed items</p>
+                        <span class="badge bg-info" id="delegatedCount">5 items</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Queue Tabs -->
+        <ul class="nav nav-tabs mb-4" id="queueTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="my-queue-tab" data-bs-toggle="tab" data-bs-target="#my-queue" type="button" role="tab">
+                    <i class="fas fa-user me-1"></i>My Queue <span class="badge bg-primary ms-1" id="myQueueCount">12</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="team-queue-tab" data-bs-toggle="tab" data-bs-target="#team-queue" type="button" role="tab">
+                    <i class="fas fa-users me-1"></i>Team Queue <span class="badge bg-info ms-1" id="teamQueueCount">8</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="finance-queue-tab" data-bs-toggle="tab" data-bs-target="#finance-queue" type="button" role="tab">
+                    <i class="fas fa-calculator me-1"></i>Finance Queue <span class="badge bg-warning ms-1" id="financeQueueCount">15</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="escalations-tab" data-bs-toggle="tab" data-bs-target="#escalations" type="button" role="tab">
+                    <i class="fas fa-arrow-up me-1"></i>Escalations <span class="badge bg-danger ms-1" id="escalationsCount">3</span>
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="queueTabsContent">
+            <!-- My Queue Tab -->
+            <div class="tab-pane fade show active" id="my-queue" role="tabpanel">
+                <!-- Filter Section -->
+                <div class="card admin-filter-card">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="statusFilter" onchange="filterApprovals()">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="overdue">Overdue</option>
+                                    <option value="due-soon">Due Soon</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Requester</label>
+                                <select class="form-select" id="requesterFilter" onchange="filterApprovals()">
+                                    <option value="">All Requesters</option>
+                                    <option value="alice">Alice Johnson</option>
+                                    <option value="bob">Bob Smith</option>
+                                    <option value="carol">Carol Davis</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Cost Center</label>
+                                <select class="form-select" id="costCenterFilter" onchange="filterApprovals()">
+                                    <option value="">All Cost Centers</option>
+                                    <option value="IT001">IT Department</option>
+                                    <option value="MKT001">Marketing</option>
+                                    <option value="SAL001">Sales</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Amount Range</label>
+                                <select class="form-select" id="amountFilter" onchange="filterApprovals()">
+                                    <option value="">All Amounts</option>
+                                    <option value="low">< 1M IDR</option>
+                                    <option value="medium">1M - 10M IDR</option>
+                                    <option value="high"> > 10M IDR</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Due Date</label>
+                                <select class="form-select" id="dueFilter" onchange="filterApprovals()">
+                                    <option value="">All Due Dates</option>
+                                    <option value="today">Due Today</option>
+                                    <option value="tomorrow">Due Tomorrow</option>
+                                    <option value="week">Due This Week</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Search</label>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search reports..." oninput="filterApprovals()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Batch Actions Bar -->
+                <div class="card mb-3" id="batchActionsBar" style="display: none;">
+                    <div class="card-body py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span id="selectedCount">0</span> items selected
+                            </div>
+                            <div>
+                                <button class="btn btn-success btn-sm me-2" onclick="showBatchModal('approve')">
+                                    <i class="fas fa-check me-1"></i>Batch Approve
+                                </button>
+                                <button class="btn btn-danger btn-sm me-2" onclick="showBatchModal('reject')">
+                                    <i class="fas fa-times me-1"></i>Batch Reject
+                                </button>
+                                <button class="btn btn-warning btn-sm me-2" onclick="showBatchModal('request-change')">
+                                    <i class="fas fa-edit me-1"></i>Request Changes
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="clearSelection()">
+                                    <i class="fas fa-times me-1"></i>Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approvals Table -->
+                <div class="card admin-table-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">My Approval Queue</h5>
+                        <small class="text-muted results-counter">Showing all items</small>
+                        <div>
+                            <button class="btn btn-outline-primary btn-sm me-2" onclick="selectAll()">
+                                <i class="fas fa-check-square me-1"></i>Select All
+                            </button>
+                            <span class="badge bg-primary" id="myQueueTotal">12 items</span>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th width="40">
+                                            <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                                        </th>
+                                        <th>Requester</th>
+                                        <th>Report Title</th>
+                                        <th>Amount</th>
+                                        <th>Policy Status</th>
+                                        <th>SLA Status</th>
+                                        <th>Submitted</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="approvalsTableBody">
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Queue Tab -->
+            <div class="tab-pane fade" id="team-queue" role="tabpanel">
+                <div class="card admin-table-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Team Queue - Manager View</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Items requiring approval from your team members or escalated to you.</p>
+                        <!-- Similar table structure as My Queue -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Finance Queue Tab -->
+            <div class="tab-pane fade" id="finance-queue" role="tabpanel">
+                <div class="card admin-table-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Finance Queue</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Final approval and payment processing queue.</p>
+                        <!-- Similar table structure as My Queue -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Escalations Tab -->
+            <div class="tab-pane fade" id="escalations" role="tabpanel">
+                <div class="card admin-table-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Escalated Items</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Items that have exceeded SLA and been escalated to higher levels.</p>
+                        <!-- Similar table structure as My Queue -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Action Modal -->
+    <div class="modal fade" id="batchActionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="batchActionTitle">Batch Action</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <h6>Summary</h6>
+                        <p id="batchSummary">You are about to process <span id="batchItemCount">0</span> items with total amount of <span id="batchTotalAmount">IDR 0</span></p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Reason <span class="text-danger">*</span></label>
+                        <select class="form-select" id="batchReason" required>
+                            <option value="">Select reason...</option>
+                            <option value="approved-policy">Complies with company policy</option>
+                            <option value="approved-business">Valid business expense</option>
+                            <option value="rejected-policy">Violates company policy</option>
+                            <option value="rejected-documentation">Insufficient documentation</option>
+                            <option value="rejected-amount">Amount exceeds limits</option>
+                            <option value="change-documentation">Need additional documentation</option>
+                            <option value="change-details">Need expense details clarification</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Additional Notes</label>
+                        <textarea class="form-control" id="batchNotes" rows="3" placeholder="Optional additional comments..."></textarea>
+                    </div>
+                    <div id="rejectionFields" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Fields to be corrected</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fixAmount">
+                                <label class="form-check-label" for="fixAmount">Amount</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fixReceipts">
+                                <label class="form-check-label" for="fixReceipts">Receipts</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fixDescription">
+                                <label class="form-check-label" for="fixDescription">Description</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="fixCategory">
+                                <label class="form-check-label" for="fixCategory">Category</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmBatchAction" onclick="processBatchAction()">Confirm Action</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delegation & OOO Modal -->
+    <div class="modal fade" id="delegationModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delegation & Out-of-Office</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Active Delegations -->
+                    <div class="mb-4">
+                        <h6>Active Delegations</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>From</th>
+                                        <th>To</th>
+                                        <th>Period</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="activeDelegationsBody">
+                                    <tr>
+                                        <td>John Doe</td>
+                                        <td>Alice Johnson</td>
+                                        <td>Jan 20-25, 2024</td>
+                                        <td><span class="badge bg-success">Active</span></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="endDelegation(1)">
+                                                <i class="fas fa-stop"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- New Delegation Form -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Create New Delegation</h6>
+                        </div>
+                        <div class="card-body">
+                            <form id="delegationForm">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Delegate To <span class="text-danger">*</span></label>
+                                        <select class="form-select" id="delegateTo" required>
+                                            <option value="">Select delegate...</option>
+                                            <option value="alice">Alice Johnson</option>
+                                            <option value="bob">Bob Smith</option>
+                                            <option value="carol">Carol Davis</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">Start Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="delegationStart" required>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="form-label">End Date <span class="text-danger">*</span></label>
+                                        <input type="date" class="form-control" id="delegationEnd" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="autoRoute" checked>
+                                            <label class="form-check-label" for="autoRoute">
+                                                Auto-route new requests to delegate during this period
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Reason</label>
+                                        <textarea class="form-control" id="delegationReason" rows="2" placeholder="Out of office, vacation, business trip, etc."></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="createDelegation()">Create Delegation</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLA Dashboard Modal -->
+    <div class="modal fade" id="slaDashboardModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">SLA & Escalations Dashboard</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- SLA Metrics -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">Avg Approval Time</h5>
+                                    <div class="display-6 text-primary">2.3 days</div>
+                                    <small class="text-muted">Target: 2 days</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">On-Time Rate</h5>
+                                    <div class="display-6 text-success">87%</div>
+                                    <small class="text-muted">Target: 90%</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">Overdue Items</h5>
+                                    <div class="display-6 text-danger">3</div>
+                                    <small class="text-muted">Needs attention</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Overdue Items -->
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">Overdue Items</h6>
+                            <button class="btn btn-sm btn-outline-primary" onclick="nudgeAll()">
+                                <i class="fas fa-bell me-1"></i>Nudge All
+                            </button>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Report</th>
+                                            <th>Requester</th>
+                                            <th>Amount</th>
+                                            <th>Days Overdue</th>
+                                            <th>Current Approver</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Business Trip - Jakarta</td>
+                                            <td>Alice Johnson</td>
+                                            <td>IDR 2,500,000</td>
+                                            <td><span class="badge bg-danger">3 days</span></td>
+                                            <td>Bob Smith</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary" onclick="nudgeApprover('alice-trip-001')">
+                                                    <i class="fas fa-bell"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-warning" onclick="escalateItem('alice-trip-001')">
+                                                    <i class="fas fa-arrow-up"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approval Detail Modal -->
+    <div class="modal fade" id="approvalDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="approvalDetailTitle">Expense Report Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Header Info -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <h6 id="reportTitle">Business Trip - Jakarta</h6>
+                            <div class="d-flex gap-3 mb-2">
+                                <span><strong>Cost Center:</strong> <span id="costCenter">IT001</span></span>
+                                <span><strong>Project:</strong> <span id="project">System Upgrade</span></span>
+                                <span><strong>Date Range:</strong> <span id="dateRange">Jan 15-17, 2024</span></span>
+                            </div>
+                            <div class="d-flex gap-2 mb-2">
+                                <span class="badge bg-success" id="policyStatus">Policy OK</span>
+                                <span class="badge bg-warning" id="slaStatus">Due Soon</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <h4 class="text-primary" id="totalAmount">IDR 2,500,000</h4>
+                            <small class="text-muted">Total Amount</small>
+                        </div>
+                    </div>
+
+                    <!-- Tabs -->
+                    <ul class="nav nav-tabs" id="detailTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="summary-tab" data-bs-toggle="tab" data-bs-target="#summary" type="button" role="tab">Summary</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="items-tab" data-bs-toggle="tab" data-bs-target="#items" type="button" role="tab">Items</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="receipts-tab" data-bs-toggle="tab" data-bs-target="#receipts" type="button" role="tab">Receipts</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity" type="button" role="tab">Activity</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content mt-3" id="detailTabsContent">
+                        <!-- Summary Tab -->
+                        <div class="tab-pane fade show active" id="summary" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h6>Expense Summary</h6>
+                                    <table class="table table-sm">
+                                        <tr><td>Transportation</td><td class="text-end">IDR 800,000</td></tr>
+                                        <tr><td>Accommodation</td><td class="text-end">IDR 1,200,000</td></tr>
+                                        <tr><td>Meals</td><td class="text-end">IDR 500,000</td></tr>
+                                        <tr class="table-primary"><td><strong>Total</strong></td><td class="text-end"><strong>IDR 2,500,000</strong></td></tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-4">
+                                    <h6>Policy Flags</h6>
+                                    <div class="d-flex flex-column gap-1">
+                                        <span class="badge bg-success"><i class="fas fa-check me-1"></i>Transportation within limits</span>
+                                        <span class="badge bg-success"><i class="fas fa-check me-1"></i>Hotel rate approved</span>
+                                        <span class="badge bg-success"><i class="fas fa-check me-1"></i>Meals within per diem</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Items Tab -->
+                        <div class="tab-pane fade" id="items" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Category</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Policy</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Jan 15, 2024</td>
+                                            <td>Transportation</td>
+                                            <td>Flight CGK-JKT</td>
+                                            <td>IDR 800,000</td>
+                                            <td><span class="badge bg-success">OK</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jan 15-17, 2024</td>
+                                            <td>Accommodation</td>
+                                            <td>Hotel Mulia - 2 nights</td>
+                                            <td>IDR 1,200,000</td>
+                                            <td><span class="badge bg-success">OK</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jan 15-17, 2024</td>
+                                            <td>Meals</td>
+                                            <td>Business meals</td>
+                                            <td>IDR 500,000</td>
+                                            <td><span class="badge bg-success">OK</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Receipts Tab -->
+                        <div class="tab-pane fade" id="receipts" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/300x200?text=Flight+Receipt" class="card-img-top" alt="Flight Receipt">
+                                        <div class="card-body p-2">
+                                            <small>Flight Receipt - IDR 800,000</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/300x200?text=Hotel+Receipt" class="card-img-top" alt="Hotel Receipt">
+                                        <div class="card-body p-2">
+                                            <small>Hotel Receipt - IDR 1,200,000</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <img src="https://via.placeholder.com/300x200?text=Meal+Receipt" class="card-img-top" alt="Meal Receipt">
+                                        <div class="card-body p-2">
+                                            <small>Meal Receipts - IDR 500,000</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Activity Tab -->
+                        <div class="tab-pane fade" id="activity" role="tabpanel">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-primary"></div>
+                                    <div class="timeline-content">
+                                        <h6>Report Submitted</h6>
+                                        <p class="mb-1">Alice Johnson submitted expense report</p>
+                                        <small class="text-muted">Jan 18, 2024 at 2:30 PM</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-info"></div>
+                                    <div class="timeline-content">
+                                        <h6>Policy Check Completed</h6>
+                                        <p class="mb-1">Automated policy validation passed</p>
+                                        <small class="text-muted">Jan 18, 2024 at 2:31 PM</small>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-marker bg-warning"></div>
+                                    <div class="timeline-content">
+                                        <h6>Pending Manager Approval</h6>
+                                        <p class="mb-1">Assigned to John Doe for approval</p>
+                                        <small class="text-muted">Jan 18, 2024 at 2:31 PM</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="me-auto">
+                        <textarea class="form-control" id="approvalComment" rows="2" placeholder="Add comment (optional)..."></textarea>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-success" onclick="approveItem()">
+                            <i class="fas fa-check me-1"></i>Approve
+                        </button>
+                        <button type="button" class="btn btn-danger" onclick="rejectItem()">
+                            <i class="fas fa-times me-1"></i>Reject
+                        </button>
+                        <button type="button" class="btn btn-warning" onclick="requestChanges()">
+                            <i class="fas fa-edit me-1"></i>Request Changes
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Approvals 2.0 JavaScript -->
+    <script>
+        // Sample data
+        const approvals = [
+            {
+                id: 'alice-trip-001',
+                requester: 'Alice Johnson',
+                title: 'Business Trip - Jakarta',
+                amount: 2500000,
+                policyStatus: 'ok',
+                slaStatus: 'due-soon',
+                submitted: '2024-01-18',
+                costCenter: 'IT001',
+                selected: false
+            },
+            {
+                id: 'bob-meal-002',
+                requester: 'Bob Smith',
+                title: 'Client Dinner - Q4 Review',
+                amount: 850000,
+                policyStatus: 'warning',
+                slaStatus: 'on-time',
+                submitted: '2024-01-19',
+                costCenter: 'SAL001',
+                selected: false
+            },
+            {
+                id: 'carol-conf-003',
+                requester: 'Carol Davis',
+                title: 'Tech Conference - Singapore',
+                amount: 4200000,
+                policyStatus: 'violation',
+                slaStatus: 'overdue',
+                submitted: '2024-01-15',
+                costCenter: 'IT001',
+                selected: false
+            }
+        ];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderApprovalsTable();
+            updateCounts();
+        });
+
+        // Render approvals table
+        function renderApprovalsTable() {
+            const tbody = document.getElementById('approvalsTableBody');
+            tbody.innerHTML = '';
+
+            approvals.forEach(approval => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <input type="checkbox" class="approval-checkbox" data-id="${approval.id}" 
+                               onchange="updateSelection()" ${approval.selected ? 'checked' : ''}>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                ${approval.requester.charAt(0)}
+                            </div>
+                            <div>
+                                <div class="fw-medium">${approval.requester}</div>
+                                <small class="text-muted">${approval.costCenter}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="fw-medium">${approval.title}</div>
+                        <small class="text-muted">ID: ${approval.id}</small>
+                    </td>
+                    <td class="fw-medium">IDR ${approval.amount.toLocaleString()}</td>
+                    <td>${getPolicyBadge(approval.policyStatus)}</td>
+                    <td>${getSLABadge(approval.slaStatus)}</td>
+                    <td>
+                        <div>${formatDate(approval.submitted)}</div>
+                        <small class="text-muted">${getTimeAgo(approval.submitted)}</small>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-success" onclick="quickApprove('${approval.id}')" title="Quick Approve">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-outline-danger" onclick="quickReject('${approval.id}')" title="Quick Reject">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="btn btn-outline-warning" onclick="quickRequestChange('${approval.id}')" title="Request Changes">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-outline-primary" onclick="showApprovalDetail('${approval.id}')" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Helper functions
+        function getPolicyBadge(status) {
+            switch(status) {
+                case 'ok': return '<span class="badge bg-success"><i class="fas fa-check me-1"></i>OK</span>';
+                case 'warning': return '<span class="badge bg-warning"><i class="fas fa-exclamation-triangle me-1"></i>Warning</span>';
+                case 'violation': return '<span class="badge bg-danger"><i class="fas fa-times me-1"></i>Violation</span>';
+                default: return '<span class="badge bg-secondary">Unknown</span>';
+            }
+        }
+
+        function getSLABadge(status) {
+            switch(status) {
+                case 'on-time': return '<span class="badge bg-success"><i class="fas fa-clock me-1"></i>On Time</span>';
+                case 'due-soon': return '<span class="badge bg-warning"><i class="fas fa-clock me-1"></i>Due Soon</span>';
+                case 'overdue': return '<span class="badge bg-danger"><i class="fas fa-exclamation-triangle me-1"></i>Overdue</span>';
+                default: return '<span class="badge bg-secondary">Unknown</span>';
+            }
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
+        function getTimeAgo(dateStr) {
+            const days = Math.floor((new Date() - new Date(dateStr)) / (1000 * 60 * 60 * 24));
+            return `${days} days ago`;
+        }
+
+        // Selection functions
+        function updateSelection() {
+            const checkboxes = document.querySelectorAll('.approval-checkbox');
+            const selectedCount = document.querySelectorAll('.approval-checkbox:checked').length;
+            
+            // Update approval objects
+            checkboxes.forEach(checkbox => {
+                const approval = approvals.find(a => a.id === checkbox.dataset.id);
+                if (approval) approval.selected = checkbox.checked;
+            });
+
+            // Show/hide batch actions bar
+            const batchBar = document.getElementById('batchActionsBar');
+            const selectedCountSpan = document.getElementById('selectedCount');
+            
+            if (selectedCount > 0) {
+                batchBar.style.display = 'block';
+                selectedCountSpan.textContent = selectedCount;
+            } else {
+                batchBar.style.display = 'none';
+            }
+
+            // Update select all checkbox
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < checkboxes.length;
+            selectAllCheckbox.checked = selectedCount === checkboxes.length;
+        }
+
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+            const checkboxes = document.querySelectorAll('.approval-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            
+            updateSelection();
+        }
+
+        function selectAll() {
+            const checkboxes = document.querySelectorAll('.approval-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = true);
+            updateSelection();
+        }
+
+        function clearSelection() {
+            const checkboxes = document.querySelectorAll('.approval-checkbox');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            updateSelection();
+        }
+
+        // Batch actions
+        function showBatchModal(action) {
+            const selectedApprovals = approvals.filter(a => a.selected);
+            const totalAmount = selectedApprovals.reduce((sum, a) => sum + a.amount, 0);
+            
+            document.getElementById('batchItemCount').textContent = selectedApprovals.length;
+            document.getElementById('batchTotalAmount').textContent = `IDR ${totalAmount.toLocaleString()}`;
+            
+            const modal = document.getElementById('batchActionModal');
+            const title = document.getElementById('batchActionTitle');
+            const confirmBtn = document.getElementById('confirmBatchAction');
+            const rejectionFields = document.getElementById('rejectionFields');
+            
+            switch(action) {
+                case 'approve':
+                    title.textContent = 'Batch Approve';
+                    confirmBtn.textContent = 'Approve Selected';
+                    confirmBtn.className = 'btn btn-success';
+                    rejectionFields.style.display = 'none';
+                    break;
+                case 'reject':
+                    title.textContent = 'Batch Reject';
+                    confirmBtn.textContent = 'Reject Selected';
+                    confirmBtn.className = 'btn btn-danger';
+                    rejectionFields.style.display = 'block';
+                    break;
+                case 'request-change':
+                    title.textContent = 'Request Changes';
+                    confirmBtn.textContent = 'Request Changes';
+                    confirmBtn.className = 'btn btn-warning';
+                    rejectionFields.style.display = 'block';
+                    break;
+            }
+            
+            confirmBtn.dataset.action = action;
+            new bootstrap.Modal(modal).show();
+        }
+
+        function processBatchAction() {
+            const action = document.getElementById('confirmBatchAction').dataset.action;
+            const reason = document.getElementById('batchReason').value;
+            const notes = document.getElementById('batchNotes').value;
+            
+            if (!reason) {
+                alert('Please select a reason');
+                return;
+            }
+            
+            const selectedApprovals = approvals.filter(a => a.selected);
+            
+            // Simulate processing
+            console.log(`Processing ${action} for ${selectedApprovals.length} items`);
+            console.log('Reason:', reason);
+            console.log('Notes:', notes);
+            
+            // Remove processed items from the list (in real app, update status)
+            selectedApprovals.forEach(approval => {
+                const index = approvals.indexOf(approval);
+                if (index > -1) approvals.splice(index, 1);
+            });
+            
+            // Refresh table and close modal
+            renderApprovalsTable();
+            updateCounts();
+            bootstrap.Modal.getInstance(document.getElementById('batchActionModal')).hide();
+            
+            // Show success message
+            showNotification(`Successfully ${action}d ${selectedApprovals.length} items`, 'success');
+        }
+
+        // Quick actions
+        function quickApprove(id) {
+            console.log('Quick approve:', id);
+            showNotification('Item approved successfully', 'success');
+        }
+
+        function quickReject(id) {
+            console.log('Quick reject:', id);
+            showNotification('Item rejected', 'danger');
+        }
+
+        function quickRequestChange(id) {
+            console.log('Request change:', id);
+            showNotification('Change request sent', 'warning');
+        }
+
+        // Detail modal
+        function showApprovalDetail(id) {
+            const approval = approvals.find(a => a.id === id);
+            if (!approval) return;
+            
+            // Populate modal with approval data
+            document.getElementById('approvalDetailTitle').textContent = approval.title;
+            document.getElementById('reportTitle').textContent = approval.title;
+            document.getElementById('costCenter').textContent = approval.costCenter;
+            document.getElementById('totalAmount').textContent = `IDR ${approval.amount.toLocaleString()}`;
+            
+            new bootstrap.Modal(document.getElementById('approvalDetailModal')).show();
+        }
+
+        // Delegation functions
+        function showDelegationModal() {
+            new bootstrap.Modal(document.getElementById('delegationModal')).show();
+        }
+
+        function createDelegation() {
+            const delegateTo = document.getElementById('delegateTo').value;
+            const startDate = document.getElementById('delegationStart').value;
+            const endDate = document.getElementById('delegationEnd').value;
+            const reason = document.getElementById('delegationReason').value;
+            
+            if (!delegateTo || !startDate || !endDate) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            console.log('Creating delegation:', { delegateTo, startDate, endDate, reason });
+            showNotification('Delegation created successfully', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('delegationModal')).hide();
+        }
+
+        function endDelegation(id) {
+            console.log('Ending delegation:', id);
+            showNotification('Delegation ended', 'info');
+        }
+
+        // SLA Dashboard
+        function showSLADashboard() {
+            new bootstrap.Modal(document.getElementById('slaDashboardModal')).show();
+        }
+
+        function nudgeApprover(id) {
+            console.log('Nudging approver for:', id);
+            showNotification('Reminder sent to approver', 'info');
+        }
+
+        function nudgeAll() {
+            console.log('Nudging all overdue approvers');
+            showNotification('Reminders sent to all overdue approvers', 'info');
+        }
+
+        function escalateItem(id) {
+            console.log('Escalating item:', id);
+            showNotification('Item escalated to next level', 'warning');
+        }
+
+        // Utility functions
+        function updateCounts() {
+            document.getElementById('overdueCount').textContent = `${approvals.filter(a => a.slaStatus === 'overdue').length} items`;
+            document.getElementById('dueSoonCount').textContent = `${approvals.filter(a => a.slaStatus === 'due-soon').length} items`;
+            document.getElementById('onTimeCount').textContent = `${approvals.filter(a => a.slaStatus === 'on-time').length} items`;
+            document.getElementById('myQueueCount').textContent = approvals.length;
+            document.getElementById('myQueueTotal').textContent = `${approvals.length} items`;
+        }
+
+        function filterApprovals() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const requesterFilter = document.getElementById('requesterFilter').value;
+            const costCenterFilter = document.getElementById('costCenterFilter').value;
+            const amountFilter = document.getElementById('amountFilter').value;
+            const dueFilter = document.getElementById('dueFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            
+            const rows = document.querySelectorAll('#approvalsTable tbody tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                // Status filter
+                if (statusFilter && statusFilter !== 'all') {
+                    const statusBadge = row.querySelector('.badge');
+                    const status = statusBadge ? statusBadge.textContent.toLowerCase() : '';
+                    if (!status.includes(statusFilter)) show = false;
+                }
+                
+                // Requester filter
+                if (requesterFilter && requesterFilter !== 'all') {
+                    const requesterCell = row.cells[1];
+                    const requester = requesterCell ? requesterCell.textContent.toLowerCase() : '';
+                    if (!requester.includes(requesterFilter.toLowerCase())) show = false;
+                }
+                
+                // Cost Center filter
+                if (costCenterFilter && costCenterFilter !== 'all') {
+                    const costCenterCell = row.cells[2];
+                    const costCenter = costCenterCell ? costCenterCell.textContent.toLowerCase() : '';
+                    if (!costCenter.includes(costCenterFilter.toLowerCase())) show = false;
+                }
+                
+                // Amount filter
+                if (amountFilter && amountFilter !== 'all') {
+                    const amountCell = row.cells[3];
+                    const amountText = amountCell ? amountCell.textContent.replace(/[^0-9.]/g, '') : '0';
+                    const amount = parseFloat(amountText);
+                    
+                    switch(amountFilter) {
+                        case 'under-1000':
+                            if (amount >= 1000) show = false;
+                            break;
+                        case '1000-5000':
+                            if (amount < 1000 || amount > 5000) show = false;
+                            break;
+                        case 'over-5000':
+                            if (amount <= 5000) show = false;
+                            break;
+                    }
+                }
+                
+                // Due date filter
+                if (dueFilter && dueFilter !== 'all') {
+                    const dueBadges = row.querySelectorAll('.badge');
+                    let hasDueStatus = false;
+                    dueBadges.forEach(badge => {
+                        const badgeText = badge.textContent.toLowerCase();
+                        if ((dueFilter === 'overdue' && badgeText.includes('overdue')) ||
+                            (dueFilter === 'due-soon' && badgeText.includes('due')) ||
+                            (dueFilter === 'on-time' && !badgeText.includes('overdue') && !badgeText.includes('due'))) {
+                            hasDueStatus = true;
+                        }
+                    });
+                    if (!hasDueStatus) show = false;
+                }
+                
+                // Search filter
+                if (searchInput) {
+                    const rowText = row.textContent.toLowerCase();
+                    if (!rowText.includes(searchInput)) show = false;
+                }
+                
+                row.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+            
+            // Update counter
+            const counter = document.querySelector('.results-counter');
+            if (counter) {
+                counter.textContent = `Showing ${visibleCount} of ${rows.length} items`;
+            }
+            
+            console.log(`Filtered approvals: ${visibleCount} visible out of ${rows.length}`);
+        }
+
+        function refreshApprovals() {
+            console.log('Refreshing approvals...');
+            showNotification('Approvals refreshed', 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            // Simple notification system
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+
+        // Modal action functions
+        function approveItem() {
+            const comment = document.getElementById('approvalComment').value;
+            console.log('Approving item with comment:', comment);
+            showNotification('Item approved successfully', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('approvalDetailModal')).hide();
+        }
+
+        function rejectItem() {
+            const comment = document.getElementById('approvalComment').value;
+            console.log('Rejecting item with comment:', comment);
+            showNotification('Item rejected', 'danger');
+            bootstrap.Modal.getInstance(document.getElementById('approvalDetailModal')).hide();
+        }
+
+        function requestChanges() {
+            const comment = document.getElementById('approvalComment').value;
+            console.log('Requesting changes with comment:', comment);
+            showNotification('Change request sent', 'warning');
+            bootstrap.Modal.getInstance(document.getElementById('approvalDetailModal')).hide();
+        }
+    </script>
+
+    <!-- Custom CSS for timeline and additional styling -->
+    <style>
+        .avatar-sm {
+            width: 32px;
+            height: 32px;
+            font-size: 14px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+        
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% - 10px);
+            background-color: #dee2e6;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: -26px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .timeline-content h6 {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .timeline-content p {
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+        
+        .admin-overview-cards {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-overview-cards .col-md-3 {
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-overview-cards {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

@@ -3,12 +3,663 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approvals - TrevID</title>
+    <title>Approval Center - TrevID</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icon-192.svg">
+    <style>
+        /* AppContainer - Consistent with other pages */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .app-container {
+                padding: 0 16px;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .app-container {
+                padding: 0 12px;
+            }
+        }
+        
+        /* KPI Cards */
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+            .kpi-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .kpi-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .kpi-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 4px solid;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .kpi-card.urgent {
+            border-left-color: #ef4444;
+        }
+        
+        .kpi-card.pending {
+            border-left-color: #f59e0b;
+        }
+        
+        .kpi-card.approved {
+            border-left-color: #10b981;
+        }
+        
+        .kpi-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+        
+        .kpi-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .kpi-card.urgent .kpi-icon {
+            background: #ef4444;
+        }
+        
+        .kpi-card.pending .kpi-icon {
+            background: #f59e0b;
+        }
+        
+        .kpi-card.approved .kpi-icon {
+            background: #10b981;
+        }
+        
+        .kpi-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+        }
+        
+        .kpi-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+        
+        .kpi-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+        
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .filter-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #6b7280;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .filter-tab:hover {
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+        
+        .filter-tab.active {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: white;
+        }
+        
+        .filter-tab .badge {
+            background: rgba(255,255,255,0.2);
+            color: inherit;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .filter-tab:not(.active) .badge {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .filter-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .custom-select {
+            position: relative;
+            min-width: 140px;
+        }
+        
+        .select-trigger {
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #374151;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23666" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 12px;
+            padding-right: 30px;
+            min-width: 120px;
+        }
+        
+        .select-trigger:hover {
+            border-color: #2563eb;
+        }
+        
+        .select-trigger:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+        }
+        
+        .beta-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        
+        .beta-toggle:hover {
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .beta-badge {
+            background: #f59e0b;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Approval Cards */
+        .approval-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .approval-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            border-left: 4px solid #e5e7eb;
+        }
+        
+        .approval-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .approval-card.urgent {
+            border-left-color: #ef4444;
+        }
+        
+        .approval-card.mwp {
+            border-left-color: #2563eb;
+        }
+        
+        .approval-card.expense {
+            border-left-color: #10b981;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .card-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f3f4f6;
+        }
+        
+        .card-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 4px 0;
+        }
+        
+        .card-info .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 0;
+        }
+        
+        .card-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .card-amount {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+        
+        .card-badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .card-badge.urgent {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .card-badge.overdue {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .card-badge.due-soon {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        
+        .card-badge.on-time {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        
+        .card-badge.policy-ok {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        
+        .card-badge.over-budget {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .card-body {
+            margin-bottom: 16px;
+        }
+        
+        .card-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        
+        .summary-label {
+            color: #6b7280;
+        }
+        
+        .summary-value {
+            color: #111827;
+            font-weight: 500;
+        }
+        
+        .card-destinations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .destination-tag {
+            padding: 4px 8px;
+            background: #f3f4f6;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .card-attachments {
+            margin-bottom: 12px;
+        }
+        
+        .attachments-toggle {
+            background: none;
+            border: none;
+            color: #2563eb;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0;
+        }
+        
+        .attachments-list {
+            display: none;
+            margin-top: 8px;
+            padding-left: 20px;
+        }
+        
+        .attachments-list.show {
+            display: block;
+        }
+        
+        .attachment-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        .card-timestamp {
+            font-size: 12px;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .card-comments {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .card-comments:hover {
+            color: #2563eb;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .card-btn {
+            padding: 8px 16px;
+            border: 1px solid;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .card-btn.approve {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+        
+        .card-btn.approve:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+        
+        .card-btn.request-changes {
+            background: white;
+            border-color: #f59e0b;
+            color: #f59e0b;
+        }
+        
+        .card-btn.request-changes:hover {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .card-btn.reject {
+            background: white;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        
+        .card-btn.reject:hover {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .card-btn.assign {
+            background: white;
+            border-color: #6b7280;
+            color: #6b7280;
+        }
+        
+        .card-btn.assign:hover {
+            background: #6b7280;
+            color: white;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .filter-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-tabs {
+                justify-content: center;
+            }
+            
+            .filter-controls {
+                justify-content: center;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .card-right {
+                align-self: stretch;
+                justify-content: space-between;
+            }
+            
+            .card-actions {
+                position: fixed;
+                bottom: 80px;
+                left: 12px;
+                right: 12px;
+                background: white;
+                padding: 12px;
+                border-radius: 12px;
+                box-shadow: 0 -4px 16px rgba(0,0,0,0.1);
+                z-index: 100;
+                display: none;
+            }
+            
+            .approval-card.active .card-actions {
+                display: flex;
+            }
+        }
+        
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        .skeleton-card {
+            height: 200px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #d1d5db;
+        }
+        
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+        
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .empty-state .btn {
+            padding: 10px 20px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .empty-state .btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -39,527 +690,410 @@
             <i class="fas fa-plane"></i>
             <span>Travel</span>
         </a>
-        <a href="vehicle.html" class="nav-item">
-            <i class="fas fa-car"></i>
-            <span>Vehicle</span>
-        </a>
         <a href="expenses.html" class="nav-item">
             <i class="fas fa-receipt"></i>
             <span>Expenses</span>
+        </a>
+        <a href="cash-advance.html" class="nav-item">
+            <i class="fas fa-money-bill"></i>
+            <span>Cash Advance</span>
         </a>
         <a href="approvals.html" class="nav-item active">
             <i class="fas fa-check-circle"></i>
             <span>Approvals</span>
         </a>
+        <a href="admin.html" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Admin</span>
+        </a>
     </nav>
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container">
+        <div class="app-container">
             <!-- Page Header -->
             <section class="page-header">
                 <h1><i class="fas fa-check-circle"></i> Approval Center</h1>
                 <p>Manage MWP and expense report approvals</p>
             </section>
 
-            <!-- Approval Stats -->
-            <section class="approval-stats">
-                <div class="stats-grid">
-                    <div class="stat-card urgent">
-                        <div class="stat-icon">
+            <!-- KPI Cards -->
+            <section class="kpi-cards">
+                <div class="kpi-card urgent" onclick="filterByStatus('urgent')">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
-                        <div class="stat-content">
-                            <h4>Urgent</h4>
-                            <span class="stat-number">3</span>
-                            <span class="stat-period">Needs immediate approval</span>
-                        </div>
+                        <div class="kpi-title">Urgent</div>
                     </div>
-                    
-                    <div class="stat-card pending">
-                        <div class="stat-icon">
+                    <div class="kpi-number">3</div>
+                    <div class="kpi-subtitle">Needs immediate approval</div>
+                </div>
+                
+                <div class="kpi-card pending" onclick="filterByStatus('pending')">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">
                             <i class="fas fa-clock"></i>
                         </div>
-                        <div class="stat-content">
-                            <h4>Pending</h4>
-                            <span class="stat-number">8</span>
-                            <span class="stat-period">Awaiting review</span>
-                        </div>
+                        <div class="kpi-title">Pending</div>
                     </div>
-                    
-                    <div class="stat-card approved">
-                        <div class="stat-icon">
+                    <div class="kpi-number">8</div>
+                    <div class="kpi-subtitle">Awaiting review</div>
+                </div>
+                
+                <div class="kpi-card approved" onclick="filterByStatus('approved')">
+                    <div class="kpi-header">
+                        <div class="kpi-icon">
                             <i class="fas fa-check"></i>
                         </div>
-                        <div class="stat-content">
-                            <h4>Approved</h4>
-                            <span class="stat-number">15</span>
-                            <span class="stat-period">This month</span>
+                        <div class="kpi-title">Approved</div>
+                    </div>
+                    <div class="kpi-number">15</div>
+                    <div class="kpi-subtitle">This month</div>
+                </div>
+            </section>
+
+            <!-- Filter Bar -->
+            <section class="filter-bar">
+                <div class="filter-row">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">
+                            <i class="fas fa-list"></i> All <span class="badge">11</span>
+                        </button>
+                        <button class="filter-tab" data-filter="mwp">
+                            <i class="fas fa-calendar-alt"></i> MWP <span class="badge">4</span>
+                        </button>
+                        <button class="filter-tab" data-filter="expense">
+                            <i class="fas fa-receipt"></i> Expenses <span class="badge">7</span>
+                        </button>
+                        <button class="filter-tab" data-filter="urgent">
+                            <i class="fas fa-exclamation-triangle"></i> Urgent <span class="badge">3</span>
+                        </button>
+                    </div>
+                    
+                    <div class="filter-controls">
+                        <div class="custom-select">
+                            <select id="sortSelect" class="select-trigger" onchange="handleSortChange(this.value)">
+                                <option value="oldest">Oldest First</option>
+                                <option value="newest">Newest First</option>
+                                <option value="priority">Priority</option>
+                                <option value="amount">Amount</option>
+                            </select>
                         </div>
+                        
+                        <div class="custom-select">
+                            <select id="queueSelect" class="select-trigger" onchange="handleQueueChange(this.value)">
+                                <option value="my">My Queues</option>
+                                <option value="team">Team Queue</option>
+                                <option value="finance">Finance Queue</option>
+                                <option value="all">All Queues</option>
+                            </select>
+                        </div>
+                        
+                        <a href="approvals_2.html?view=v2" class="beta-toggle">
+                            <i class="fas fa-flask"></i>
+                            Try new Approvals
+                            <span class="beta-badge">Beta</span>
+                        </a>
                     </div>
                 </div>
             </section>
 
-            <!-- Filter Tabs -->
-            <section class="filter-tabs">
-                <div class="tab-buttons">
-                    <button class="tab-btn active" onclick="showTab('all')">
-                        <i class="fas fa-list"></i> All (11)
-                    </button>
-                    <button class="tab-btn" onclick="showTab('mwp')">
-                        <i class="fas fa-calendar-alt"></i> MWP (4)
-                    </button>
-                    <button class="tab-btn" onclick="showTab('expense')">
-                        <i class="fas fa-receipt"></i> Expenses (7)
-                    </button>
-                    <button class="tab-btn" onclick="showTab('urgent')">
-                        <i class="fas fa-exclamation-triangle"></i> Urgent (3)
-                    </button>
-                </div>
-                
-                <!-- Sorting Options -->
-                <div class="sort-controls">
-                    <div class="custom-dropdown" id="sortDropdown">
-                        <div class="dropdown-selected" onclick="toggleDropdown('sortDropdown')">
-                            <span id="sortSelected">Oldest First</span>
-                            <i class="fas fa-chevron-down"></i>
+            <!-- Approval Cards -->
+            <section class="approval-cards">
+                <!-- MWP Approval 1 -->
+                <div class="approval-card mwp urgent" data-type="mwp" data-id="mwp-001" data-submitted="2024-03-15" data-amount="8500">
+                    <div class="card-header">
+                        <div class="card-left">
+                            <img src="https://via.placeholder.com/40x40" alt="Avatar" class="card-avatar">
+                            <div class="card-info">
+                                <h4><i class="fas fa-calendar-alt"></i> Monthly Working Plan - March 2024</h4>
+                                <p class="subtitle">Sarah Johnson • Marketing Department</p>
+                            </div>
                         </div>
-                        <div class="dropdown-options">
-                            <div class="dropdown-option" data-value="oldest" onclick="selectSort('oldest', 'Oldest First')">Oldest First</div>
-                            <div class="dropdown-option" data-value="sla" onclick="selectSort('sla', 'SLA Soonest')">SLA Soonest</div>
-                            <div class="dropdown-option" data-value="amount" onclick="selectSort('amount', 'Highest Amount')">Highest Amount</div>
+                        <div class="card-right">
+                            <div class="card-amount">$8,500</div>
+                            <div class="card-badge urgent">Urgent</div>
+                            <div class="card-badge overdue">Overdue 1d</div>
+                            <div class="card-badge over-budget">Over Budget</div>
                         </div>
                     </div>
                     
-                    <!-- Saved Views -->
-                    <div class="saved-views">
-                        <div class="custom-dropdown" id="viewsDropdown">
-                            <div class="dropdown-selected" onclick="toggleDropdown('viewsDropdown')">
-                                <span id="viewSelected">My Queues</span>
-                                <i class="fas fa-chevron-down"></i>
+                    <div class="card-body">
+                        <div class="card-summary">
+                            <div class="summary-item">
+                                <span class="summary-label">Period:</span>
+                                <span class="summary-value">1-31 March 2024</span>
                             </div>
-                            <div class="dropdown-options">
-                                <div class="dropdown-option" data-value="my-queues" onclick="selectView('my-queues', 'My Queues')">My Queues</div>
-                                <div class="dropdown-option" data-value="urgent-week" onclick="selectView('urgent-week', 'Urgent this week')">Urgent this week</div>
-                                <div class="dropdown-option" data-value="mwp-only" onclick="selectView('mwp-only', 'MWP only')">MWP only</div>
-                                <div class="dropdown-option" data-value="high-amount" onclick="selectView('high-amount', '> $1k')"> > $1k</div>
-                                <div class="dropdown-option" data-value="overdue" onclick="selectView('overdue', 'Overdue items')">Overdue items</div>
+                            <div class="summary-item">
+                                <span class="summary-label">Total Trips:</span>
+                                <span class="summary-value">5 trips</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Estimated Budget:</span>
+                                <span class="summary-value">$8,500</span>
                             </div>
                         </div>
-                        <button class="btn-create-view" onclick="createCustomView()">
-                            <i class="fas fa-plus"></i>
+                        
+                        <div class="card-destinations">
+                            <div class="destination-tag">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Jakarta → Surabaya
+                            </div>
+                            <div class="destination-tag">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Jakarta → Bandung
+                            </div>
+                            <div class="destination-tag">
+                                <i class="fas fa-plus"></i>
+                                +3 others
+                            </div>
+                        </div>
+                        
+                        <div class="card-attachments">
+                            <button class="attachments-toggle" onclick="toggleAttachments('mwp-001')">
+                                <i class="fas fa-paperclip"></i>
+                                2 attachments
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="attachments-list" id="attachments-mwp-001">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Itinerary.pdf
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-excel"></i>
+                                    Budget.xlsx
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-timestamp">
+                            <i class="fas fa-clock"></i>
+                            Submitted • 28 Feb 16:45
+                        </div>
+                        <div class="card-comments" onclick="showComments('mwp-001')">
+                            <i class="fas fa-comment"></i>
+                            3
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="card-btn approve" onclick="approveItem('mwp-001')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="card-btn request-changes" onclick="requestChanges('mwp-001')">
+                            <i class="fas fa-edit"></i> Request Changes
+                        </button>
+                        <button class="card-btn reject" onclick="rejectItem('mwp-001')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button class="card-btn assign" onclick="assignItem('mwp-001')">
+                            <i class="fas fa-user-plus"></i> Assign
                         </button>
                     </div>
                 </div>
-            </section>
-            
-            <!-- Batch Actions Bar -->
-            <div id="batchActionsBar" class="batch-actions-bar sticky" style="display: none;">
-                <div class="batch-info">
-                    <span id="selectedCount">0</span> items selected
-                </div>
-                <div class="batch-buttons">
-                    <button class="btn btn-batch-approve" onclick="batchApprove()">
-                        <i class="fas fa-check"></i> Approve
-                    </button>
-                    <button class="btn btn-batch-changes" onclick="batchRequestChanges()">
-                        <i class="fas fa-edit"></i> Request Changes
-                    </button>
-                    <button class="btn btn-batch-reject" onclick="batchReject()">
-                        <i class="fas fa-times"></i> Reject
-                    </button>
-                    <button class="btn btn-batch-assign" onclick="batchAssign()">
-                        <i class="fas fa-user-plus"></i> Assign
-                    </button>
-                    <button class="btn btn-batch-snooze" onclick="batchSnooze()">
-                        <i class="fas fa-clock"></i> Snooze
-                    </button>
-                </div>
-                <button class="btn-close-batch" onclick="clearSelection()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-
-            <!-- Approval Items -->
-            <section class="approval-list">
-                <div class="approval-cards">
-                    <!-- MWP Approval 1 -->
-                    <div class="approval-card mwp urgent" data-type="mwp" data-id="mwp-001" data-submitted="2024-02-19T16:45:00" data-sla="12" data-amount="2500">
-                        <div class="card-checkbox">
-                            <input type="checkbox" class="approval-checkbox" onchange="toggleSelection(this)" onclick="event.stopPropagation()">
-                        </div>
-                        <div class="approval-header" onclick="viewApproval('approval-detail.html')">
-                            <div class="employee-info">
-                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
-                                <div class="employee-details">
-                                    <span class="name">Sarah Johnson</span>
-                                    <span class="department">Marketing Department</span>
-                                </div>
+                
+                <!-- Expense Approval 1 -->
+                <div class="approval-card expense" data-type="expense" data-id="exp-001" data-submitted="2024-03-14" data-amount="2500">
+                    <div class="card-header">
+                        <div class="card-left">
+                            <img src="https://via.placeholder.com/40x40" alt="Avatar" class="card-avatar">
+                            <div class="card-info">
+                                <h4><i class="fas fa-receipt"></i> Expense Report - Jakarta Business Trip</h4>
+                                <p class="subtitle">Michael Chen • Sales Department</p>
                             </div>
-                            <div class="header-right">
-                                <div class="amount">$8,500</div>
-                                <div class="priority-badge urgent">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    Urgent
-                                </div>
-                                <div class="sla-badge overdue">
-                                    Overdue 1d
-                                </div>
+                        </div>
+                        <div class="card-right">
+                            <div class="card-amount">$2,350</div>
+                            <div class="card-badge due-soon">Due in 2h</div>
+                            <div class="card-badge policy-ok">Policy OK</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-summary">
+                            <div class="summary-item">
+                                <span class="summary-label">Period:</span>
+                                <span class="summary-value">25-27 Feb 2024</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Categories:</span>
+                                <span class="summary-value">Transportation, Meals</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Total Receipts:</span>
+                                <span class="summary-value">6 receipts</span>
                             </div>
                         </div>
                         
-                        <div class="approval-content">
-                            <div class="content-header">
-                                <h4>Monthly Working Plan - Maret 2024</h4>
-                                <div class="assignee-chip">
-                                    <i class="fas fa-user"></i>
-                                    <span>You</span>
-                                </div>
+                        <div class="card-destinations">
+                            <div class="destination-tag">
+                                <i class="fas fa-plane"></i>
+                                Flight: CGK-JKT
                             </div>
-                            
-                            <!-- Budget Delta & Trip Summary -->
-                            <div class="budget-summary">
-                                <div class="budget-delta positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    <span>+$500 vs Budget</span>
-                                </div>
-                                <div class="trip-types">
-                                    <span class="trip-type"><i class="fas fa-plane"></i> 2 Flights</span>
-                                    <span class="trip-type"><i class="fas fa-bed"></i> 3 Hotels</span>
-                                    <span class="trip-type"><i class="fas fa-train"></i> 1 Train</span>
-                                </div>
+                            <div class="destination-tag">
+                                <i class="fas fa-bed"></i>
+                                Hotel: 2 nights
                             </div>
-                            
-                            <div class="approval-details">
-                                <div class="detail-row">
-                                    <span class="label">Period:</span>
-                                    <span class="value">1-31 March 2024</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Total Trips:</span>
-                                    <span class="value">5 trips</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Estimated Budget:</span>
-                                    <span class="value budget">$8,500</span>
-                                </div>
+                            <div class="destination-tag">
+                                <i class="fas fa-utensils"></i>
+                                Meals: 4 items
                             </div>
-                            
-                            <div class="trip-summary">
-                                <div class="trip-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Jakarta → Surabaya (5-7 Mar)</span>
+                        </div>
+                        
+                        <div class="card-attachments">
+                            <button class="attachments-toggle" onclick="toggleAttachments('exp-001')">
+                                <i class="fas fa-paperclip"></i>
+                                6 receipts
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="attachments-list" id="attachments-exp-001">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-image"></i>
+                                    Flight_Receipt.jpg
                                 </div>
-                                <div class="trip-item">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Jakarta → Bandung (12-13 Mar)</span>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-image"></i>
+                                    Hotel_Invoice.pdf
                                 </div>
-                                <div class="trip-item">
+                                <div class="attachment-item">
                                     <i class="fas fa-plus"></i>
-                                    <span>+3 other trips</span>
+                                    +4 more receipts
                                 </div>
                             </div>
-                            
-                            <!-- Preview Attachments -->
-                            <div class="attachments-preview">
-                                <div class="attachment-thumbnail" onclick="previewAttachment('itinerary-1')">
-                                    <i class="fas fa-file-pdf"></i>
-                                    <span>Itinerary.pdf</span>
-                                </div>
-                                <div class="attachment-thumbnail" onclick="previewAttachment('budget-1')">
-                                    <i class="fas fa-file-excel"></i>
-                                    <span>Budget.xlsx</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-footer">
-                            <div class="submission-timestamp">
-                                <i class="fas fa-clock"></i>
-                                <span>Submitted • 28 Feb 16:45</span>
-                            </div>
-                            <div class="comment-count" onclick="showComments('mwp-001')">
-                                <i class="fas fa-comment"></i>
-                                <span>3</span>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-actions">
-                            <button class="btn btn-approve" onclick="approveItem('mwp-001')">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-request-changes" onclick="requestChanges('mwp-001')">
-                                <i class="fas fa-edit"></i> Request Changes
-                            </button>
-                            <button class="btn btn-reject" onclick="rejectItem('mwp-001')">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                            <button class="btn btn-assign" onclick="assignItem('mwp-001')">
-                                <i class="fas fa-user-plus"></i> Assign
-                            </button>
                         </div>
                     </div>
-
-                    <!-- Expense Approval 1 -->
-                    <div class="approval-card expense urgent" data-type="expense" data-id="exp-001" data-submitted="2024-02-18T14:30:00" data-sla="24" data-amount="1250">
-                        <div class="card-checkbox">
-                            <input type="checkbox" class="approval-checkbox" onchange="toggleSelection(this)" onclick="event.stopPropagation()">
+                    
+                    <div class="card-footer">
+                        <div class="card-timestamp">
+                            <i class="fas fa-clock"></i>
+                            Submitted • 1 Mar 09:30
                         </div>
-                        <div class="approval-header" onclick="viewApproval('approval-detail.html')">
-                            <div class="employee-info">
-                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
-                                <div class="employee-details">
-                                    <span class="name">Michael Chen</span>
-                                    <span class="department">Sales Department</span>
-                                </div>
-                            </div>
-                            <div class="header-right">
-                                <div class="amount">$3,250</div>
-                                <div class="priority-badge urgent">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    Urgent
-                                </div>
-                                <div class="sla-badge due-soon">
-                                    Due in 12h
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-content">
-                            <div class="content-header">
-                                <h4>Expense Report - Jakarta Business Trip</h4>
-                                <div class="assignee-chip">
-                                    <i class="fas fa-user"></i>
-                                    <span>You</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Policy Flags & Receipt Meter -->
-                            <div class="policy-summary">
-                                <div class="policy-flags">
-                                    <div class="policy-flag warning">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <span>Over per-diem</span>
-                                    </div>
-                                    <div class="policy-flag error">
-                                        <i class="fas fa-times-circle"></i>
-                                        <span>No receipt</span>
-                                    </div>
-                                    <div class="policy-flag warning">
-                                        <i class="fas fa-dollar-sign"></i>
-                                        <span>Over cat budget $120</span>
-                                    </div>
-                                </div>
-                                <div class="receipt-meter" onclick="showReceiptDetails('exp-001')">
-                                    <div class="meter-label">Receipts</div>
-                                    <div class="meter-bar">
-                                        <div class="meter-fill" style="width: 75%"></div>
-                                    </div>
-                                    <div class="meter-text">6/8</div>
-                                </div>
-                            </div>
-                            
-                            <div class="approval-details">
-                                <div class="detail-row">
-                                    <span class="label">Report ID:</span>
-                                    <span class="value">#EXP-2024-015</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Trip Period:</span>
-                                    <span class="value">25-27 Feb 2024</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Total Amount:</span>
-                                    <span class="value budget">$3,250</span>
-                                </div>
-                            </div>
-                            
-                            <div class="expense-breakdown">
-                                <div class="expense-item">
-                                    <span class="category">Transportation</span>
-                                    <span class="amount">$1,500</span>
-                                </div>
-                                <div class="expense-item">
-                                    <span class="category">Accommodation</span>
-                                    <span class="amount">$1,200</span>
-                                </div>
-                                <div class="expense-item">
-                                    <span class="category">Meals</span>
-                                    <span class="amount">$550</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Receipt Thumbnails -->
-                            <div class="receipts-preview">
-                                <div class="receipt-thumbnail" onclick="previewReceipt('receipt-1')">
-                                    <img src="https://via.placeholder.com/60x80/f0f0f0/666?text=Receipt" alt="Receipt">
-                                </div>
-                                <div class="receipt-thumbnail" onclick="previewReceipt('receipt-2')">
-                                    <img src="https://via.placeholder.com/60x80/f0f0f0/666?text=Receipt" alt="Receipt">
-                                </div>
-                                <div class="receipt-thumbnail" onclick="previewReceipt('receipt-3')">
-                                    <img src="https://via.placeholder.com/60x80/f0f0f0/666?text=Receipt" alt="Receipt">
-                                </div>
-                                <div class="receipt-more" onclick="showAllReceipts('exp-001')">
-                                    <span>+5 more</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-footer">
-                            <div class="submission-timestamp">
-                                <i class="fas fa-clock"></i>
-                                <span>Submitted • 28 Feb 16:45</span>
-                            </div>
-                            <div class="comment-count" onclick="showComments('exp-001')">
-                                <i class="fas fa-comment"></i>
-                                <span>1</span>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-actions">
-                            <button class="btn btn-approve" onclick="approveItem('exp-001')">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-request-changes" onclick="requestChanges('exp-001')">
-                                <i class="fas fa-edit"></i> Request Changes
-                            </button>
-                            <button class="btn btn-reject" onclick="rejectItem('exp-001')">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                            <button class="btn btn-assign" onclick="assignItem('exp-001')">
-                                <i class="fas fa-user-plus"></i> Assign
-                            </button>
+                        <div class="card-comments" onclick="showComments('exp-001')">
+                            <i class="fas fa-comment"></i>
+                            1
                         </div>
                     </div>
-
-                    <!-- MWP Approval 2 -->
-                    <div class="approval-card mwp" data-type="mwp" data-id="mwp-002" data-submitted="2024-02-17T10:15:00" data-sla="48" data-amount="1800" onclick="viewApproval('approval-detail.html')">
-                        <div class="approval-header">
-                            <div class="approval-type">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>MWP Approval</span>
-                            </div>
-                            <div class="priority-badge normal">
-                                <i class="fas fa-clock"></i>
-                                Normal
-                            </div>
-                        </div>
-                        
-                        <div class="approval-content">
-                            <h4>Monthly Working Plan - April 2024</h4>
-                            <div class="submitter-info">
-                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
-                                <div class="submitter-details">
-                                    <span class="name">David Wilson</span>
-                                    <span class="department">Operations Department</span>
-                                </div>
-                            </div>
-                            
-                            <div class="approval-details">
-                                <div class="detail-row">
-                                    <span class="label">Period:</span>
-                                    <span class="value">1-30 April 2024</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Total Trips:</span>
-                                    <span class="value">3 trips</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Estimated Budget:</span>
-                                    <span class="value budget">$5,200</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-footer">
-                            <div class="submission-info">
-                                <i class="fas fa-clock"></i>
-                                <span>Submitted: 1 Mar 2024, 09:15</span>
-                            </div>
-                            <div class="deadline-info normal">
-                                <i class="fas fa-calendar"></i>
-                                <span>Deadline: 5 Mar 2024</span>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-actions">
-                            <button class="btn btn-approve" onclick="showNotImplementedPopup('Approve MWP')">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-reject" onclick="showNotImplementedPopup('Reject MWP')">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                            <button class="btn btn-comment" onclick="showNotImplementedPopup('Add Comment')">
-                                <i class="fas fa-comment"></i> Comment
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Expense Approval 2 -->
-                    <div class="approval-card expense" data-type="expense" data-id="exp-002" data-submitted="2024-02-16T09:20:00" data-sla="72" data-amount="850" onclick="viewApproval('approval-detail.html')">
-                        <div class="approval-header">
-                            <div class="approval-type">
-                                <i class="fas fa-receipt"></i>
-                                <span>Expense Approval</span>
-                            </div>
-                            <div class="priority-badge normal">
-                                <i class="fas fa-clock"></i>
-                                Normal
-                            </div>
-                        </div>
-                        
-                        <div class="approval-content">
-                            <h4>Expense Report - Surabaya Training</h4>
-                            <div class="submitter-info">
-                                <img src="https://via.placeholder.com/32x32" alt="Avatar" class="avatar">
-                                <div class="submitter-details">
-                                    <span class="name">Lisa Anderson</span>
-                                    <span class="department">HR Department</span>
-                                </div>
-                            </div>
-                            
-                            <div class="approval-details">
-                                <div class="detail-row">
-                                    <span class="label">Report ID:</span>
-                                    <span class="value">#EXP-2024-016</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Trip Period:</span>
-                                    <span class="value">28 Feb - 1 Mar 2024</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="label">Total Amount:</span>
-                                    <span class="value budget">$2,100</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-footer">
-                            <div class="submission-info">
-                                <i class="fas fa-clock"></i>
-                                <span>Submitted: 2 Mar 2024, 11:20</span>
-                            </div>
-                            <div class="deadline-info normal">
-                                <i class="fas fa-calendar"></i>
-                                <span>Deadline: 7 Mar 2024</span>
-                            </div>
-                        </div>
-                        
-                        <div class="approval-actions">
-                            <button class="btn btn-approve" onclick="showNotImplementedPopup('Approve Expense')">
-                                <i class="fas fa-check"></i> Approve
-                            </button>
-                            <button class="btn btn-reject" onclick="showNotImplementedPopup('Reject Expense')">
-                                <i class="fas fa-times"></i> Reject
-                            </button>
-                            <button class="btn btn-comment" onclick="showNotImplementedPopup('Add Comment')">
-                                <i class="fas fa-comment"></i> Comment
-                            </button>
-                        </div>
+                    
+                    <div class="card-actions">
+                        <button class="card-btn approve" onclick="approveItem('exp-001')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="card-btn request-changes" onclick="requestChanges('exp-001')">
+                            <i class="fas fa-edit"></i> Request Changes
+                        </button>
+                        <button class="card-btn reject" onclick="rejectItem('exp-001')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button class="card-btn assign" onclick="assignItem('exp-001')">
+                            <i class="fas fa-user-plus"></i> Assign
+                        </button>
                     </div>
                 </div>
+                
+                <!-- MWP Approval 2 -->
+                <div class="approval-card mwp" data-type="mwp" data-id="mwp-002" data-submitted="2024-03-16" data-amount="5200">
+                    <div class="card-header">
+                        <div class="card-left">
+                            <img src="https://via.placeholder.com/40x40" alt="Avatar" class="card-avatar">
+                            <div class="card-info">
+                                <h4><i class="fas fa-calendar-alt"></i> Monthly Working Plan - April 2024</h4>
+                                <p class="subtitle">David Wilson • Operations Department</p>
+                            </div>
+                        </div>
+                        <div class="card-right">
+                            <div class="card-amount">$5,200</div>
+                            <div class="card-badge on-time">On Time</div>
+                            <div class="card-badge policy-ok">Policy OK</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-summary">
+                            <div class="summary-item">
+                                <span class="summary-label">Period:</span>
+                                <span class="summary-value">1-30 April 2024</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Total Trips:</span>
+                                <span class="summary-value">3 trips</span>
+                            </div>
+                            <div class="summary-item">
+                                <span class="summary-label">Estimated Budget:</span>
+                                <span class="summary-value">$5,200</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-destinations">
+                            <div class="destination-tag">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Jakarta → Medan
+                            </div>
+                            <div class="destination-tag">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Jakarta → Bali
+                            </div>
+                            <div class="destination-tag">
+                                <i class="fas fa-plus"></i>
+                                +1 other
+                            </div>
+                        </div>
+                        
+                        <div class="card-attachments">
+                            <button class="attachments-toggle" onclick="toggleAttachments('mwp-002')">
+                                <i class="fas fa-paperclip"></i>
+                                3 attachments
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="attachments-list" id="attachments-mwp-002">
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Travel_Plan.pdf
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-excel"></i>
+                                    Budget_Breakdown.xlsx
+                                </div>
+                                <div class="attachment-item">
+                                    <i class="fas fa-file-word"></i>
+                                    Justification.docx
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-timestamp">
+                            <i class="fas fa-clock"></i>
+                            Submitted • 2 Mar 14:20
+                        </div>
+                        <div class="card-comments" onclick="showComments('mwp-002')">
+                            <i class="fas fa-comment"></i>
+                            0
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="card-btn approve" onclick="approveItem('mwp-002')">
+                            <i class="fas fa-check"></i> Approve
+                        </button>
+                        <button class="card-btn request-changes" onclick="requestChanges('mwp-002')">
+                            <i class="fas fa-edit"></i> Request Changes
+                        </button>
+                        <button class="card-btn reject" onclick="rejectItem('mwp-002')">
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                        <button class="card-btn assign" onclick="assignItem('mwp-002')">
+                            <i class="fas fa-user-plus"></i> Assign
+                        </button>
+                    </div>
+                </div>
+                    </div>
             </section>
+        </main>
         </div>
     </main>
 
@@ -586,34 +1120,126 @@
             window.location.href = url;
         }
         
-        function approveItem(event, itemId) {
-            event.stopPropagation();
-            if (confirm('Are you sure you want to approve this item?')) {
-                alert(`Item ${itemId} has been approved!`);
-                // Here you would typically make an API call
-            }
+        function approveItem(itemId) {
+            if (!confirm('Are you sure you want to approve this item?')) return;
+            alert(`Item ${itemId} has been approved!`);
+            // Here you would typically make an API call
         }
         
-        function rejectItem(event, itemId) {
-            event.stopPropagation();
+        function rejectItem(itemId) {
             const reason = prompt('Enter rejection reason:');
-            if (reason) {
-                alert(`Item ${itemId} has been rejected with reason: ${reason}`);
-                // Here you would typically make an API call
-            }
+            if (!reason) return;
+            alert(`Item ${itemId} has been rejected with reason: ${reason}`);
+            // Here you would typically make an API call
         }
         
-        function addComment(event, itemId) {
-            event.stopPropagation();
+        function addComment(itemId) {
             const comment = prompt('Enter your comment:');
-            if (comment) {
-                alert(`Comment has been added for item ${itemId}`);
-                // Here you would typically make an API call
-            }
+            if (!comment) return;
+            alert(`Comment has been added for item ${itemId}`);
+            // Here you would typically make an API call
+        }
+        
+        function showComments(itemId) {
+            // Create and show comments modal
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.style.display = 'block';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Comments - ${itemId}</h5>
+                            <button type="button" class="btn-close" onclick="this.closest('.modal').remove()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="comments-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;">
+                                <div class="comment-item" style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                                    <div class="comment-author" style="font-weight: bold; color: #333;">John Doe</div>
+                                    <div class="comment-text" style="margin: 5px 0;">Please review the budget allocation for Q2.</div>
+                                    <div class="comment-time" style="font-size: 12px; color: #666;">2 hours ago</div>
+                                </div>
+                                <div class="comment-item" style="border-bottom: 1px solid #eee; padding: 10px 0;">
+                                    <div class="comment-author" style="font-weight: bold; color: #333;">Sarah Johnson</div>
+                                    <div class="comment-text" style="margin: 5px 0;">Updated the travel dates as requested.</div>
+                                    <div class="comment-time" style="font-size: 12px; color: #666;">1 day ago</div>
+                                </div>
+                            </div>
+                            <div class="add-comment">
+                                <textarea class="form-control" placeholder="Add a comment..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                                <button class="btn btn-primary mt-2" onclick="addNewComment('${itemId}')" style="margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px;">Add Comment</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
         
         function showNotImplementedPopup(action) {
             alert(`${action} feature is not yet implemented. This is a demo version.`);
+        }
+        
+        function handleSortChange(sortValue) {
+            // Save preference
+            localStorage.setItem('approvals_sort', sortValue);
+            
+            // Sort cards
+            const container = document.querySelector('.approval-cards');
+            const cards = Array.from(container.querySelectorAll('.approval-card'));
+            
+            cards.sort((a, b) => {
+                switch(sortValue) {
+                    case 'oldest':
+                        return new Date(a.dataset.submitted) - new Date(b.dataset.submitted);
+                    case 'newest':
+                        return new Date(b.dataset.submitted) - new Date(a.dataset.submitted);
+                    case 'priority':
+                        const priorityOrder = { 'urgent': 3, 'normal': 2, 'low': 1 };
+                        const aPriority = a.querySelector('.priority-badge')?.textContent.toLowerCase() || 'normal';
+                        const bPriority = b.querySelector('.priority-badge')?.textContent.toLowerCase() || 'normal';
+                        return (priorityOrder[bPriority] || 2) - (priorityOrder[aPriority] || 2);
+                    case 'amount':
+                        return parseFloat(b.dataset.amount || 0) - parseFloat(a.dataset.amount || 0);
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Re-append sorted cards
+            cards.forEach(card => container.appendChild(card));
+        }
+        
+        function handleQueueChange(queueValue) {
+            // Save preference
+            localStorage.setItem('approvals_queue', queueValue);
+            
+            // Filter cards based on queue
+            const cards = document.querySelectorAll('.approval-card');
+            cards.forEach(card => {
+                let show = true;
+                
+                switch(queueValue) {
+                    case 'my':
+                        // Show all for demo - in real app would filter by assigned user
+                        show = true;
+                        break;
+                    case 'team':
+                        // Show team items - demo logic
+                        show = card.dataset.type === 'mwp';
+                        break;
+                    case 'finance':
+                        // Show finance items - demo logic
+                        show = card.dataset.type === 'expense';
+                        break;
+                    case 'all':
+                        show = true;
+                        break;
+                }
+                
+                card.style.display = show ? 'block' : 'none';
+            });
         }
     </script>
     
@@ -1989,6 +2615,25 @@
         
 
         
+        function addNewComment(itemId) {
+            const textarea = document.querySelector('.add-comment textarea');
+            const comment = textarea.value.trim();
+            if (!comment) return;
+            
+            // Add comment to list (demo)
+            const commentsList = document.querySelector('.comments-list');
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-item';
+            newComment.style.cssText = 'border-bottom: 1px solid #eee; padding: 10px 0;';
+            newComment.innerHTML = `
+                <div class="comment-author" style="font-weight: bold; color: #333;">You</div>
+                <div class="comment-text" style="margin: 5px 0;">${comment}</div>
+                <div class="comment-time" style="font-size: 12px; color: #666;">Just now</div>
+            `;
+            commentsList.appendChild(newComment);
+            textarea.value = '';
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             // Set first card as focused
@@ -1997,12 +2642,39 @@
                 firstCard.classList.add('focused');
             }
             
-            // Restore saved preferences
+            // Mobile action bar toggle
+            document.querySelectorAll('.approval-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Don't toggle if clicking on action buttons
+                    if (e.target.closest('.card-actions')) return;
+                    
+                    // Close other active cards
+                    document.querySelectorAll('.approval-card.active').forEach(c => c.classList.remove('active'));
+                    // Toggle current card
+                    this.classList.add('active');
+                });
+            });
+            
+            // Load saved sort preference
             const savedSort = localStorage.getItem('approvals_sort');
-            if (savedSort) {
-                const sortOption = document.querySelector(`#sortDropdown [data-value="${savedSort}"]`);
+            if (savedSort && document.getElementById('sortSelect')) {
+                document.getElementById('sortSelect').value = savedSort;
+                handleSortChange(savedSort);
+            }
+            
+            // Load saved queue preference
+            const savedQueue = localStorage.getItem('approvals_queue');
+            if (savedQueue && document.getElementById('queueSelect')) {
+                document.getElementById('queueSelect').value = savedQueue;
+                handleQueueChange(savedQueue);
+            }
+            
+            // Restore old saved preferences (backward compatibility)
+            const savedSortOld = localStorage.getItem('approvals_sort');
+            if (savedSortOld) {
+                const sortOption = document.querySelector(`#sortDropdown [data-value="${savedSortOld}"]`);
                 if (sortOption) {
-                    selectSort(savedSort, sortOption.textContent);
+                    selectSort(savedSortOld, sortOption.textContent);
                 }
             }
             
