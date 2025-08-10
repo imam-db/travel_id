@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Center Management - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="admin-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin.html">Admin</a></li>
+                <li class="breadcrumb-item"><a href="admin.html">Organization</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Cost Centers</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="fas fa-building"></i>Cost Centers Management</h1>
+                    <p>Manage organizational cost centers and budget tracking</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#costCenterModal">
+                    <i class="fas fa-plus me-2"></i>Add Cost Center
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="card admin-filter-card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" id="filterDepartment">
+                            <option value="">All Departments</option>
+                            <option value="finance">Finance</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="it">Information Technology</option>
+                            <option value="sales">Sales</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="operations">Operations</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Budget Status</label>
+                        <select class="form-select" id="filterBudgetStatus">
+                            <option value="">All Budget Status</option>
+                            <option value="under-budget">Under Budget</option>
+                            <option value="on-budget">On Budget</option>
+                            <option value="over-budget">Over Budget</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search code or name...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Centers Table -->
+        <div class="card admin-table-card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Cost Centers</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="costCenterTable">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Manager</th>
+                                <th>Budget</th>
+                                <th>Spent</th>
+                                <th>Remaining</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="costCenterTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Cost Center Modal -->
+    <div class="modal fade" id="costCenterModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="costCenterModalTitle">Add Cost Center</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="costCenterForm">
+                        <input type="hidden" id="costCenterId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Cost Center Code *</label>
+                                    <input type="text" class="form-control" id="costCenterCode" required placeholder="e.g., CC-FIN-001">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Cost Center Name *</label>
+                                    <input type="text" class="form-control" id="costCenterName" required placeholder="e.g., Finance Department">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Department *</label>
+                                    <select class="form-select" id="costCenterDepartment" required>
+                                        <option value="">Select Department</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="hr">Human Resources</option>
+                                        <option value="it">Information Technology</option>
+                                        <option value="sales">Sales</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="operations">Operations</option>
+                                        <option value="legal">Legal</option>
+                                        <option value="procurement">Procurement</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Manager *</label>
+                                    <input type="text" class="form-control" id="costCenterManager" required placeholder="Manager name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Annual Budget *</label>
+                                    <input type="number" class="form-control" id="costCenterBudget" required min="0" step="1000000">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Currency *</label>
+                                    <select class="form-select" id="costCenterCurrency" required>
+                                        <option value="IDR">IDR - Indonesian Rupiah</option>
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="SGD">SGD - Singapore Dollar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Budget Period *</label>
+                                    <select class="form-select" id="costCenterBudgetPeriod" required>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">GL Account</label>
+                                    <input type="text" class="form-control" id="costCenterGLAccount" placeholder="General Ledger Account">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="costCenterStatus">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                        <option value="suspended">Suspended</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="costCenterDescription" rows="3" placeholder="Cost center description and purpose..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="costCenterRequireApproval">
+                                <label class="form-check-label" for="costCenterRequireApproval">
+                                    Require approval for expenses above budget threshold
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCostCenter()">Save Cost Center</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample cost center data
+        let costCenters = [
+            {
+                id: 1,
+                code: 'CC-FIN-001',
+                name: 'Finance Department',
+                department: 'finance',
+                departmentName: 'Finance',
+                manager: 'John Smith',
+                budget: 500000000,
+                spent: 320000000,
+                currency: 'IDR',
+                budgetPeriod: '2024',
+                glAccount: '4000-001',
+                status: 'active',
+                description: 'Finance department cost center for operational expenses',
+                requireApproval: true
+            },
+            {
+                id: 2,
+                code: 'CC-IT-001',
+                name: 'IT Infrastructure',
+                department: 'it',
+                departmentName: 'Information Technology',
+                manager: 'Sarah Johnson',
+                budget: 750000000,
+                spent: 450000000,
+                currency: 'IDR',
+                budgetPeriod: '2024',
+                glAccount: '4000-002',
+                status: 'active',
+                description: 'IT infrastructure and technology expenses',
+                requireApproval: true
+            },
+            {
+                id: 3,
+                code: 'CC-SAL-001',
+                name: 'Sales Team',
+                department: 'sales',
+                departmentName: 'Sales',
+                manager: 'Michael Brown',
+                budget: 300000000,
+                spent: 280000000,
+                currency: 'IDR',
+                budgetPeriod: '2024',
+                glAccount: '4000-003',
+                status: 'active',
+                description: 'Sales team travel and client entertainment expenses',
+                requireApproval: false
+            },
+            {
+                id: 4,
+                code: 'CC-MKT-001',
+                name: 'Marketing Campaigns',
+                department: 'marketing',
+                departmentName: 'Marketing',
+                manager: 'Lisa Davis',
+                budget: 400000000,
+                spent: 150000000,
+                currency: 'IDR',
+                budgetPeriod: '2024',
+                glAccount: '4000-004',
+                status: 'active',
+                description: 'Marketing campaigns and promotional activities',
+                requireApproval: true
+            }
+        ];
+
+        function renderCostCenterTable() {
+            const tbody = document.getElementById('costCenterTableBody');
+            const filteredCenters = getFilteredCostCenters();
+            
+            tbody.innerHTML = filteredCenters.map(center => {
+                const remaining = center.budget - center.spent;
+                const budgetPercentage = (center.spent / center.budget) * 100;
+                const budgetStatus = getBudgetStatus(budgetPercentage);
+                
+                return `
+                    <tr>
+                        <td>
+                            <strong>${center.code}</strong>
+                        </td>
+                        <td>
+                            <div>
+                                <strong>${center.name}</strong>
+                                ${center.requireApproval ? '<i class="fas fa-shield-alt text-warning ms-1" title="Requires Approval"></i>' : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-${getDepartmentBadgeColor(center.department)}">
+                                ${center.departmentName}
+                            </span>
+                        </td>
+                        <td>
+                            <i class="fas fa-user me-2 text-muted"></i>
+                            ${center.manager}
+                        </td>
+                        <td>${formatCurrency(center.budget, center.currency)}</td>
+                        <td>
+                            <div>
+                                ${formatCurrency(center.spent, center.currency)}
+                                <div class="progress mt-1" style="height: 4px;">
+                                    <div class="progress-bar bg-${budgetStatus.color}" style="width: ${Math.min(budgetPercentage, 100)}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="text-${remaining >= 0 ? 'success' : 'danger'}">
+                                ${formatCurrency(remaining, center.currency)}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-${center.status === 'active' ? 'success' : center.status === 'suspended' ? 'warning' : 'secondary'}">
+                                ${center.status.charAt(0).toUpperCase() + center.status.slice(1)}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editCostCenter(${center.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCostCenter(${center.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getFilteredCostCenters() {
+            const departmentFilter = document.getElementById('filterDepartment').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const budgetStatusFilter = document.getElementById('filterBudgetStatus').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            return costCenters.filter(center => {
+                const budgetPercentage = (center.spent / center.budget) * 100;
+                const budgetStatus = getBudgetStatusValue(budgetPercentage);
+                
+                const matchesDepartment = !departmentFilter || center.department === departmentFilter;
+                const matchesStatus = !statusFilter || center.status === statusFilter;
+                const matchesBudgetStatus = !budgetStatusFilter || budgetStatus === budgetStatusFilter;
+                const matchesSearch = !searchTerm || 
+                    center.code.toLowerCase().includes(searchTerm) ||
+                    center.name.toLowerCase().includes(searchTerm) ||
+                    center.manager.toLowerCase().includes(searchTerm);
+                
+                return matchesDepartment && matchesStatus && matchesBudgetStatus && matchesSearch;
+            });
+        }
+
+        function getBudgetStatus(percentage) {
+            if (percentage < 80) return { color: 'success', text: 'Under Budget' };
+            if (percentage <= 100) return { color: 'warning', text: 'On Budget' };
+            return { color: 'danger', text: 'Over Budget' };
+        }
+
+        function getBudgetStatusValue(percentage) {
+            if (percentage < 80) return 'under-budget';
+            if (percentage <= 100) return 'on-budget';
+            return 'over-budget';
+        }
+
+        function getDepartmentBadgeColor(department) {
+            const colors = {
+                'finance': 'primary',
+                'hr': 'success',
+                'it': 'info',
+                'sales': 'warning',
+                'marketing': 'danger',
+                'operations': 'secondary',
+                'legal': 'dark',
+                'procurement': 'light'
+            };
+            return colors[department] || 'secondary';
+        }
+
+        function formatCurrency(amount, currency) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: currency,
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function editCostCenter(id) {
+            const center = costCenters.find(c => c.id === id);
+            if (center) {
+                document.getElementById('costCenterId').value = center.id;
+                document.getElementById('costCenterCode').value = center.code;
+                document.getElementById('costCenterName').value = center.name;
+                document.getElementById('costCenterDepartment').value = center.department;
+                document.getElementById('costCenterManager').value = center.manager;
+                document.getElementById('costCenterBudget').value = center.budget;
+                document.getElementById('costCenterCurrency').value = center.currency;
+                document.getElementById('costCenterBudgetPeriod').value = center.budgetPeriod;
+                document.getElementById('costCenterGLAccount').value = center.glAccount || '';
+                document.getElementById('costCenterStatus').value = center.status;
+                document.getElementById('costCenterDescription').value = center.description || '';
+                document.getElementById('costCenterRequireApproval').checked = center.requireApproval;
+                
+                document.getElementById('costCenterModalTitle').textContent = 'Edit Cost Center';
+                new bootstrap.Modal(document.getElementById('costCenterModal')).show();
+            }
+        }
+
+        function deleteCostCenter(id) {
+            if (confirm('Are you sure you want to delete this cost center?')) {
+                costCenters = costCenters.filter(c => c.id !== id);
+                renderCostCenterTable();
+            }
+        }
+
+        function saveCostCenter() {
+            const form = document.getElementById('costCenterForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const id = document.getElementById('costCenterId').value;
+            const code = document.getElementById('costCenterCode').value;
+            const name = document.getElementById('costCenterName').value;
+            const department = document.getElementById('costCenterDepartment').value;
+            const departmentName = document.getElementById('costCenterDepartment').selectedOptions[0].text;
+            const manager = document.getElementById('costCenterManager').value;
+            const budget = parseInt(document.getElementById('costCenterBudget').value);
+            const currency = document.getElementById('costCenterCurrency').value;
+            const budgetPeriod = document.getElementById('costCenterBudgetPeriod').value;
+            const glAccount = document.getElementById('costCenterGLAccount').value;
+            const status = document.getElementById('costCenterStatus').value;
+            const description = document.getElementById('costCenterDescription').value;
+            const requireApproval = document.getElementById('costCenterRequireApproval').checked;
+
+            if (id) {
+                // Edit existing
+                const index = costCenters.findIndex(c => c.id === parseInt(id));
+                if (index !== -1) {
+                    costCenters[index] = {
+                        ...costCenters[index],
+                        code, name, department, departmentName, manager,
+                        budget, currency, budgetPeriod, glAccount, status,
+                        description, requireApproval
+                    };
+                }
+            } else {
+                // Add new
+                const newId = Math.max(...costCenters.map(c => c.id)) + 1;
+                costCenters.push({
+                    id: newId,
+                    code, name, department, departmentName, manager,
+                    budget, spent: 0, currency, budgetPeriod, glAccount,
+                    status, description, requireApproval
+                });
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('costCenterModal')).hide();
+            form.reset();
+            document.getElementById('costCenterId').value = '';
+            document.getElementById('costCenterModalTitle').textContent = 'Add Cost Center';
+            renderCostCenterTable();
+        }
+
+        // Event listeners
+        document.getElementById('filterDepartment').addEventListener('change', renderCostCenterTable);
+        document.getElementById('filterStatus').addEventListener('change', renderCostCenterTable);
+        document.getElementById('filterBudgetStatus').addEventListener('change', renderCostCenterTable);
+        document.getElementById('searchInput').addEventListener('input', renderCostCenterTable);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCostCenterTable();
+        });
+    </script>
+</body>
+</html>

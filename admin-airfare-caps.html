@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airfare Caps Configuration - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin.html">Admin</a></li>
+                <li class="breadcrumb-item"><a href="admin.html">Policies</a></li>
+                <li class="breadcrumb-item active">Airfare Caps</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1"><i class="fas fa-plane-departure me-2"></i>Airfare Caps Configuration</h1>
+                <p class="text-muted mb-0">Set maximum allowable airfare amounts by route and class</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="importCaps()">
+                    <i class="fas fa-upload me-1"></i>Import
+                </button>
+                <button class="btn btn-primary" onclick="showAddCapModal()">
+                    <i class="fas fa-plus me-1"></i>Add Cap
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Route</label>
+                        <select class="form-select" id="routeFilter" onchange="filterCaps()">
+                            <option value="">All Routes</option>
+                            <option value="domestic">Domestic</option>
+                            <option value="international">International</option>
+                            <option value="CGK-DPS">CGK - DPS</option>
+                            <option value="CGK-SIN">CGK - SIN</option>
+                            <option value="CGK-KUL">CGK - KUL</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Class</label>
+                        <select class="form-select" id="classFilter" onchange="filterCaps()">
+                            <option value="">All Classes</option>
+                            <option value="economy">Economy</option>
+                            <option value="business">Business</option>
+                            <option value="first">First Class</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter" onchange="filterCaps()">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search routes..." oninput="filterCaps()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Airfare Caps Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Airfare Caps</h5>
+                <span class="badge bg-primary" id="capsCount">12 caps configured</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Route</th>
+                                <th>Class</th>
+                                <th>Cap Amount</th>
+                                <th>Currency</th>
+                                <th>Effective Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="capsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Cap Modal -->
+    <div class="modal fade" id="capModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="capModalTitle">Add Airfare Cap</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="capForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Origin <span class="text-danger">*</span></label>
+                                <select class="form-select" id="origin" required>
+                                    <option value="">Select Origin</option>
+                                    <option value="CGK">Jakarta (CGK)</option>
+                                    <option value="DPS">Denpasar (DPS)</option>
+                                    <option value="SIN">Singapore (SIN)</option>
+                                    <option value="KUL">Kuala Lumpur (KUL)</option>
+                                    <option value="BKK">Bangkok (BKK)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Destination <span class="text-danger">*</span></label>
+                                <select class="form-select" id="destination" required>
+                                    <option value="">Select Destination</option>
+                                    <option value="CGK">Jakarta (CGK)</option>
+                                    <option value="DPS">Denpasar (DPS)</option>
+                                    <option value="SIN">Singapore (SIN)</option>
+                                    <option value="KUL">Kuala Lumpur (KUL)</option>
+                                    <option value="BKK">Bangkok (BKK)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Class <span class="text-danger">*</span></label>
+                                <select class="form-select" id="travelClass" required>
+                                    <option value="">Select Class</option>
+                                    <option value="economy">Economy</option>
+                                    <option value="business">Business</option>
+                                    <option value="first">First Class</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Cap Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <select class="form-select" id="currency" style="max-width: 100px;">
+                                        <option value="IDR">IDR</option>
+                                        <option value="USD">USD</option>
+                                        <option value="SGD">SGD</option>
+                                    </select>
+                                    <input type="number" class="form-control" id="capAmount" placeholder="0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Effective Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="effectiveDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Expiry Date</label>
+                                <input type="date" class="form-control" id="expiryDate">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                    <label class="form-check-label" for="isActive">
+                                        Active
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" id="notes" rows="3" placeholder="Additional notes or conditions..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveCap()">Save Cap</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data
+        let airfareCaps = [
+            {
+                id: 1,
+                origin: 'CGK',
+                destination: 'DPS',
+                class: 'economy',
+                amount: 2500000,
+                currency: 'IDR',
+                effectiveDate: '2024-01-01',
+                expiryDate: '2024-12-31',
+                status: 'active',
+                notes: 'Standard domestic route cap'
+            },
+            {
+                id: 2,
+                origin: 'CGK',
+                destination: 'SIN',
+                class: 'economy',
+                amount: 800,
+                currency: 'USD',
+                effectiveDate: '2024-01-01',
+                expiryDate: '2024-12-31',
+                status: 'active',
+                notes: 'International route to Singapore'
+            },
+            {
+                id: 3,
+                origin: 'CGK',
+                destination: 'DPS',
+                class: 'business',
+                amount: 8000000,
+                currency: 'IDR',
+                effectiveDate: '2024-01-01',
+                expiryDate: '2024-12-31',
+                status: 'active',
+                notes: 'Business class domestic'
+            }
+        ];
+
+        let filteredCaps = [...airfareCaps];
+        let editingCapId = null;
+
+        function renderCapsTable() {
+            const tbody = document.getElementById('capsTableBody');
+            tbody.innerHTML = '';
+
+            filteredCaps.forEach(cap => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="fw-medium">${cap.origin} → ${cap.destination}</div>
+                        <small class="text-muted">${getRouteType(cap.origin, cap.destination)}</small>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark">${cap.class.charAt(0).toUpperCase() + cap.class.slice(1)}</span>
+                    </td>
+                    <td>
+                        <div class="fw-medium">${formatCurrency(cap.amount, cap.currency)}</div>
+                    </td>
+                    <td>${cap.currency}</td>
+                    <td>${formatDate(cap.effectiveDate)}</td>
+                    <td>
+                        <span class="badge bg-${cap.status === 'active' ? 'success' : 'secondary'}">
+                            ${cap.status.charAt(0).toUpperCase() + cap.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editCap(${cap.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteCap(${cap.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('capsCount').textContent = `${filteredCaps.length} caps configured`;
+        }
+
+        function getRouteType(origin, destination) {
+            const domesticCities = ['CGK', 'DPS', 'SUB', 'MLG', 'YOG'];
+            const isDomestic = domesticCities.includes(origin) && domesticCities.includes(destination);
+            return isDomestic ? 'Domestic' : 'International';
+        }
+
+        function formatCurrency(amount, currency) {
+            if (currency === 'IDR') {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
+            }
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: currency
+            }).format(amount);
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function filterCaps() {
+            const routeFilter = document.getElementById('routeFilter').value;
+            const classFilter = document.getElementById('classFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredCaps = airfareCaps.filter(cap => {
+                const routeMatch = !routeFilter || 
+                    (routeFilter === 'domestic' && getRouteType(cap.origin, cap.destination) === 'Domestic') ||
+                    (routeFilter === 'international' && getRouteType(cap.origin, cap.destination) === 'International') ||
+                    `${cap.origin}-${cap.destination}` === routeFilter;
+                
+                const classMatch = !classFilter || cap.class === classFilter;
+                const statusMatch = !statusFilter || cap.status === statusFilter;
+                const searchMatch = !searchInput || 
+                    cap.origin.toLowerCase().includes(searchInput) ||
+                    cap.destination.toLowerCase().includes(searchInput);
+
+                return routeMatch && classMatch && statusMatch && searchMatch;
+            });
+
+            renderCapsTable();
+        }
+
+        function showAddCapModal() {
+            editingCapId = null;
+            document.getElementById('capModalTitle').textContent = 'Add Airfare Cap';
+            document.getElementById('capForm').reset();
+            document.getElementById('effectiveDate').value = new Date().toISOString().split('T')[0];
+            new bootstrap.Modal(document.getElementById('capModal')).show();
+        }
+
+        function editCap(id) {
+            const cap = airfareCaps.find(c => c.id === id);
+            if (!cap) return;
+
+            editingCapId = id;
+            document.getElementById('capModalTitle').textContent = 'Edit Airfare Cap';
+            
+            document.getElementById('origin').value = cap.origin;
+            document.getElementById('destination').value = cap.destination;
+            document.getElementById('travelClass').value = cap.class;
+            document.getElementById('capAmount').value = cap.amount;
+            document.getElementById('currency').value = cap.currency;
+            document.getElementById('effectiveDate').value = cap.effectiveDate;
+            document.getElementById('expiryDate').value = cap.expiryDate || '';
+            document.getElementById('isActive').checked = cap.status === 'active';
+            document.getElementById('notes').value = cap.notes || '';
+
+            new bootstrap.Modal(document.getElementById('capModal')).show();
+        }
+
+        function saveCap() {
+            const form = document.getElementById('capForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const capData = {
+                origin: document.getElementById('origin').value,
+                destination: document.getElementById('destination').value,
+                class: document.getElementById('travelClass').value,
+                amount: parseFloat(document.getElementById('capAmount').value),
+                currency: document.getElementById('currency').value,
+                effectiveDate: document.getElementById('effectiveDate').value,
+                expiryDate: document.getElementById('expiryDate').value,
+                status: document.getElementById('isActive').checked ? 'active' : 'inactive',
+                notes: document.getElementById('notes').value
+            };
+
+            if (editingCapId) {
+                const index = airfareCaps.findIndex(c => c.id === editingCapId);
+                airfareCaps[index] = { ...airfareCaps[index], ...capData };
+            } else {
+                const newCap = {
+                    id: Math.max(...airfareCaps.map(c => c.id)) + 1,
+                    ...capData
+                };
+                airfareCaps.push(newCap);
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('capModal')).hide();
+            filterCaps();
+            showNotification(editingCapId ? 'Cap updated successfully!' : 'Cap added successfully!', 'success');
+        }
+
+        function deleteCap(id) {
+            if (confirm('Are you sure you want to delete this airfare cap?')) {
+                airfareCaps = airfareCaps.filter(c => c.id !== id);
+                filterCaps();
+                showNotification('Cap deleted successfully!', 'success');
+            }
+        }
+
+        function importCaps() {
+            // Mock import functionality
+            showNotification('Import feature will be available soon!', 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCapsTable();
+        });
+    </script>
+</body>
+</html>

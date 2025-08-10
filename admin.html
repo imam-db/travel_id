@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - TrevID</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-cog"></i> Admin Configuration</h1>
+                    <p class="page-description">Manage policies, approval chains, and system settings</p>
+                </div>
+            </div>
+
+            <div class="admin-grid">
+                <!-- Policies Section -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-shield-alt"></i> Policies</h2>
+                        <p>Configure expense and travel policies</p>
+                    </div>
+                    <div class="admin-cards">
+                        <a href="admin-airfare-caps.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Airfare Caps</h3>
+                                <p>Set fare limits by route and cabin class</p>
+                                <span class="card-badge">12 rules</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-hotel-caps.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Hotel Caps</h3>
+                                <p>Configure nightly rate limits by city</p>
+                                <span class="card-badge">25 cities</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-mileage-rate.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-road"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Mileage Rate</h3>
+                                <p>Set reimbursement rate per kilometer</p>
+                                <span class="card-badge">IDR 2,500/km</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-meals-caps.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Meals Caps</h3>
+                                <p>Configure meal allowances by type</p>
+                                <span class="card-badge">3 meal types</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-per-diem.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-day"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Per Diem</h3>
+                                <p>Daily allowances by location and level</p>
+                                <span class="card-badge">3 tiers</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-receipt-rules.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Receipt Rules</h3>
+                                <p>Configure receipt requirements</p>
+                                <span class="card-badge">5 categories</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Approval Chain Section -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-sitemap"></i> Approval Chain</h2>
+                        <p>Configure approval workflows and delegation</p>
+                    </div>
+                    <div class="admin-cards">
+                        <a href="admin-approval-chain.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Approval Rules</h3>
+                                <p>Set approval levels by amount and category</p>
+                                <span class="card-badge">8 rules</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Organization Section -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-building"></i> Organization</h2>
+                        <p>Manage cost centers, projects, and users</p>
+                    </div>
+                    <div class="admin-cards">
+                        <a href="admin-cost-center.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Cost Center</h3>
+                                <p>Manage organizational cost centers</p>
+                                <span class="card-badge">15 centers</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-users.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Users & Roles</h3>
+                                <p>Manage user access and permissions</p>
+                                <span class="card-badge">124 users</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- System Settings Section -->
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tools"></i> System Settings</h2>
+                        <p>Configure system-wide settings and integrations</p>
+                    </div>
+                    <div class="admin-cards">
+                        <a href="admin-fx-setting.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>FX Setting</h3>
+                                <p>Currency rates and exchange settings</p>
+                                <span class="card-badge">5 currencies</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+
+                        <a href="admin-integrations.html" class="admin-card">
+                            <div class="card-icon">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Integrations</h3>
+                                <p>Traveloka and other service connections</p>
+                                <span class="card-badge connected">Connected</span>
+                            </div>
+                            <i class="fas fa-chevron-right card-arrow"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">98.5%</div>
+                        <div class="stat-label">Policy Compliance</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">2.3 days</div>
+                        <div class="stat-label">Avg Approval Time</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Active Violations</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">Last sync</div>
+                        <div class="stat-label">2 hours ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Add any interactive functionality here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects and animations
+            const adminCards = document.querySelectorAll('.admin-card');
+            adminCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approval Chain Configuration - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="admin-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin.html">Admin</a></li>
+                <li class="breadcrumb-item"><a href="admin.html">System</a></li>
+                <li class="breadcrumb-item active">Approval Chain</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div>
+                <h1 class="h3 mb-1"><i class="fas fa-sitemap me-2"></i>Approval Chain Configuration</h1>
+                <p class="text-muted mb-0">Configure approval workflows and hierarchies</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="previewChain()">
+                    <i class="fas fa-eye me-1"></i>Preview
+                </button>
+                <button class="btn btn-primary" onclick="showAddChainModal()">
+                    <i class="fas fa-plus me-1"></i>Add Chain
+                </button>
+            </div>
+        </div>
+
+        <!-- Chain Overview -->
+        <div class="admin-overview-cards">
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-primary mb-2">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h5 class="card-title">Total Chains</h5>
+                        <p class="card-text">Active approval chains</p>
+                        <span class="badge bg-primary" id="totalChains">6 chains</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-success mb-2">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h5 class="card-title">Approvers</h5>
+                        <p class="card-text">Unique approvers</p>
+                        <span class="badge bg-success" id="totalApprovers">15 users</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-warning mb-2">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h5 class="card-title">Avg. Time</h5>
+                        <p class="card-text">Average approval time</p>
+                        <span class="badge bg-warning" id="avgTime">2.3 days</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-info mb-2">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h5 class="card-title">Success Rate</h5>
+                        <p class="card-text">Approval success rate</p>
+                        <span class="badge bg-info" id="successRate">94.2%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="card admin-filter-card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" id="departmentFilter" onchange="filterChains()">
+                            <option value="">All Departments</option>
+                            <option value="IT">IT</option>
+                            <option value="Finance">Finance</option>
+                            <option value="HR">HR</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Amount Range</label>
+                        <select class="form-select" id="amountFilter" onchange="filterChains()">
+                            <option value="">All Amounts</option>
+                            <option value="low">< 1M IDR</option>
+                            <option value="medium">1M - 10M IDR</option>
+                            <option value="high"> > 10M IDR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter" onchange="filterChains()">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search chains..." oninput="filterChains()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approval Chains Table -->
+        <div class="card admin-table-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Approval Chains</h5>
+                <span class="badge bg-primary" id="chainsCount">6 chains configured</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Chain Name</th>
+                                <th>Department</th>
+                                <th>Amount Range</th>
+                                <th>Approval Steps</th>
+                                <th>Avg. Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chainsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Chain Modal -->
+    <div class="modal fade" id="chainModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chainModalTitle">Add Approval Chain</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="chainForm">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">Chain Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="chainName" placeholder="Enter chain name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Department <span class="text-danger">*</span></label>
+                                <select class="form-select" id="department" required>
+                                    <option value="">Select Department</option>
+                                    <option value="IT">IT</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="HR">HR</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Marketing">Marketing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Minimum Amount</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="minCurrency" style="max-width: 100px;">
+                                        <option value="IDR">IDR</option>
+                                        <option value="USD">USD</option>
+                                    </select>
+                                    <input type="number" class="form-control" id="minAmount" placeholder="0">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Maximum Amount</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="maxCurrency" style="max-width: 100px;">
+                                        <option value="IDR">IDR</option>
+                                        <option value="USD">USD</option>
+                                    </select>
+                                    <input type="number" class="form-control" id="maxAmount" placeholder="Unlimited">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                    <label class="form-check-label" for="isActive">
+                                        Active
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Approval Steps -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Approval Steps</h6>
+                                <button type="button" class="btn btn-sm btn-outline-primary" onclick="addApprovalStep()">
+                                    <i class="fas fa-plus me-1"></i>Add Step
+                                </button>
+                            </div>
+                            <div id="approvalSteps">
+                                <!-- Approval steps will be added here -->
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="description" rows="3" placeholder="Chain description and conditions..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveChain()">Save Chain</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chain Preview Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Approval Chain Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="previewContent">
+                    <!-- Preview content will be populated here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data
+        let approvalChains = [
+            {
+                id: 1,
+                name: 'IT Department - Low Amount',
+                department: 'IT',
+                minAmount: 0,
+                maxAmount: 1000000,
+                currency: 'IDR',
+                status: 'active',
+                avgTime: 1.2,
+                steps: [
+                    { order: 1, role: 'Direct Manager', user: 'John Doe', email: 'john.doe@company.com', timeout: 2 },
+                    { order: 2, role: 'Department Head', user: 'Jane Smith', email: 'jane.smith@company.com', timeout: 3 }
+                ],
+                description: 'Standard approval for IT expenses under 1M IDR'
+            },
+            {
+                id: 2,
+                name: 'Finance - High Amount',
+                department: 'Finance',
+                minAmount: 10000000,
+                maxAmount: null,
+                currency: 'IDR',
+                status: 'active',
+                avgTime: 4.5,
+                steps: [
+                    { order: 1, role: 'Direct Manager', user: 'Mike Johnson', email: 'mike.johnson@company.com', timeout: 2 },
+                    { order: 2, role: 'Department Head', user: 'Sarah Wilson', email: 'sarah.wilson@company.com', timeout: 3 },
+                    { order: 3, role: 'Finance Director', user: 'Robert Brown', email: 'robert.brown@company.com', timeout: 5 },
+                    { order: 4, role: 'CEO', user: 'David Lee', email: 'david.lee@company.com', timeout: 7 }
+                ],
+                description: 'High-value expense approval requiring multiple levels'
+            },
+            {
+                id: 3,
+                name: 'Sales - Travel Expenses',
+                department: 'Sales',
+                minAmount: 0,
+                maxAmount: 5000000,
+                currency: 'IDR',
+                status: 'active',
+                avgTime: 2.1,
+                steps: [
+                    { order: 1, role: 'Team Lead', user: 'Lisa Chen', email: 'lisa.chen@company.com', timeout: 1 },
+                    { order: 2, role: 'Sales Manager', user: 'Tom Anderson', email: 'tom.anderson@company.com', timeout: 3 }
+                ],
+                description: 'Fast-track approval for sales travel expenses'
+            }
+        ];
+
+        let filteredChains = [...approvalChains];
+        let editingChainId = null;
+        let stepCounter = 0;
+
+        function renderChainsTable() {
+            const tbody = document.getElementById('chainsTableBody');
+            tbody.innerHTML = '';
+
+            filteredChains.forEach(chain => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="fw-medium">${chain.name}</div>
+                        <small class="text-muted">${chain.description}</small>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark">${chain.department}</span>
+                    </td>
+                    <td>
+                        <div class="small">
+                            ${formatAmountRange(chain.minAmount, chain.maxAmount, chain.currency)}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-primary me-2">${chain.steps.length}</span>
+                            <div class="step-preview">
+                                ${chain.steps.slice(0, 3).map(step => 
+                                    `<span class="badge bg-light text-dark me-1" title="${step.role}">${step.order}</span>`
+                                ).join('')}
+                                ${chain.steps.length > 3 ? '<span class="text-muted">...</span>' : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="text-muted">${chain.avgTime} days</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-${chain.status === 'active' ? 'success' : 'secondary'}">
+                            ${chain.status.charAt(0).toUpperCase() + chain.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="previewChainDetails(${chain.id})" title="Preview">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editChain(${chain.id})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteChain(${chain.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('chainsCount').textContent = `${filteredChains.length} chains configured`;
+        }
+
+        function formatAmountRange(min, max, currency) {
+            const formatter = new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: currency,
+                minimumFractionDigits: 0
+            });
+            
+            if (min === 0 && max === null) {
+                return 'All amounts';
+            } else if (max === null) {
+                return `≥ ${formatter.format(min)}`;
+            } else if (min === 0) {
+                return `≤ ${formatter.format(max)}`;
+            } else {
+                return `${formatter.format(min)} - ${formatter.format(max)}`;
+            }
+        }
+
+        function filterChains() {
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const amountFilter = document.getElementById('amountFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredChains = approvalChains.filter(chain => {
+                const departmentMatch = !departmentFilter || chain.department === departmentFilter;
+                const statusMatch = !statusFilter || chain.status === statusFilter;
+                const searchMatch = !searchInput || 
+                    chain.name.toLowerCase().includes(searchInput) ||
+                    chain.description.toLowerCase().includes(searchInput) ||
+                    chain.department.toLowerCase().includes(searchInput);
+                
+                let amountMatch = true;
+                if (amountFilter) {
+                    switch(amountFilter) {
+                        case 'low':
+                            amountMatch = chain.maxAmount && chain.maxAmount <= 1000000;
+                            break;
+                        case 'medium':
+                            amountMatch = chain.minAmount >= 1000000 && (!chain.maxAmount || chain.maxAmount <= 10000000);
+                            break;
+                        case 'high':
+                            amountMatch = chain.minAmount >= 10000000 || (chain.maxAmount && chain.maxAmount > 10000000);
+                            break;
+                    }
+                }
+
+                return departmentMatch && statusMatch && searchMatch && amountMatch;
+            });
+
+            renderChainsTable();
+        }
+
+        function showAddChainModal() {
+            editingChainId = null;
+            stepCounter = 0;
+            document.getElementById('chainModalTitle').textContent = 'Add Approval Chain';
+            document.getElementById('chainForm').reset();
+            document.getElementById('approvalSteps').innerHTML = '';
+            addApprovalStep(); // Add first step by default
+            new bootstrap.Modal(document.getElementById('chainModal')).show();
+        }
+
+        function addApprovalStep() {
+            stepCounter++;
+            const stepsContainer = document.getElementById('approvalSteps');
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'card mb-3';
+            stepDiv.id = `step-${stepCounter}`;
+            stepDiv.innerHTML = `
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Step ${stepCounter}</h6>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeApprovalStep(${stepCounter})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Role <span class="text-danger">*</span></label>
+                            <select class="form-select step-role" required>
+                                <option value="">Select Role</option>
+                                <option value="Direct Manager">Direct Manager</option>
+                                <option value="Team Lead">Team Lead</option>
+                                <option value="Department Head">Department Head</option>
+                                <option value="Finance Director">Finance Director</option>
+                                <option value="CEO">CEO</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Approver <span class="text-danger">*</span></label>
+                            <select class="form-select step-user" required>
+                                <option value="">Select User</option>
+                                <option value="john.doe@company.com">John Doe</option>
+                                <option value="jane.smith@company.com">Jane Smith</option>
+                                <option value="mike.johnson@company.com">Mike Johnson</option>
+                                <option value="sarah.wilson@company.com">Sarah Wilson</option>
+                                <option value="robert.brown@company.com">Robert Brown</option>
+                                <option value="david.lee@company.com">David Lee</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Timeout (days)</label>
+                            <input type="number" class="form-control step-timeout" min="1" max="30" value="3">
+                        </div>
+                    </div>
+                </div>
+            `;
+            stepsContainer.appendChild(stepDiv);
+        }
+
+        function removeApprovalStep(stepId) {
+            const stepElement = document.getElementById(`step-${stepId}`);
+            if (stepElement) {
+                stepElement.remove();
+            }
+        }
+
+        function editChain(id) {
+            const chain = approvalChains.find(c => c.id === id);
+            if (!chain) return;
+
+            editingChainId = id;
+            stepCounter = 0;
+            document.getElementById('chainModalTitle').textContent = 'Edit Approval Chain';
+            
+            document.getElementById('chainName').value = chain.name;
+            document.getElementById('department').value = chain.department;
+            document.getElementById('minAmount').value = chain.minAmount || '';
+            document.getElementById('maxAmount').value = chain.maxAmount || '';
+            document.getElementById('minCurrency').value = chain.currency;
+            document.getElementById('maxCurrency').value = chain.currency;
+            document.getElementById('isActive').checked = chain.status === 'active';
+            document.getElementById('description').value = chain.description || '';
+
+            // Clear and populate steps
+            document.getElementById('approvalSteps').innerHTML = '';
+            chain.steps.forEach((step, index) => {
+                addApprovalStep();
+                const stepElement = document.getElementById(`step-${stepCounter}`);
+                stepElement.querySelector('.step-role').value = step.role;
+                stepElement.querySelector('.step-user').value = step.email;
+                stepElement.querySelector('.step-timeout').value = step.timeout;
+            });
+
+            new bootstrap.Modal(document.getElementById('chainModal')).show();
+        }
+
+        function saveChain() {
+            const form = document.getElementById('chainForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Collect approval steps
+            const steps = [];
+            const stepElements = document.querySelectorAll('#approvalSteps .card');
+            stepElements.forEach((stepElement, index) => {
+                const role = stepElement.querySelector('.step-role').value;
+                const userEmail = stepElement.querySelector('.step-user').value;
+                const timeout = parseInt(stepElement.querySelector('.step-timeout').value);
+                
+                if (role && userEmail) {
+                    const userName = stepElement.querySelector('.step-user option:checked').textContent;
+                    steps.push({
+                        order: index + 1,
+                        role: role,
+                        user: userName,
+                        email: userEmail,
+                        timeout: timeout
+                    });
+                }
+            });
+
+            if (steps.length === 0) {
+                alert('Please add at least one approval step.');
+                return;
+            }
+
+            const chainData = {
+                name: document.getElementById('chainName').value,
+                department: document.getElementById('department').value,
+                minAmount: parseFloat(document.getElementById('minAmount').value) || 0,
+                maxAmount: parseFloat(document.getElementById('maxAmount').value) || null,
+                currency: document.getElementById('minCurrency').value,
+                status: document.getElementById('isActive').checked ? 'active' : 'inactive',
+                description: document.getElementById('description').value,
+                steps: steps,
+                avgTime: Math.random() * 3 + 1 // Mock average time
+            };
+
+            if (editingChainId) {
+                const index = approvalChains.findIndex(c => c.id === editingChainId);
+                approvalChains[index] = { ...approvalChains[index], ...chainData };
+            } else {
+                const newChain = {
+                    id: Math.max(...approvalChains.map(c => c.id)) + 1,
+                    ...chainData
+                };
+                approvalChains.push(newChain);
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('chainModal')).hide();
+            filterChains();
+            showNotification(editingChainId ? 'Chain updated successfully!' : 'Chain added successfully!', 'success');
+        }
+
+        function deleteChain(id) {
+            if (confirm('Are you sure you want to delete this approval chain?')) {
+                approvalChains = approvalChains.filter(c => c.id !== id);
+                filterChains();
+                showNotification('Chain deleted successfully!', 'success');
+            }
+        }
+
+        function previewChainDetails(id) {
+            const chain = approvalChains.find(c => c.id === id);
+            if (!chain) return;
+
+            const previewContent = document.getElementById('previewContent');
+            previewContent.innerHTML = `
+                <div class="mb-4">
+                    <h6>${chain.name}</h6>
+                    <p class="text-muted">${chain.description}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>Department:</strong> ${chain.department}<br>
+                            <strong>Amount Range:</strong> ${formatAmountRange(chain.minAmount, chain.maxAmount, chain.currency)}<br>
+                            <strong>Status:</strong> <span class="badge bg-${chain.status === 'active' ? 'success' : 'secondary'}">${chain.status}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Steps:</strong> ${chain.steps.length}<br>
+                            <strong>Avg. Time:</strong> ${chain.avgTime} days<br>
+                        </div>
+                    </div>
+                </div>
+                <div class="approval-flow">
+                    <h6>Approval Flow:</h6>
+                    ${chain.steps.map((step, index) => `
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 30px; height: 30px; font-size: 14px;">
+                                ${step.order}
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="fw-medium">${step.role}</div>
+                                <div class="text-muted small">${step.user} (${step.email})</div>
+                                <div class="text-muted small">Timeout: ${step.timeout} days</div>
+                            </div>
+                            ${index < chain.steps.length - 1 ? '<div class="text-muted"><i class="fas fa-arrow-down"></i></div>' : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            new bootstrap.Modal(document.getElementById('previewModal')).show();
+        }
+
+        function previewChain() {
+            // Mock preview functionality
+            showNotification('Chain preview feature will show workflow visualization!', 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderChainsTable();
+        });
+    </script>
+</body>
+</html>

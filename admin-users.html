@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users & Roles Management - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="admin-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin.html">Admin</a></li>
+                <li class="breadcrumb-item"><a href="admin.html">Organization</a></li>
+                <li class="breadcrumb-item active">Users & Roles</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div>
+                <h1 class="h3 mb-1"><i class="fas fa-users me-2"></i>Users & Roles Management</h1>
+                <p class="text-muted mb-0">Manage user accounts, roles, and permissions</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="exportUsers()">
+                    <i class="fas fa-download me-1"></i>Export
+                </button>
+                <button class="btn btn-primary" onclick="showAddUserModal()">
+                    <i class="fas fa-user-plus me-1"></i>Add User
+                </button>
+            </div>
+        </div>
+
+        <!-- Role Overview -->
+        <div class="admin-overview-cards">
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-danger mb-2">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h5 class="card-title">Admin</h5>
+                        <p class="card-text">Full system access</p>
+                        <span class="badge bg-danger" id="adminCount">3 users</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-warning mb-2">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <h5 class="card-title">Finance</h5>
+                        <p class="card-text">Financial operations</p>
+                        <span class="badge bg-warning" id="financeCount">5 users</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-info mb-2">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h5 class="card-title">Manager</h5>
+                        <p class="card-text">Team management</p>
+                        <span class="badge bg-info" id="managerCount">12 users</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-success mb-2">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h5 class="card-title">Employee</h5>
+                        <p class="card-text">Standard access</p>
+                        <span class="badge bg-success" id="employeeCount">45 users</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="card admin-filter-card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Role</label>
+                        <select class="form-select" id="roleFilter" onchange="filterUsers()">
+                            <option value="">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="finance">Finance</option>
+                            <option value="manager">Manager</option>
+                            <option value="employee">Employee</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Department</label>
+                        <select class="form-select" id="departmentFilter" onchange="filterUsers()">
+                            <option value="">All Departments</option>
+                            <option value="IT">IT</option>
+                            <option value="Finance">Finance</option>
+                            <option value="HR">HR</option>
+                            <option value="Sales">Sales</option>
+                            <option value="Marketing">Marketing</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="statusFilter" onchange="filterUsers()">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search users..." oninput="filterUsers()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card admin-table-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Users</h5>
+                <span class="badge bg-primary" id="usersCount">65 users</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Department</th>
+                                <th>Cost Center</th>
+                                <th>Last Login</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit User Modal -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalTitle">Add User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="fullName" placeholder="Enter full name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" placeholder="user@company.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Employee ID</label>
+                                <input type="text" class="form-control" id="employeeId" placeholder="EMP001">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="+62 812 3456 7890">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Role <span class="text-danger">*</span></label>
+                                <select class="form-select" id="role" onchange="updateRolePermissions()" required>
+                                    <option value="">Select Role</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="finance">Finance</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="employee">Employee</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Department <span class="text-danger">*</span></label>
+                                <select class="form-select" id="department" required>
+                                    <option value="">Select Department</option>
+                                    <option value="IT">IT</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="HR">HR</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Marketing">Marketing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Cost Center</label>
+                                <select class="form-select" id="costCenter">
+                                    <option value="">Select Cost Center</option>
+                                    <option value="CC001">IT Operations (CC001)</option>
+                                    <option value="CC002">Finance (CC002)</option>
+                                    <option value="CC003">HR (CC003)</option>
+                                    <option value="CC004">Sales (CC004)</option>
+                                    <option value="CC005">Marketing (CC005)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Manager</label>
+                                <select class="form-select" id="manager">
+                                    <option value="">Select Manager</option>
+                                    <option value="john.doe@company.com">John Doe</option>
+                                    <option value="jane.smith@company.com">Jane Smith</option>
+                                    <option value="mike.johnson@company.com">Mike Johnson</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isActive" checked>
+                                    <label class="form-check-label" for="isActive">
+                                        Active
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Role Permissions Preview -->
+                            <div class="col-12" id="permissionsPreview" style="display: none;">
+                                <label class="form-label">Role Permissions</label>
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <div id="permissionsList">
+                                            <!-- Permissions will be populated based on role -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()">Save User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Role Permissions Modal -->
+    <div class="modal fade" id="permissionsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Role Permissions</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Admin</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Full CRUD all settings</li>
+                                <li><i class="fas fa-check text-success me-2"></i>User management</li>
+                                <li><i class="fas fa-check text-success me-2"></i>System configuration</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Audit logs</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Finance</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Edit rates, caps, receipt rules</li>
+                                <li><i class="fas fa-check text-success me-2"></i>View approval chain</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Financial reports</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>User management</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Manager</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>View policies & chain</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Approve expenses</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Team reports</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Edit policies</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Employee</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success me-2"></i>Read-only policy view</li>
+                                <li><i class="fas fa-check text-success me-2"></i>Submit expenses</li>
+                                <li><i class="fas fa-check text-success me-2"></i>View own reports</li>
+                                <li><i class="fas fa-times text-danger me-2"></i>Approve expenses</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample data
+        let users = [
+            {
+                id: 1,
+                fullName: 'John Doe',
+                email: 'john.doe@company.com',
+                employeeId: 'EMP001',
+                phone: '+62 812 1234 5678',
+                role: 'admin',
+                department: 'IT',
+                costCenter: 'CC001',
+                manager: null,
+                status: 'active',
+                lastLogin: '2024-01-15T10:30:00Z',
+                createdAt: '2023-01-01T00:00:00Z'
+            },
+            {
+                id: 2,
+                fullName: 'Jane Smith',
+                email: 'jane.smith@company.com',
+                employeeId: 'EMP002',
+                phone: '+62 812 2345 6789',
+                role: 'finance',
+                department: 'Finance',
+                costCenter: 'CC002',
+                manager: 'john.doe@company.com',
+                status: 'active',
+                lastLogin: '2024-01-14T15:45:00Z',
+                createdAt: '2023-01-15T00:00:00Z'
+            },
+            {
+                id: 3,
+                fullName: 'Mike Johnson',
+                email: 'mike.johnson@company.com',
+                employeeId: 'EMP003',
+                phone: '+62 812 3456 7890',
+                role: 'manager',
+                department: 'Sales',
+                costCenter: 'CC004',
+                manager: 'john.doe@company.com',
+                status: 'active',
+                lastLogin: '2024-01-13T09:15:00Z',
+                createdAt: '2023-02-01T00:00:00Z'
+            },
+            {
+                id: 4,
+                fullName: 'Sarah Wilson',
+                email: 'sarah.wilson@company.com',
+                employeeId: 'EMP004',
+                phone: '+62 812 4567 8901',
+                role: 'employee',
+                department: 'Marketing',
+                costCenter: 'CC005',
+                manager: 'mike.johnson@company.com',
+                status: 'active',
+                lastLogin: '2024-01-12T14:20:00Z',
+                createdAt: '2023-03-01T00:00:00Z'
+            },
+            {
+                id: 5,
+                fullName: 'Robert Brown',
+                email: 'robert.brown@company.com',
+                employeeId: 'EMP005',
+                phone: '+62 812 5678 9012',
+                role: 'employee',
+                department: 'HR',
+                costCenter: 'CC003',
+                manager: 'jane.smith@company.com',
+                status: 'pending',
+                lastLogin: null,
+                createdAt: '2024-01-10T00:00:00Z'
+            }
+        ];
+
+        let filteredUsers = [...users];
+        let editingUserId = null;
+
+        const rolePermissions = {
+            admin: [
+                'Full CRUD all settings',
+                'User management',
+                'System configuration',
+                'Audit logs'
+            ],
+            finance: [
+                'Edit rates, caps, receipt rules',
+                'View approval chain',
+                'Financial reports'
+            ],
+            manager: [
+                'View policies & chain',
+                'Approve expenses',
+                'Team reports'
+            ],
+            employee: [
+                'Read-only policy view',
+                'Submit expenses',
+                'View own reports'
+            ]
+        };
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+
+            filteredUsers.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                ${user.fullName.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <div>
+                                <div class="fw-medium">${user.fullName}</div>
+                                <small class="text-muted">${user.email}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-${getRoleBadgeColor(user.role)}">
+                            ${user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                        </span>
+                    </td>
+                    <td>${user.department}</td>
+                    <td>
+                        <span class="badge bg-light text-dark">${user.costCenter || 'Not assigned'}</span>
+                    </td>
+                    <td>
+                        ${user.lastLogin ? formatDateTime(user.lastLogin) : '<span class="text-muted">Never</span>'}
+                    </td>
+                    <td>
+                        <span class="badge bg-${getStatusBadgeColor(user.status)}">
+                            ${user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editUser(${user.id})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="viewPermissions('${user.role}')" title="View Permissions">
+                            <i class="fas fa-key"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${user.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateUserCounts();
+        }
+
+        function getRoleBadgeColor(role) {
+            const colors = {
+                'admin': 'danger',
+                'finance': 'warning',
+                'manager': 'info',
+                'employee': 'success'
+            };
+            return colors[role] || 'secondary';
+        }
+
+        function getStatusBadgeColor(status) {
+            const colors = {
+                'active': 'success',
+                'inactive': 'secondary',
+                'pending': 'warning'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function formatDateTime(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function updateUserCounts() {
+            const counts = {
+                admin: filteredUsers.filter(u => u.role === 'admin').length,
+                finance: filteredUsers.filter(u => u.role === 'finance').length,
+                manager: filteredUsers.filter(u => u.role === 'manager').length,
+                employee: filteredUsers.filter(u => u.role === 'employee').length
+            };
+
+            document.getElementById('adminCount').textContent = `${counts.admin} users`;
+            document.getElementById('financeCount').textContent = `${counts.finance} users`;
+            document.getElementById('managerCount').textContent = `${counts.manager} users`;
+            document.getElementById('employeeCount').textContent = `${counts.employee} users`;
+            document.getElementById('usersCount').textContent = `${filteredUsers.length} users`;
+        }
+
+        function filterUsers() {
+            const roleFilter = document.getElementById('roleFilter').value;
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredUsers = users.filter(user => {
+                const roleMatch = !roleFilter || user.role === roleFilter;
+                const departmentMatch = !departmentFilter || user.department === departmentFilter;
+                const statusMatch = !statusFilter || user.status === statusFilter;
+                const searchMatch = !searchInput || 
+                    user.fullName.toLowerCase().includes(searchInput) ||
+                    user.email.toLowerCase().includes(searchInput) ||
+                    user.employeeId.toLowerCase().includes(searchInput);
+
+                return roleMatch && departmentMatch && statusMatch && searchMatch;
+            });
+
+            renderUsersTable();
+        }
+
+        function showAddUserModal() {
+            editingUserId = null;
+            document.getElementById('userModalTitle').textContent = 'Add User';
+            document.getElementById('userForm').reset();
+            document.getElementById('permissionsPreview').style.display = 'none';
+            new bootstrap.Modal(document.getElementById('userModal')).show();
+        }
+
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (!user) return;
+
+            editingUserId = id;
+            document.getElementById('userModalTitle').textContent = 'Edit User';
+            
+            document.getElementById('fullName').value = user.fullName;
+            document.getElementById('email').value = user.email;
+            document.getElementById('employeeId').value = user.employeeId || '';
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('role').value = user.role;
+            document.getElementById('department').value = user.department;
+            document.getElementById('costCenter').value = user.costCenter || '';
+            document.getElementById('manager').value = user.manager || '';
+            document.getElementById('isActive').checked = user.status === 'active';
+
+            updateRolePermissions();
+            new bootstrap.Modal(document.getElementById('userModal')).show();
+        }
+
+        function updateRolePermissions() {
+            const role = document.getElementById('role').value;
+            const previewDiv = document.getElementById('permissionsPreview');
+            const permissionsList = document.getElementById('permissionsList');
+
+            if (role && rolePermissions[role]) {
+                previewDiv.style.display = 'block';
+                permissionsList.innerHTML = rolePermissions[role].map(permission => 
+                    `<div class="mb-1"><i class="fas fa-check text-success me-2"></i>${permission}</div>`
+                ).join('');
+            } else {
+                previewDiv.style.display = 'none';
+            }
+        }
+
+        function saveUser() {
+            const form = document.getElementById('userForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const userData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                employeeId: document.getElementById('employeeId').value,
+                phone: document.getElementById('phone').value,
+                role: document.getElementById('role').value,
+                department: document.getElementById('department').value,
+                costCenter: document.getElementById('costCenter').value,
+                manager: document.getElementById('manager').value,
+                status: document.getElementById('isActive').checked ? 'active' : 'inactive'
+            };
+
+            if (editingUserId) {
+                const index = users.findIndex(u => u.id === editingUserId);
+                users[index] = { ...users[index], ...userData };
+            } else {
+                const newUser = {
+                    id: Math.max(...users.map(u => u.id)) + 1,
+                    ...userData,
+                    lastLogin: null,
+                    createdAt: new Date().toISOString()
+                };
+                users.push(newUser);
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+            filterUsers();
+            showNotification(editingUserId ? 'User updated successfully!' : 'User added successfully!', 'success');
+        }
+
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                users = users.filter(u => u.id !== id);
+                filterUsers();
+                showNotification('User deleted successfully!', 'success');
+            }
+        }
+
+        function viewPermissions(role) {
+            new bootstrap.Modal(document.getElementById('permissionsModal')).show();
+        }
+
+        function exportUsers() {
+            // Mock export functionality
+            showNotification('Export feature will be available soon!', 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderUsersTable();
+        });
+    </script>
+</body>
+</html>

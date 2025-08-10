@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FX Settings - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="admin-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin.html">Admin</a></li>
+                <li class="breadcrumb-item"><a href="admin.html">System</a></li>
+                <li class="breadcrumb-item active" aria-current="page">FX Settings</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1><i class="fas fa-exchange-alt"></i>Foreign Exchange Settings</h1>
+                    <p>Manage currency exchange rates and conversion settings</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary me-2" onclick="refreshRates()">
+                        <i class="fas fa-sync-alt me-2"></i>Refresh Rates
+                    </button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fxRateModal">
+                        <i class="fas fa-plus me-2"></i>Add FX Rate
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FX Settings Overview -->
+        <div class="admin-overview-cards">
+            <div class="admin-overview-card">
+                <i class="fas fa-coins fa-2x text-primary mb-2"></i>
+                <h5 class="card-title">Base Currency</h5>
+                <p class="card-text"><strong>IDR</strong></p>
+                <small class="text-muted">Indonesian Rupiah</small>
+            </div>
+            <div class="admin-overview-card">
+                <i class="fas fa-exchange-alt fa-2x text-success mb-2"></i>
+                <h5 class="card-title">Active Rates</h5>
+                <p class="card-text"><strong id="activeRatesCount">8</strong></p>
+                <small class="text-muted">Currency pairs</small>
+            </div>
+            <div class="admin-overview-card">
+                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                <h5 class="card-title">Last Update</h5>
+                <p class="card-text"><strong id="lastUpdateTime">2 hours ago</strong></p>
+                <small class="text-muted">Rate refresh</small>
+            </div>
+            <div class="admin-overview-card">
+                <i class="fas fa-cog fa-2x text-info mb-2"></i>
+                <h5 class="card-title">Auto Refresh</h5>
+                <p class="card-text">
+                    <div class="form-check form-switch d-flex justify-content-center">
+                        <input class="form-check-input" type="checkbox" id="autoRefreshSwitch" checked>
+                    </div>
+                </p>
+                <small class="text-muted">Daily at 9:00 AM</small>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="card admin-filter-card">
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">From Currency</label>
+                        <select class="form-select" id="filterFromCurrency">
+                            <option value="">All Currencies</option>
+                            <option value="USD">USD</option>
+                            <option value="SGD">SGD</option>
+                            <option value="MYR">MYR</option>
+                            <option value="THB">THB</option>
+                            <option value="EUR">EUR</option>
+                            <option value="JPY">JPY</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To Currency</label>
+                        <select class="form-select" id="filterToCurrency">
+                            <option value="">All Currencies</option>
+                            <option value="IDR">IDR</option>
+                            <option value="USD">USD</option>
+                            <option value="SGD">SGD</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="filterStatus">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search currency pair...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FX Rates Table -->
+        <div class="card admin-table-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Exchange Rates</h5>
+                <small class="text-muted">Last updated: <span id="tableLastUpdate">Today, 14:30</span></small>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="fxRatesTable">
+                        <thead>
+                            <tr>
+                                <th>Currency Pair</th>
+                                <th>Current Rate</th>
+                                <th>Previous Rate</th>
+                                <th>Change</th>
+                                <th>Source</th>
+                                <th>Last Updated</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="fxRatesTableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit FX Rate Modal -->
+    <div class="modal fade" id="fxRateModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="fxRateModalTitle">Add FX Rate</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="fxRateForm">
+                        <input type="hidden" id="fxRateId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">From Currency *</label>
+                                    <select class="form-select" id="fxFromCurrency" required>
+                                        <option value="">Select Currency</option>
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="SGD">SGD - Singapore Dollar</option>
+                                        <option value="MYR">MYR - Malaysian Ringgit</option>
+                                        <option value="THB">THB - Thai Baht</option>
+                                        <option value="EUR">EUR - Euro</option>
+                                        <option value="JPY">JPY - Japanese Yen</option>
+                                        <option value="GBP">GBP - British Pound</option>
+                                        <option value="AUD">AUD - Australian Dollar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">To Currency *</label>
+                                    <select class="form-select" id="fxToCurrency" required>
+                                        <option value="">Select Currency</option>
+                                        <option value="IDR">IDR - Indonesian Rupiah</option>
+                                        <option value="USD">USD - US Dollar</option>
+                                        <option value="SGD">SGD - Singapore Dollar</option>
+                                        <option value="MYR">MYR - Malaysian Ringgit</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Exchange Rate *</label>
+                                    <input type="number" class="form-control" id="fxRate" required min="0" step="0.0001" placeholder="e.g., 15750.50">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Rate Source *</label>
+                                    <select class="form-select" id="fxRateSource" required>
+                                        <option value="">Select Source</option>
+                                        <option value="bank-indonesia">Bank Indonesia</option>
+                                        <option value="xe-com">XE.com</option>
+                                        <option value="yahoo-finance">Yahoo Finance</option>
+                                        <option value="manual">Manual Entry</option>
+                                        <option value="api-provider">API Provider</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Effective Date *</label>
+                                    <input type="datetime-local" class="form-control" id="fxEffectiveDate" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Status</label>
+                                    <select class="form-select" id="fxStatus">
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Spread (%)</label>
+                                    <input type="number" class="form-control" id="fxSpread" min="0" max="10" step="0.01" placeholder="e.g., 2.5">
+                                    <small class="form-text text-muted">Additional margin for currency conversion</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Auto Update</label>
+                                    <div class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" id="fxAutoUpdate">
+                                        <label class="form-check-label" for="fxAutoUpdate">
+                                            Enable automatic rate updates
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control" id="fxNotes" rows="3" placeholder="Additional notes about this exchange rate..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveFxRate()">Save FX Rate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample FX rates data
+        let fxRates = [
+            {
+                id: 1,
+                fromCurrency: 'USD',
+                toCurrency: 'IDR',
+                currentRate: 15750.50,
+                previousRate: 15720.25,
+                source: 'bank-indonesia',
+                sourceName: 'Bank Indonesia',
+                effectiveDate: '2024-01-15T14:30:00',
+                status: 'active',
+                spread: 2.5,
+                autoUpdate: true,
+                notes: 'Official BI middle rate with 2.5% spread'
+            },
+            {
+                id: 2,
+                fromCurrency: 'SGD',
+                toCurrency: 'IDR',
+                currentRate: 11650.75,
+                previousRate: 11680.20,
+                source: 'xe-com',
+                sourceName: 'XE.com',
+                effectiveDate: '2024-01-15T14:25:00',
+                status: 'active',
+                spread: 1.8,
+                autoUpdate: true,
+                notes: 'Real-time rate from XE.com'
+            },
+            {
+                id: 3,
+                fromCurrency: 'MYR',
+                toCurrency: 'IDR',
+                currentRate: 3420.80,
+                previousRate: 3415.60,
+                source: 'yahoo-finance',
+                sourceName: 'Yahoo Finance',
+                effectiveDate: '2024-01-15T14:20:00',
+                status: 'active',
+                spread: 2.0,
+                autoUpdate: true,
+                notes: 'Yahoo Finance API rate'
+            },
+            {
+                id: 4,
+                fromCurrency: 'THB',
+                toCurrency: 'IDR',
+                currentRate: 445.25,
+                previousRate: 447.10,
+                source: 'manual',
+                sourceName: 'Manual Entry',
+                effectiveDate: '2024-01-15T09:00:00',
+                status: 'active',
+                spread: 3.0,
+                autoUpdate: false,
+                notes: 'Manually entered rate for Thai operations'
+            },
+            {
+                id: 5,
+                fromCurrency: 'EUR',
+                toCurrency: 'IDR',
+                currentRate: 17250.30,
+                previousRate: 17180.45,
+                source: 'api-provider',
+                sourceName: 'API Provider',
+                effectiveDate: '2024-01-15T14:35:00',
+                status: 'active',
+                spread: 2.2,
+                autoUpdate: true,
+                notes: 'Third-party API provider rate'
+            }
+        ];
+
+        function renderFxRatesTable() {
+            const tbody = document.getElementById('fxRatesTableBody');
+            const filteredRates = getFilteredFxRates();
+            
+            tbody.innerHTML = filteredRates.map(rate => {
+                const change = rate.currentRate - rate.previousRate;
+                const changePercent = ((change / rate.previousRate) * 100).toFixed(4);
+                const changeClass = change >= 0 ? 'text-success' : 'text-danger';
+                const changeIcon = change >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
+                
+                return `
+                    <tr>
+                        <td>
+                            <strong>${rate.fromCurrency}/${rate.toCurrency}</strong>
+                            ${rate.autoUpdate ? '<i class="fas fa-sync-alt text-primary ms-1" title="Auto Update Enabled"></i>' : ''}
+                        </td>
+                        <td>
+                            <strong>${formatRate(rate.currentRate)}</strong>
+                            ${rate.spread ? `<br><small class="text-muted">+${rate.spread}% spread</small>` : ''}
+                        </td>
+                        <td>${formatRate(rate.previousRate)}</td>
+                        <td>
+                            <span class="${changeClass}">
+                                <i class="fas ${changeIcon} me-1"></i>
+                                ${formatRate(Math.abs(change))} (${changePercent}%)
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-${getSourceBadgeColor(rate.source)}">
+                                ${rate.sourceName}
+                            </span>
+                        </td>
+                        <td>
+                            ${formatDateTime(rate.effectiveDate)}
+                        </td>
+                        <td>
+                            <span class="badge bg-${rate.status === 'active' ? 'success' : 'secondary'}">
+                                ${rate.status.charAt(0).toUpperCase() + rate.status.slice(1)}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary me-1" onclick="editFxRate(${rate.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-info me-1" onclick="refreshSingleRate(${rate.id})" title="Refresh Rate">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteFxRate(${rate.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getFilteredFxRates() {
+            const fromCurrencyFilter = document.getElementById('filterFromCurrency').value;
+            const toCurrencyFilter = document.getElementById('filterToCurrency').value;
+            const statusFilter = document.getElementById('filterStatus').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            return fxRates.filter(rate => {
+                const matchesFromCurrency = !fromCurrencyFilter || rate.fromCurrency === fromCurrencyFilter;
+                const matchesToCurrency = !toCurrencyFilter || rate.toCurrency === toCurrencyFilter;
+                const matchesStatus = !statusFilter || rate.status === statusFilter;
+                const matchesSearch = !searchTerm || 
+                    `${rate.fromCurrency}/${rate.toCurrency}`.toLowerCase().includes(searchTerm) ||
+                    rate.sourceName.toLowerCase().includes(searchTerm);
+                
+                return matchesFromCurrency && matchesToCurrency && matchesStatus && matchesSearch;
+            });
+        }
+
+        function getSourceBadgeColor(source) {
+            const colors = {
+                'bank-indonesia': 'primary',
+                'xe-com': 'success',
+                'yahoo-finance': 'info',
+                'manual': 'warning',
+                'api-provider': 'secondary'
+            };
+            return colors[source] || 'secondary';
+        }
+
+        function formatRate(rate) {
+            return new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 4
+            }).format(rate);
+        }
+
+        function formatDateTime(dateString) {
+            return new Date(dateString).toLocaleString('id-ID', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function editFxRate(id) {
+            const rate = fxRates.find(r => r.id === id);
+            if (rate) {
+                document.getElementById('fxRateId').value = rate.id;
+                document.getElementById('fxFromCurrency').value = rate.fromCurrency;
+                document.getElementById('fxToCurrency').value = rate.toCurrency;
+                document.getElementById('fxRate').value = rate.currentRate;
+                document.getElementById('fxRateSource').value = rate.source;
+                document.getElementById('fxEffectiveDate').value = rate.effectiveDate;
+                document.getElementById('fxStatus').value = rate.status;
+                document.getElementById('fxSpread').value = rate.spread || '';
+                document.getElementById('fxAutoUpdate').checked = rate.autoUpdate;
+                document.getElementById('fxNotes').value = rate.notes || '';
+                
+                document.getElementById('fxRateModalTitle').textContent = 'Edit FX Rate';
+                new bootstrap.Modal(document.getElementById('fxRateModal')).show();
+            }
+        }
+
+        function deleteFxRate(id) {
+            if (confirm('Are you sure you want to delete this FX rate?')) {
+                fxRates = fxRates.filter(r => r.id !== id);
+                renderFxRatesTable();
+                updateActiveRatesCount();
+            }
+        }
+
+        function refreshSingleRate(id) {
+            const rate = fxRates.find(r => r.id === id);
+            if (rate) {
+                // Simulate rate refresh with random variation
+                const variation = (Math.random() - 0.5) * 0.02; // ±1% variation
+                rate.previousRate = rate.currentRate;
+                rate.currentRate = rate.currentRate * (1 + variation);
+                rate.effectiveDate = new Date().toISOString();
+                
+                renderFxRatesTable();
+                updateLastUpdateTime();
+            }
+        }
+
+        function refreshRates() {
+            // Simulate refreshing all active rates
+            fxRates.forEach(rate => {
+                if (rate.status === 'active' && rate.autoUpdate) {
+                    const variation = (Math.random() - 0.5) * 0.02;
+                    rate.previousRate = rate.currentRate;
+                    rate.currentRate = rate.currentRate * (1 + variation);
+                    rate.effectiveDate = new Date().toISOString();
+                }
+            });
+            
+            renderFxRatesTable();
+            updateLastUpdateTime();
+            
+            // Show success message
+            const alert = document.createElement('div');
+            alert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+            alert.style.top = '20px';
+            alert.style.right = '20px';
+            alert.style.zIndex = '9999';
+            alert.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                Exchange rates refreshed successfully!
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 3000);
+        }
+
+        function saveFxRate() {
+            const form = document.getElementById('fxRateForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const id = document.getElementById('fxRateId').value;
+            const fromCurrency = document.getElementById('fxFromCurrency').value;
+            const toCurrency = document.getElementById('fxToCurrency').value;
+            const currentRate = parseFloat(document.getElementById('fxRate').value);
+            const source = document.getElementById('fxRateSource').value;
+            const sourceName = document.getElementById('fxRateSource').selectedOptions[0].text;
+            const effectiveDate = document.getElementById('fxEffectiveDate').value;
+            const status = document.getElementById('fxStatus').value;
+            const spread = parseFloat(document.getElementById('fxSpread').value) || 0;
+            const autoUpdate = document.getElementById('fxAutoUpdate').checked;
+            const notes = document.getElementById('fxNotes').value;
+
+            if (id) {
+                // Edit existing
+                const index = fxRates.findIndex(r => r.id === parseInt(id));
+                if (index !== -1) {
+                    fxRates[index] = {
+                        ...fxRates[index],
+                        fromCurrency, toCurrency, currentRate, source, sourceName,
+                        effectiveDate, status, spread, autoUpdate, notes
+                    };
+                }
+            } else {
+                // Add new
+                const newId = Math.max(...fxRates.map(r => r.id)) + 1;
+                fxRates.push({
+                    id: newId,
+                    fromCurrency, toCurrency, currentRate, previousRate: currentRate,
+                    source, sourceName, effectiveDate, status, spread, autoUpdate, notes
+                });
+            }
+
+            bootstrap.Modal.getInstance(document.getElementById('fxRateModal')).hide();
+            form.reset();
+            document.getElementById('fxRateId').value = '';
+            document.getElementById('fxRateModalTitle').textContent = 'Add FX Rate';
+            renderFxRatesTable();
+            updateActiveRatesCount();
+        }
+
+        function updateActiveRatesCount() {
+            const activeCount = fxRates.filter(r => r.status === 'active').length;
+            document.getElementById('activeRatesCount').textContent = activeCount;
+        }
+
+        function updateLastUpdateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdateTime').textContent = 'Just now';
+            document.getElementById('tableLastUpdate').textContent = now.toLocaleString('id-ID', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Event listeners
+        document.getElementById('filterFromCurrency').addEventListener('change', renderFxRatesTable);
+        document.getElementById('filterToCurrency').addEventListener('change', renderFxRatesTable);
+        document.getElementById('filterStatus').addEventListener('change', renderFxRatesTable);
+        document.getElementById('searchInput').addEventListener('input', renderFxRatesTable);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFxRatesTable();
+            updateActiveRatesCount();
+            
+            // Set default effective date to now
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('fxEffectiveDate').value = now.toISOString().slice(0, 16);
+        });
+    </script>
+</body>
+</html>

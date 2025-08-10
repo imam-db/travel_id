@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Integrations - TrevID</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="/assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, Admin User</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="admin-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admin.html">Admin</a></li>
+                <li class="breadcrumb-item"><a href="admin.html">System</a></li>
+                <li class="breadcrumb-item active">Integrations</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="admin-page-header">
+            <div>
+                <h1 class="h3 mb-1"><i class="fas fa-plug me-2"></i>System Integrations</h1>
+                <p class="text-muted mb-0">Manage external system connections and API configurations</p>
+            </div>
+            <div>
+                <button class="btn btn-outline-primary me-2" onclick="testAllConnections()">
+                    <i class="fas fa-sync me-1"></i>Test All
+                </button>
+                <button class="btn btn-primary" onclick="showAddIntegrationModal()">
+                    <i class="fas fa-plus me-1"></i>Add Integration
+                </button>
+            </div>
+        </div>
+
+        <!-- Integration Status Overview -->
+        <div class="admin-overview-cards">
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-success mb-2">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h5 class="card-title">Active</h5>
+                        <p class="card-text">Working integrations</p>
+                        <span class="badge bg-success" id="activeCount">3 integrations</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-warning mb-2">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h5 class="card-title">Warning</h5>
+                        <p class="card-text">Needs attention</p>
+                        <span class="badge bg-warning" id="warningCount">1 integration</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-danger mb-2">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <h5 class="card-title">Error</h5>
+                        <p class="card-text">Connection failed</p>
+                        <span class="badge bg-danger" id="errorCount">0 integrations</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card admin-overview-card text-center">
+                    <div class="card-body">
+                        <div class="display-6 text-secondary mb-2">
+                            <i class="fas fa-pause-circle"></i>
+                        </div>
+                        <h5 class="card-title">Inactive</h5>
+                        <p class="card-text">Disabled integrations</p>
+                        <span class="badge bg-secondary" id="inactiveCount">1 integration</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Traveloka Integration Card -->
+        <div class="card mb-4 border-primary">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-plane me-2"></i>
+                    <h5 class="mb-0">Traveloka Integration</h5>
+                    <span class="badge bg-success ms-2">Active</span>
+                </div>
+                <div>
+                    <button class="btn btn-light btn-sm me-2" onclick="testTravelokaConnection()">
+                        <i class="fas fa-sync me-1"></i>Test
+                    </button>
+                    <button class="btn btn-outline-light btn-sm" onclick="configureTraveloka()">
+                        <i class="fas fa-cog me-1"></i>Configure
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="card-text">Integration with Traveloka for flight bookings, hotel reservations, and expense synchronization.</p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">API Endpoint</small>
+                                <code>https://api.traveloka.com/v2/</code>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Last Sync</small>
+                                <span>2024-01-15 10:30 AM</span>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Sync Frequency</small>
+                                <span>Every 15 minutes</span>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Records Synced</small>
+                                <span>1,234 bookings</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-center">
+                            <div class="progress mb-2" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 95%"></div>
+                            </div>
+                            <small class="text-muted">95% Success Rate</small>
+                        </div>
+                        <div class="mt-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Flights</small>
+                                <small class="text-success">✓ Active</small>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Hotels</small>
+                                <small class="text-success">✓ Active</small>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <small>Expenses</small>
+                                <small class="text-success">✓ Active</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other Integrations -->
+        <div class="card admin-table-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">All Integrations</h5>
+                <div>
+                    <select class="form-select form-select-sm" id="statusFilter" onchange="filterIntegrations()" style="width: auto; display: inline-block;">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="warning">Warning</option>
+                        <option value="error">Error</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Integration</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Last Sync</th>
+                                <th>Success Rate</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="integrationsTableBody">
+                            <!-- Table rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Traveloka Configuration Modal -->
+    <div class="modal fade" id="travelokaModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Traveloka Integration Configuration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="travelokaForm">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2">API Configuration</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">API Endpoint <span class="text-danger">*</span></label>
+                                <input type="url" class="form-control" id="travelokaEndpoint" value="https://api.traveloka.com/v2/" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">API Version</label>
+                                <select class="form-select" id="travelokaVersion">
+                                    <option value="v2" selected>v2 (Recommended)</option>
+                                    <option value="v1">v1 (Legacy)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Client ID <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="travelokaClientId" placeholder="Enter client ID" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Client Secret <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="travelokaClientSecret" placeholder="Enter client secret" required>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('travelokaClientSecret')">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <h6 class="border-bottom pb-2">Sync Settings</h6>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sync Frequency</label>
+                                <select class="form-select" id="travelokaSyncFreq">
+                                    <option value="5">Every 5 minutes</option>
+                                    <option value="15" selected>Every 15 minutes</option>
+                                    <option value="30">Every 30 minutes</option>
+                                    <option value="60">Every hour</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Timeout (seconds)</label>
+                                <input type="number" class="form-control" id="travelokaTimeout" value="30" min="10" max="300">
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label">Enabled Services</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="travelokaFlights" checked>
+                                            <label class="form-check-label" for="travelokaFlights">
+                                                <i class="fas fa-plane me-1"></i>Flight Bookings
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="travelokaHotels" checked>
+                                            <label class="form-check-label" for="travelokaHotels">
+                                                <i class="fas fa-bed me-1"></i>Hotel Bookings
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="travelokaExpenses" checked>
+                                            <label class="form-check-label" for="travelokaExpenses">
+                                                <i class="fas fa-receipt me-1"></i>Expense Sync
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 mt-4">
+                                <h6 class="border-bottom pb-2">Webhook Configuration</h6>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Webhook URL</label>
+                                <div class="input-group">
+                                    <input type="url" class="form-control" id="travelokaWebhook" value="https://your-domain.com/api/webhooks/traveloka" readonly>
+                                    <button class="btn btn-outline-secondary" type="button" onclick="copyWebhookUrl()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">Use this URL in your Traveloka webhook configuration</small>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" onclick="testTravelokaConnection()">Test Connection</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveTravelokaConfig()">Save Configuration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Integration Modal -->
+    <div class="modal fade" id="addIntegrationModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Integration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addIntegrationForm">
+                        <div class="mb-3">
+                            <label class="form-label">Integration Type</label>
+                            <select class="form-select" id="integrationType" required>
+                                <option value="">Select Integration Type</option>
+                                <option value="booking">Booking Platform</option>
+                                <option value="expense">Expense Management</option>
+                                <option value="accounting">Accounting System</option>
+                                <option value="hr">HR System</option>
+                                <option value="custom">Custom API</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="integrationName" placeholder="Enter integration name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="integrationDescription" rows="3" placeholder="Enter description"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">API Endpoint <span class="text-danger">*</span></label>
+                            <input type="url" class="form-control" id="integrationEndpoint" placeholder="https://api.example.com" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="addIntegration()">Add Integration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample integrations data
+        let integrations = [
+            {
+                id: 1,
+                name: 'Traveloka',
+                type: 'booking',
+                status: 'active',
+                endpoint: 'https://api.traveloka.com/v2/',
+                lastSync: '2024-01-15T10:30:00Z',
+                successRate: 95,
+                description: 'Flight and hotel booking integration'
+            },
+            {
+                id: 2,
+                name: 'SAP Concur',
+                type: 'expense',
+                status: 'active',
+                endpoint: 'https://api.concursolutions.com/api/v3.0/',
+                lastSync: '2024-01-15T09:45:00Z',
+                successRate: 98,
+                description: 'Expense management system'
+            },
+            {
+                id: 3,
+                name: 'QuickBooks',
+                type: 'accounting',
+                status: 'warning',
+                endpoint: 'https://sandbox-quickbooks.api.intuit.com/v3/',
+                lastSync: '2024-01-14T16:20:00Z',
+                successRate: 87,
+                description: 'Accounting system integration'
+            },
+            {
+                id: 4,
+                name: 'BambooHR',
+                type: 'hr',
+                status: 'active',
+                endpoint: 'https://api.bamboohr.com/api/gateway.php/',
+                lastSync: '2024-01-15T08:15:00Z',
+                successRate: 92,
+                description: 'HR system for employee data'
+            },
+            {
+                id: 5,
+                name: 'Legacy System',
+                type: 'custom',
+                status: 'inactive',
+                endpoint: 'https://legacy.company.com/api/',
+                lastSync: '2024-01-10T14:30:00Z',
+                successRate: 45,
+                description: 'Legacy internal system'
+            }
+        ];
+
+        let filteredIntegrations = [...integrations];
+
+        function renderIntegrationsTable() {
+            const tbody = document.getElementById('integrationsTableBody');
+            tbody.innerHTML = '';
+
+            filteredIntegrations.forEach(integration => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <i class="fas ${getIntegrationIcon(integration.type)} fa-2x text-${getStatusColor(integration.status)}"></i>
+                            </div>
+                            <div>
+                                <div class="fw-medium">${integration.name}</div>
+                                <small class="text-muted">${integration.description}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark">
+                            ${integration.type.charAt(0).toUpperCase() + integration.type.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-${getStatusColor(integration.status)}">
+                            ${integration.status.charAt(0).toUpperCase() + integration.status.slice(1)}
+                        </span>
+                    </td>
+                    <td>
+                        ${integration.lastSync ? formatDateTime(integration.lastSync) : '<span class="text-muted">Never</span>'}
+                    </td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="progress me-2" style="width: 60px; height: 8px;">
+                                <div class="progress-bar bg-${getSuccessRateColor(integration.successRate)}" style="width: ${integration.successRate}%"></div>
+                            </div>
+                            <small>${integration.successRate}%</small>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="testConnection(${integration.id})" title="Test Connection">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-info me-1" onclick="configureIntegration(${integration.id})" title="Configure">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-${integration.status === 'active' ? 'warning' : 'success'}" onclick="toggleIntegration(${integration.id})" title="${integration.status === 'active' ? 'Disable' : 'Enable'}">
+                            <i class="fas fa-${integration.status === 'active' ? 'pause' : 'play'}"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteIntegration(${integration.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            updateIntegrationCounts();
+        }
+
+        function getIntegrationIcon(type) {
+            const icons = {
+                'booking': 'fa-plane',
+                'expense': 'fa-receipt',
+                'accounting': 'fa-calculator',
+                'hr': 'fa-users',
+                'custom': 'fa-code'
+            };
+            return icons[type] || 'fa-plug';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'active': 'success',
+                'warning': 'warning',
+                'error': 'danger',
+                'inactive': 'secondary'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function getSuccessRateColor(rate) {
+            if (rate >= 95) return 'success';
+            if (rate >= 80) return 'warning';
+            return 'danger';
+        }
+
+        function formatDateTime(dateString) {
+            return new Date(dateString).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function updateIntegrationCounts() {
+            const counts = {
+                active: filteredIntegrations.filter(i => i.status === 'active').length,
+                warning: filteredIntegrations.filter(i => i.status === 'warning').length,
+                error: filteredIntegrations.filter(i => i.status === 'error').length,
+                inactive: filteredIntegrations.filter(i => i.status === 'inactive').length
+            };
+
+            document.getElementById('activeCount').textContent = `${counts.active} integrations`;
+            document.getElementById('warningCount').textContent = `${counts.warning} integration${counts.warning !== 1 ? 's' : ''}`;
+            document.getElementById('errorCount').textContent = `${counts.error} integration${counts.error !== 1 ? 's' : ''}`;
+            document.getElementById('inactiveCount').textContent = `${counts.inactive} integration${counts.inactive !== 1 ? 's' : ''}`;
+        }
+
+        function filterIntegrations() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            filteredIntegrations = integrations.filter(integration => {
+                return !statusFilter || integration.status === statusFilter;
+            });
+
+            renderIntegrationsTable();
+        }
+
+        function configureTraveloka() {
+            new bootstrap.Modal(document.getElementById('travelokaModal')).show();
+        }
+
+        function testTravelokaConnection() {
+            showNotification('Testing Traveloka connection...', 'info');
+            
+            // Simulate API test
+            setTimeout(() => {
+                showNotification('Traveloka connection test successful!', 'success');
+            }, 2000);
+        }
+
+        function saveTravelokaConfig() {
+            const form = document.getElementById('travelokaForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            showNotification('Traveloka configuration saved successfully!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('travelokaModal')).hide();
+        }
+
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        }
+
+        function copyWebhookUrl() {
+            const webhookInput = document.getElementById('travelokaWebhook');
+            webhookInput.select();
+            document.execCommand('copy');
+            showNotification('Webhook URL copied to clipboard!', 'success');
+        }
+
+        function showAddIntegrationModal() {
+            document.getElementById('addIntegrationForm').reset();
+            new bootstrap.Modal(document.getElementById('addIntegrationModal')).show();
+        }
+
+        function addIntegration() {
+            const form = document.getElementById('addIntegrationForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const newIntegration = {
+                id: Math.max(...integrations.map(i => i.id)) + 1,
+                name: document.getElementById('integrationName').value,
+                type: document.getElementById('integrationType').value,
+                status: 'inactive',
+                endpoint: document.getElementById('integrationEndpoint').value,
+                lastSync: null,
+                successRate: 0,
+                description: document.getElementById('integrationDescription').value || 'Custom integration'
+            };
+
+            integrations.push(newIntegration);
+            filterIntegrations();
+            
+            bootstrap.Modal.getInstance(document.getElementById('addIntegrationModal')).hide();
+            showNotification('Integration added successfully!', 'success');
+        }
+
+        function testConnection(id) {
+            const integration = integrations.find(i => i.id === id);
+            showNotification(`Testing ${integration.name} connection...`, 'info');
+            
+            // Simulate API test
+            setTimeout(() => {
+                const success = Math.random() > 0.2; // 80% success rate
+                if (success) {
+                    showNotification(`${integration.name} connection test successful!`, 'success');
+                } else {
+                    showNotification(`${integration.name} connection test failed!`, 'danger');
+                }
+            }, 2000);
+        }
+
+        function configureIntegration(id) {
+            const integration = integrations.find(i => i.id === id);
+            if (integration.name === 'Traveloka') {
+                configureTraveloka();
+            } else {
+                showNotification(`Configuration for ${integration.name} will be available soon!`, 'info');
+            }
+        }
+
+        function toggleIntegration(id) {
+            const integration = integrations.find(i => i.id === id);
+            const newStatus = integration.status === 'active' ? 'inactive' : 'active';
+            integration.status = newStatus;
+            
+            filterIntegrations();
+            showNotification(`${integration.name} ${newStatus === 'active' ? 'enabled' : 'disabled'} successfully!`, 'success');
+        }
+
+        function deleteIntegration(id) {
+            const integration = integrations.find(i => i.id === id);
+            if (confirm(`Are you sure you want to delete ${integration.name} integration?`)) {
+                integrations = integrations.filter(i => i.id !== id);
+                filterIntegrations();
+                showNotification('Integration deleted successfully!', 'success');
+            }
+        }
+
+        function testAllConnections() {
+            showNotification('Testing all active connections...', 'info');
+            
+            // Simulate testing all connections
+            setTimeout(() => {
+                showNotification('All connection tests completed!', 'success');
+            }, 3000);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderIntegrationsTable();
+        });
+    </script>
+</body>
+</html>
