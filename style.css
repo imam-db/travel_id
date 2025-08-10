@@ -1269,6 +1269,49 @@ textarea:focus {
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
 }
 
+/* Quick Stats Summary Cards */
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.stat-info {
+    text-align: right;
+}
+
+.stat-title {
+    font-size: 0.9rem;
+    color: var(--ink-700);
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink-900);
+}
+
+.mwp-stat .stat-icon { background: var(--brand-primary); }
+.travel-stat .stat-icon { background: var(--brand-teal); }
+.vehicle-stat .stat-icon { background: var(--success); }
+.expense-stat .stat-icon { background: var(--warning); }
+.approval-stat .stat-icon { background: var(--danger); }
+
 .card-header {
     display: flex;
     justify-content: space-between;
