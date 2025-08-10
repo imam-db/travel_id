@@ -397,7 +397,7 @@
                                     <!-- Policy helper banner (green / amber / red / neutral) -->
                                     <div id="rate-per-km" class="banner banner-neutral" role="status" aria-live="polite">
                                         <span id="rate-icon" class="icon"></span>
-                                        <span id="rate-display">Enter fuel volume and price to compute rate per km.</span>
+                                        <span id="rate-display">Enter fuel volume & price to calculate cost/km.</span>
                                         <div id="policy-caption"></div>
                                     </div>
 
@@ -432,7 +432,7 @@
                             <!-- Policy helper banner mirrored in Step 1 (Fuel) -->
                             <div id="rate-per-km-step1" class="banner banner-neutral" role="status" aria-live="polite">
                                 <span class="icon"></span>
-                                <span class="rate-display">Masukkan volume & harga BBM untuk menghitung Rp/km.</span>
+                                <span class="rate-display">Enter fuel volume & price to calculate cost/km.</span>
                                 <div class="policy-caption"></div>
                             </div>
                             <!-- styles moved to global CSS -->
@@ -818,14 +818,14 @@
                     if (formattedRate) {
                         displayEl.textContent = `Rate: ${formattedRate}/km`;
                     } else {
-                        displayEl.textContent = 'Masukkan volume & harga BBM untuk menghitung Rp/km.';
+                        displayEl.textContent = 'Enter fuel volume & price to calculate cost/km.';
                     }
                 }
                 if (captionEl) {
                     captionEl.textContent = (
-                        state === 'banner-ok' ? 'Dalam kebijakan' :
-                        state === 'banner-amber' ? 'Mendekati batas soft cap' :
-                        state === 'banner-red' ? 'Melebihi soft cap' : ''
+                        state === 'banner-ok' ? 'Within policy' :
+                        state === 'banner-amber' ? 'Approaching soft cap' :
+                        state === 'banner-red' ? 'Exceeds soft cap' : ''
                     );
                 }
             };
