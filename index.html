@@ -123,7 +123,7 @@
             <section class="my-tasks-section">
                 <div class="dashboard-card tasks-card">
                     <div class="card-header">
-                        <h3><i class="fas fa-tasks"></i> My Tasks</h3>
+                        <h3><i class="fas fa-tasks"></i> Pending Tasks</h3>
                         <span class="tasks-count">4 pending</span>
                     </div>
                     <div class="card-content">
@@ -236,27 +236,6 @@
                         </div>
                     </div>
     
-                    <!-- Vehicle Logs -->
-                    <div class="dashboard-card vehicle-card" tabindex="0" onclick="window.location.href='vehicle.html'" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='vehicle.html';}">
-                        <div class="card-header">
-                            <h3><i class="fas fa-car"></i> Vehicle Logs</h3>
-                            <span class="badge pending-badge">3</span>
-                        </div>
-                        <div class="card-content">
-                            <div class="vehicle-stats">
-                                <span class="stat-item">This Month <strong>24</strong></span>
-                                <span class="stat-divider">•</span>
-                                <span class="stat-item">Pending <strong>3</strong></span>
-                                <span class="stat-divider">•</span>
-                                <span class="stat-item">Est. Cost <strong>Rp 2.4M</strong></span>
-                            </div>
-                            <button class="cta-button primary" onclick="event.stopPropagation(); window.location.href='vehicle.html#new-log'">
-                                <i class="fas fa-road"></i> Log mileage
-                            </button>
-                        </div>
-                    </div>
-
-
                 </div>
             </section>
 
@@ -459,79 +438,50 @@
                         </div>
                     </div>
                     
-                    <!-- MWP Status Summary -->
-                    <div class="dashboard-card mwp-summary-card">
+                    <!-- Recent Activities -->
+                    <div class="dashboard-card activities-card">
                         <div class="card-header">
-                            <h3><i class="fas fa-calendar-check"></i> MWP Status</h3>
+                            <h3><i class="fas fa-history"></i> Recent Activities</h3>
                         </div>
                         <div class="card-content">
-                            <div class="mwp-status">
-                                <span class="status-item">Draft <strong>2</strong></span>
-                                <span class="stat-divider">•</span>
-                                <span class="status-item">Pending <strong>1</strong></span>
-                                <span class="stat-divider">•</span>
-                                <span class="status-item">Approved <strong>3</strong></span>
-                            </div>
-                            <div class="mwp-actions">
-                                <button class="cta-button primary" id="convertAllBtn" onclick="convertAllTrips()" title="Convert all approved trips">
-                                    Convert to Travel
-                                </button>
-                                <div class="mwp-upload-actions">
-                                    <button class="btn btn-ghost btn-sm" id="btnUpload" title="Upload MWP (XLSX/CSV)" aria-label="Upload MWP file">
-                                        <i class="fas fa-upload"></i> Upload
-                                    </button>
-                                    <input type="file" id="mwpFile" accept=".xlsx,.csv" hidden>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Row 4: Recent Activities -->
-            <section class="activities-row">
-                <div class="dashboard-card activities-card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-history"></i> Recent Activities</h3>
-                    </div>
-                    <div class="card-content">
-                        <div class="activity-feed">
-                            <div class="activity-item" data-activity-id="expense-jakarta-001">
-                                <div class="activity-icon expense">
-                                    <i class="fas fa-receipt"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Expense Report Approved • Jakarta Trip • $2,450</div>
-                                    <div class="activity-meta">
-                                        <span class="source-chip traveloka">Traveloka</span>
-                                        <span class="sync-chip synced">Synced</span>
-                                        <span class="activity-time">2h ago</span>
+                            <div class="activity-feed">
+                                <div class="activity-item" data-activity-id="expense-jakarta-001">
+                                    <div class="activity-icon expense">
+                                        <i class="fas fa-receipt"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Expense Report Approved • Jakarta Trip • $2,450</div>
+                                        <div class="activity-meta">
+                                            <span class="source-chip traveloka">Traveloka</span>
+                                            <span class="sync-chip synced">Synced</span>
+                                            <span class="activity-time">2h ago</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="activity-item" data-activity-id="flight-bandung-001">
-                                <div class="activity-icon booking">
-                                    <i class="fas fa-plane"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Flight Booking Confirmed • Bandung Trip • $850</div>
-                                    <div class="activity-meta">
-                                        <span class="source-chip manual">Manual</span>
-                                        <span class="sync-chip failed" onclick="retrySyncActivity('flight-bandung-001')" style="cursor: pointer;" title="Click to retry sync">Failed <i class="fas fa-redo"></i></span>
-                                        <span class="activity-time">4h ago</span>
+                                <div class="activity-item" data-activity-id="flight-bandung-001">
+                                    <div class="activity-icon booking">
+                                        <i class="fas fa-plane"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Flight Booking Confirmed • Bandung Trip • $850</div>
+                                        <div class="activity-meta">
+                                            <span class="source-chip manual">Manual</span>
+                                            <span class="sync-chip failed" onclick="retrySyncActivity('flight-bandung-001')" style="cursor: pointer;" title="Click to retry sync">Failed <i class="fas fa-redo"></i></span>
+                                            <span class="activity-time">4h ago</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="activity-item" data-activity-id="vehicle-mileage-002">
-                                <div class="activity-icon vehicle">
-                                    <i class="fas fa-car"></i>
-                                </div>
-                                <div class="activity-content">
-                                    <div class="activity-title">Vehicle Mileage Logged • 125 km • $45</div>
-                                    <div class="activity-meta">
-                                        <span class="source-chip manual">Manual</span>
-                                        <span class="sync-chip synced">Synced</span>
-                                        <span class="activity-time">1d ago</span>
+                                <div class="activity-item" data-activity-id="vehicle-mileage-002">
+                                    <div class="activity-icon vehicle">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Vehicle Mileage Logged • 125 km • $45</div>
+                                        <div class="activity-meta">
+                                            <span class="source-chip manual">Manual</span>
+                                            <span class="sync-chip synced">Synced</span>
+                                            <span class="activity-time">1d ago</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
