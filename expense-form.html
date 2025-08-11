@@ -10,61 +10,178 @@
     <meta name="theme-color" content="#2563eb">
     <link rel="apple-touch-icon" href="icon-192.svg">
     <style>
-        .policy-indicator {
-            margin-top: 8px;
-            padding: 8px 12px;
+        .category-tabs {
+            display: flex;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .category-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            text-align: center;
             border-radius: 6px;
-            font-size: 13px;
+            background: transparent;
+            border: none;
+            font-size: 14px;
             font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .category-tab.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+        
+        .category-tab:hover:not(.active) {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        .category-content {
+            display: none;
+        }
+        
+        .category-content.active {
+            display: block;
+        }
+        
+        .quick-add-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+        
+        .quick-add-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .quick-add-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quick-add-header {
             display: flex;
             align-items: center;
-            gap: 6px;
-        }
-        
-        .policy-indicator.violation {
-            background: #fce8e6;
-            color: #ea4335;
-            border: 1px solid #f28b82;
-        }
-        
-        .policy-indicator.warning {
-            background: #fef7e0;
-            color: #f9ab00;
-            border: 1px solid #fbbc04;
-        }
-        
-        .policy-indicator.ok {
-            background: #e8f5e8;
-            color: #34a853;
-            border: 1px solid #81c995;
-        }
-        
-        .justification-section {
-            margin-top: 16px;
-            padding: 16px;
-            background: #fef7e0;
-            border: 1px solid #fbbc04;
-            border-radius: 8px;
-        }
-        
-        .justification-section .form-group {
-            margin-bottom: 12px;
-        }
-        
-        .justification-section .form-group:last-child {
-            margin-bottom: 0;
-        }
-        
-        .justification-section label {
+            gap: 8px;
+            margin-bottom: 1rem;
             font-weight: 600;
-            color: #ea4335;
+            color: #1e293b;
         }
         
-        .form-group.error input,
-        .form-group.error select,
-        .form-group.error textarea {
-            border-color: #ea4335;
-            box-shadow: 0 0 0 2px rgba(234, 67, 53, 0.1);
+        .quick-add-header i {
+            color: #2563eb;
+            width: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr 1fr;
+            margin-bottom: 1rem;
+        }
+        
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+        
+        .advanced-toggle {
+            background: none;
+            border: none;
+            color: #2563eb;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 4px 0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .advanced-toggle:hover {
+            text-decoration: underline;
+        }
+        
+        .advanced-content {
+            display: none;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 1rem;
+        }
+        
+        .advanced-content.show {
+            display: block;
+        }
+        
+        .add-item-btn {
+            width: 100%;
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            color: #475569;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .add-item-btn:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+        
+        .add-item-btn:active {
+            background: #cbd5e1;
+        }
+        
+        .readonly-field {
+            background: #f8fafc;
+            color: #64748b;
+        }
+        
+        .import-hint {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #1e40af;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .category-tab {
+                flex: none;
+                min-width: calc(50% - 2px);
+            }
+            
+            .quick-add-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -123,7 +240,7 @@
             <!-- Form Header -->
             <section class="form-header">
                 <h1><i class="fas fa-plus-circle"></i> Create New Expense Report</h1>
-                <p class="form-subtitle">Fill in the basic information to create your expense report</p>
+                <p class="form-subtitle">Create expense framework with quick estimates. Complete details in Expense Detail.</p>
             </section>
 
             <!-- Create Form -->
@@ -205,112 +322,539 @@
                         </div>
                     </div>
                     
-                    <!-- Quick Add Options -->
+                    <!-- Quick Add Items -->
                     <div class="form-section">
                         <h3>Quick Add Items (Optional)</h3>
-                        <p class="section-subtitle">You can add items now or after creating the report</p>
+                        <p class="section-subtitle">Add placeholder items for quick estimates. Complete details later in Expense Detail.</p>
                         
-                        <div class="quick-add-options">
-                            <div class="quick-add-card" onclick="toggleQuickAdd('flight')">
-                                <div class="quick-add-header">
-                                    <i class="fas fa-plane"></i>
-                                    <span>Add Flight</span>
-                                    <i class="fas fa-chevron-down toggle-icon"></i>
-                                </div>
-                                <div class="quick-add-content" id="quickAddFlight" style="display: none;">
+                        <!-- Category Tabs -->
+                        <div class="category-tabs">
+                            <button type="button" class="category-tab active" onclick="switchCategory('travel')">
+                                <i class="fas fa-plane"></i> Travel & Hotel
+                            </button>
+                            <button type="button" class="category-tab" onclick="switchCategory('vehicle')">
+                                <i class="fas fa-car"></i> Vehicle & Transport
+                            </button>
+                            <button type="button" class="category-tab" onclick="switchCategory('meals')">
+                                <i class="fas fa-utensils"></i> Meals & Per-Diem
+                            </button>
+                            <button type="button" class="category-tab" onclick="switchCategory('others')">
+                                <i class="fas fa-receipt"></i> Others
+                            </button>
+                        </div>
+                        
+                        <!-- Travel & Hotel Category -->
+                        <div id="category-travel" class="category-content active">
+                            <div class="quick-add-grid">
+                                <!-- Flight Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-plane"></i>
+                                        <span>Flight</span>
+                                    </div>
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="flightFrom">From</label>
-                                            <select id="flightFrom" name="flightFrom">
-                                                <option value="">Select departure city</option>
-                                                <option value="CGK">CGK - Jakarta</option>
-                                                <option value="SUB">SUB - Surabaya</option>
-                                                <option value="DPS">DPS - Denpasar</option>
-                                                <option value="MLG">MLG - Malang</option>
-                                            </select>
+                                            <label for="flightFrom">From *</label>
+                                            <input type="text" id="flightFrom" name="flightFrom" placeholder="City or IATA code">
                                         </div>
                                         <div class="form-group">
-                                            <label for="flightTo">To</label>
-                                            <select id="flightTo" name="flightTo">
-                                                <option value="">Select destination city</option>
-                                                <option value="CGK">CGK - Jakarta</option>
-                                                <option value="SUB">SUB - Surabaya</option>
-                                                <option value="DPS">DPS - Denpasar</option>
-                                                <option value="MLG">MLG - Malang</option>
-                                            </select>
+                                            <label for="flightTo">To *</label>
+                                            <input type="text" id="flightTo" name="flightTo" placeholder="City or IATA code">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="flightDate">Date</label>
+                                            <label for="flightDate">Date *</label>
                                             <input type="date" id="flightDate" name="flightDate">
                                         </div>
                                         <div class="form-group">
                                             <label for="flightAmount">Estimated Amount</label>
-                                            <input type="number" id="flightAmount" name="flightAmount" placeholder="0" step="0.01">
+                                            <input type="number" id="flightAmount" name="flightAmount" placeholder="0" step="0.01" min="0">
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            
-                            <div class="quick-add-card" onclick="toggleQuickAdd('hotel')">
-                                <div class="quick-add-header">
-                                    <i class="fas fa-bed"></i>
-                                    <span>Add Hotel</span>
-                                    <i class="fas fa-chevron-down toggle-icon"></i>
-                                </div>
-                                <div class="quick-add-content" id="quickAddHotel" style="display: none;">
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="hotelCity">City</label>
-                                            <select id="hotelCity" name="hotelCity">
-                                                <option value="">Select city</option>
-                                                <option value="jakarta">Jakarta</option>
-                                                <option value="surabaya">Surabaya</option>
-                                                <option value="bandung">Bandung</option>
-                                                <option value="yogyakarta">Yogyakarta</option>
+                                            <label for="flightCurrency">Currency</label>
+                                            <select id="flightCurrency" name="flightCurrency">
+                                                <option value="IDR">IDR</option>
+                                                <option value="USD">USD</option>
+                                                <option value="SGD">SGD</option>
+                                                <option value="EUR">EUR</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label for="hotelNights">Nights</label>
-                                            <input type="number" id="hotelNights" name="hotelNights" placeholder="1" min="1">
+                                            <label for="flightPayment">Payment Intent</label>
+                                            <select id="flightPayment" name="flightPayment">
+                                                <option value="">Select payment method</option>
+                                                <option value="personal">Personal</option>
+                                                <option value="corporate">Corporate Card</option>
+                                                <option value="company">Company-paid</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="advanced-toggle" onclick="toggleAdvanced('flight', this)">
+                                        <i class="fas fa-chevron-down"></i> Advanced Options
+                                    </button>
+                                    <div id="flight-advanced" class="advanced-content">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="flightCabin">Cabin</label>
+                                                <select id="flightCabin" name="flightCabin">
+                                                    <option value="">Select cabin</option>
+                                                    <option value="economy">Economy</option>
+                                                    <option value="premium">Premium Economy</option>
+                                                    <option value="business">Business</option>
+                                                    <option value="first">First Class</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="flightNotes">Notes</label>
+                                                <textarea id="flightNotes" name="flightNotes" rows="2" placeholder="Additional notes..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('flight')">
+                                        <i class="fas fa-plus"></i> Add Flight
+                                    </button>
+                                </div>
+                                
+                                <!-- Hotel Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-bed"></i>
+                                        <span>Hotel</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="hotelCity">City *</label>
+                                            <input type="text" id="hotelCity" name="hotelCity" placeholder="Hotel city">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="hotelNights">Nights *</label>
+                                            <input type="number" id="hotelNights" name="hotelNights" placeholder="1" min="1" onchange="calculateCheckout()">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group">
-                                            <label for="hotelCheckIn">Check-in</label>
-                                            <input type="date" id="hotelCheckIn" name="hotelCheckIn">
+                                            <label for="hotelCheckin">Check-in *</label>
+                                            <input type="date" id="hotelCheckin" name="hotelCheckin" onchange="calculateCheckout()">
                                         </div>
+                                        <div class="form-group">
+                                            <label for="hotelCheckout">Check-out</label>
+                                            <input type="date" id="hotelCheckout" name="hotelCheckout" class="readonly-field" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
                                         <div class="form-group">
                                             <label for="hotelAmount">Estimated Amount</label>
-                                            <input type="number" id="hotelAmount" name="hotelAmount" placeholder="0" step="0.01" oninput="checkHotelPolicy()">
-                                            <div class="policy-indicator" id="hotelPolicyIndicator" style="display: none;"></div>
+                                            <input type="number" id="hotelAmount" name="hotelAmount" placeholder="0" step="0.01" min="0">
                                         </div>
-                                    </div>
-                                    
-                                    <!-- Hotel Policy Justification -->
-                                    <div class="justification-section" id="hotelJustification" style="display: none;">
                                         <div class="form-group">
-                                            <label for="hotelViolationReason">Violation Reason *</label>
-                                            <select id="hotelViolationReason" name="hotelViolationReason" onchange="toggleHotelCustomReason()">
-                                                <option value="">Select reason for policy violation</option>
-                                                <option value="client_request">Client Request</option>
-                                                <option value="no_lower_rate">No Lower Rate Available</option>
-                                                <option value="location_constraint">Location Constraint</option>
-                                                <option value="last_minute_booking">Last Minute Booking</option>
-                                                <option value="business_necessity">Business Necessity</option>
-                                                <option value="other">Other (specify below)</option>
+                                            <label for="hotelPayment">Payment Intent</label>
+                                            <select id="hotelPayment" name="hotelPayment">
+                                                <option value="">Select payment method</option>
+                                                <option value="personal">Personal</option>
+                                                <option value="corporate">Corporate Card</option>
+                                                <option value="company">Company-paid</option>
                                             </select>
                                         </div>
-                                        <div class="form-group" id="hotelCustomReasonGroup" style="display: none;">
-                                            <label for="hotelCustomReason">Custom Reason</label>
-                                            <input type="text" id="hotelCustomReason" name="hotelCustomReason" placeholder="Please specify the reason...">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="hotelJustificationNotes">Additional Details</label>
-                                            <textarea id="hotelJustificationNotes" name="hotelJustificationNotes" rows="2" placeholder="Provide additional details or context for this violation..."></textarea>
+                                    </div>
+                                    <button type="button" class="advanced-toggle" onclick="toggleAdvanced('hotel')">
+                                        <i class="fas fa-chevron-down"></i> Advanced Options
+                                    </button>
+                                    <div id="hotel-advanced" class="advanced-content">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="hotelBusinessNights">Business Nights</label>
+                                                <input type="number" id="hotelBusinessNights" name="hotelBusinessNights" placeholder="All nights" min="0">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="hotelNotes">Notes</label>
+                                                <textarea id="hotelNotes" name="hotelNotes" rows="2" placeholder="Additional notes..."></textarea>
+                                            </div>
                                         </div>
                                     </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('hotel')">
+                                        <i class="fas fa-plus"></i> Add Hotel
+                                    </button>
+                                </div>
+                                
+                                <!-- Train/Bus/Ferry Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-train"></i>
+                                        <span>Train / Bus / Ferry</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="transportType">Type *</label>
+                                            <select id="transportType" name="transportType">
+                                                <option value="">Select transport type</option>
+                                                <option value="train">Train</option>
+                                                <option value="bus">Bus</option>
+                                                <option value="ferry">Ferry</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="transportDate">Date *</label>
+                                            <input type="date" id="transportDate" name="transportDate">
+                                        </div>
+                                    </div>
+                                    <div class="form-row single">
+                                        <div class="form-group">
+                                            <label for="transportRoute">Route *</label>
+                                            <input type="text" id="transportRoute" name="transportRoute" placeholder="Origin - Destination">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="transportAmount">Estimated Amount</label>
+                                            <input type="number" id="transportAmount" name="transportAmount" placeholder="0" step="0.01" min="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="transportCurrency">Currency</label>
+                                            <select id="transportCurrency" name="transportCurrency">
+                                                <option value="IDR">IDR</option>
+                                                <option value="USD">USD</option>
+                                                <option value="SGD">SGD</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('transport')">
+                                        <i class="fas fa-plus"></i> Add Transport
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vehicle & Transport Category -->
+                        <div id="category-vehicle" class="category-content">
+                            <div class="quick-add-grid">
+                                <!-- Vehicle Expenses Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-gas-pump"></i>
+                                        <span>Vehicle Expenses</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="vehicleSubcategory">Subcategory *</label>
+                                            <select id="vehicleSubcategory" name="vehicleSubcategory" onchange="showVehicleAdvanced()">
+                                                <option value="">Select subcategory</option>
+                                                <option value="fuel">Fuel</option>
+                                                <option value="parking">Parking</option>
+                                                <option value="toll">Toll</option>
+                                                <option value="taxi">Taxi</option>
+                                                <option value="ridehailing">Ride-hailing</option>
+                                                <option value="workshop">Workshop/Service</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="vehicleDate">Date *</label>
+                                            <input type="date" id="vehicleDate" name="vehicleDate">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="vehicleAmount">Estimated Amount *</label>
+                                            <input type="number" id="vehicleAmount" name="vehicleAmount" placeholder="0" step="0.01" min="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="vehicleCurrency">Currency</label>
+                                            <select id="vehicleCurrency" name="vehicleCurrency">
+                                                <option value="IDR">IDR</option>
+                                                <option value="USD">USD</option>
+                                                <option value="SGD">SGD</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="advanced-toggle" onclick="toggleAdvanced('vehicle', this)">
+                                        <i class="fas fa-chevron-down"></i> Advanced Options
+                                    </button>
+                                    <div id="vehicle-advanced" class="advanced-content">
+                                        <!-- Dynamic advanced fields based on subcategory -->
+                                        <div id="fuel-fields" style="display: none;">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="fuelLiters">Liters</label>
+                                                    <input type="number" id="fuelLiters" name="fuelLiters" placeholder="0" step="0.1" onchange="calculateFuelTotal()">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="fuelPricePerLiter">Price/Liter</label>
+                                                    <input type="number" id="fuelPricePerLiter" name="fuelPricePerLiter" placeholder="0" step="0.01" onchange="calculateFuelTotal()">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="parking-fields" style="display: none;">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="parkingDuration">Duration (hours)</label>
+                                                    <input type="number" id="parkingDuration" name="parkingDuration" placeholder="0" step="0.5">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="toll-fields" style="display: none;">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="tollRoad">Road</label>
+                                                    <input type="text" id="tollRoad" name="tollRoad" placeholder="Road name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="taxi-fields" style="display: none;">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="taxiFrom">From</label>
+                                                    <input type="text" id="taxiFrom" name="taxiFrom" placeholder="Origin">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="taxiTo">To</label>
+                                                    <input type="text" id="taxiTo" name="taxiTo" placeholder="Destination">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="workshop-fields" style="display: none;">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label for="workshopVendor">Vendor</label>
+                                                    <input type="text" id="workshopVendor" name="workshopVendor" placeholder="Vendor name">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="workshopService">Type of Service</label>
+                                                    <select id="workshopService" name="workshopService">
+                                                        <option value="">Select service type</option>
+                                                        <option value="maintenance">Maintenance</option>
+                                                        <option value="repair">Repair</option>
+                                                        <option value="inspection">Inspection</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('vehicle')">
+                                        <i class="fas fa-plus"></i> Add Vehicle Expense
+                                    </button>
+                                </div>
+                                
+                                <!-- Mileage Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-route"></i>
+                                        <span>Mileage</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="mileageDate">Date *</label>
+                                            <input type="date" id="mileageDate" name="mileageDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mileageDistance">Distance (km) *</label>
+                                            <input type="number" id="mileageDistance" name="mileageDistance" placeholder="0" step="0.1" min="0.1" onchange="calculateMileageTotal()">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="mileageFrom">From</label>
+                                            <input type="text" id="mileageFrom" name="mileageFrom" placeholder="Origin">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mileageTo">To</label>
+                                            <input type="text" id="mileageTo" name="mileageTo" placeholder="Destination">
+                                        </div>
+                                    </div>
+                                    <div class="form-row single">
+                                        <div class="form-group">
+                                            <label for="mileagePreview">Rate Preview</label>
+                                            <input type="text" id="mileagePreview" name="mileagePreview" class="readonly-field" readonly placeholder="Distance × Rate = Total">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('mileage')">
+                                        <i class="fas fa-plus"></i> Add Mileage
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Meals & Per-Diem Category -->
+                        <div id="category-meals" class="category-content">
+                            <div class="quick-add-grid">
+                                <!-- Meals Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-utensils"></i>
+                                        <span>Meals</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="mealDate">Date *</label>
+                                            <input type="date" id="mealDate" name="mealDate">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mealType">Meal Type *</label>
+                                            <select id="mealType" name="mealType">
+                                                <option value="">Select meal type</option>
+                                                <option value="breakfast">Breakfast</option>
+                                                <option value="lunch">Lunch</option>
+                                                <option value="dinner">Dinner</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="mealAmount">Estimated Amount *</label>
+                                            <input type="number" id="mealAmount" name="mealAmount" placeholder="0" step="0.01" min="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mealLocation">City/Country</label>
+                                            <input type="text" id="mealLocation" name="mealLocation" placeholder="Location">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="mealAttendees">Attendees (count)</label>
+                                            <input type="number" id="mealAttendees" name="mealAttendees" placeholder="1" min="1">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="advanced-toggle" onclick="toggleAdvanced('meal', this)">
+                                        <i class="fas fa-chevron-down"></i> Advanced Options
+                                    </button>
+                                    <div id="meal-advanced" class="advanced-content">
+                                        <div class="form-row single">
+                                            <div class="form-group">
+                                                <label for="mealAttendeesList">Attendees List</label>
+                                                <textarea id="mealAttendeesList" name="mealAttendeesList" rows="3" placeholder="One name per line..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('meal')">
+                                        <i class="fas fa-plus"></i> Add Meal
+                                    </button>
+                                </div>
+                                
+                                <!-- Per-Diem Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-calendar-day"></i>
+                                        <span>Per-Diem</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="perdiemStart">Start Date *</label>
+                                            <input type="date" id="perdiemStart" name="perdiemStart" onchange="calculatePerdiemDays()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="perdiemEnd">End Date *</label>
+                                            <input type="date" id="perdiemEnd" name="perdiemEnd" onchange="calculatePerdiemDays()">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="perdiemLocation">City/Country (Tier) *</label>
+                                            <select id="perdiemLocation" name="perdiemLocation" onchange="calculatePerdiemTotal()">
+                                                <option value="">Select location tier</option>
+                                                <option value="tier1" data-rate="500000">Tier 1 Cities (IDR 500,000/day)</option>
+                                                <option value="tier2" data-rate="350000">Tier 2 Cities (IDR 350,000/day)</option>
+                                                <option value="tier3" data-rate="250000">Tier 3 Cities (IDR 250,000/day)</option>
+                                                <option value="international" data-rate="100">International (USD 100/day)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="perdiemDays">Days</label>
+                                            <input type="number" id="perdiemDays" name="perdiemDays" class="readonly-field" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-row single">
+                                        <div class="form-group">
+                                            <label for="perdiemTotal">Estimated Total</label>
+                                            <input type="text" id="perdiemTotal" name="perdiemTotal" class="readonly-field" readonly placeholder="Rate × Days = Total">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="advanced-toggle" onclick="toggleAdvanced('perdiem')">
+                                        <i class="fas fa-chevron-down"></i> Advanced Options
+                                    </button>
+                                    <div id="perdiem-advanced" class="advanced-content">
+                                        <div class="form-row">
+                                            <div class="form-group">
+                                                <label for="perdiemExcludeDays">Exclude Personal Days</label>
+                                                <input type="number" id="perdiemExcludeDays" name="perdiemExcludeDays" placeholder="0" min="0" onchange="calculatePerdiemTotal()">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="perdiemNotes">Notes</label>
+                                                <textarea id="perdiemNotes" name="perdiemNotes" rows="2" placeholder="Additional notes..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('perdiem')">
+                                        <i class="fas fa-plus"></i> Add Per-Diem
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Others Category -->
+                        <div id="category-others" class="category-content">
+                            <div class="quick-add-grid">
+                                <!-- Generic Other Expenses Card -->
+                                <div class="quick-add-card">
+                                    <div class="quick-add-header">
+                                        <i class="fas fa-receipt"></i>
+                                        <span>Other Expenses</span>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="otherCategory">Category *</label>
+                                            <select id="otherCategory" name="otherCategory">
+                                                <option value="">Select category</option>
+                                                <option value="supplies">Supplies</option>
+                                                <option value="fees">Fees</option>
+                                                <option value="communication">Communication</option>
+                                                <option value="equipment">Equipment</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="otherDate">Date *</label>
+                                            <input type="date" id="otherDate" name="otherDate">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="otherAmount">Estimated Amount *</label>
+                                            <input type="number" id="otherAmount" name="otherAmount" placeholder="0" step="0.01" min="0">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="otherCurrency">Currency</label>
+                                            <select id="otherCurrency" name="otherCurrency">
+                                                <option value="IDR">IDR</option>
+                                                <option value="USD">USD</option>
+                                                <option value="SGD">SGD</option>
+                                                <option value="EUR">EUR</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row single">
+                                        <div class="form-group">
+                                            <label for="otherMerchant">Merchant / Description</label>
+                                            <input type="text" id="otherMerchant" name="otherMerchant" placeholder="Merchant name or description">
+                                        </div>
+                                    </div>
+                                    <button type="button" class="advanced-toggle" onclick="toggleAdvanced('other', this)">
+                                        <i class="fas fa-chevron-down"></i> Advanced Options
+                                    </button>
+                                    <div id="other-advanced" class="advanced-content">
+                                        <div class="form-row single">
+                                            <div class="form-group">
+                                                <label for="otherNotes">Notes</label>
+                                                <textarea id="otherNotes" name="otherNotes" rows="3" placeholder="Additional notes..."></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="add-item-btn" onclick="addQuickItem('other')">
+                                        <i class="fas fa-plus"></i> Add Other Expense
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -318,7 +862,7 @@
                         <!-- Import Hint -->
                         <div class="import-hint">
                             <i class="fas fa-info-circle"></i>
-                            <span>Semua data booking dari modul Travel dapat diimpor dari tombol 'Add from Bookings' di halaman detail.</span>
+                            <span>Travel bookings can be imported using 'Add from Bookings' button in Expense Detail page.</span>
                         </div>
                     </div>
                     
@@ -334,7 +878,78 @@
     </main>
 
     <script>
-        // Form validation
+        // Global variables
+        let quickAddItems = [];
+        const mileageRate = 3500; // IDR per km
+        
+        // Initialize form
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default currency from report header
+            const reportCurrency = document.getElementById('currency').value || 'IDR';
+            document.querySelectorAll('select[name$="Currency"]').forEach(select => {
+                select.value = reportCurrency;
+            });
+            
+            // Load preferences from localStorage
+            loadPreferences();
+        });
+        
+        // Category switching
+        function switchCategory(category) {
+            // Update tabs
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find and activate the clicked tab
+            const activeTab = document.querySelector(`[onclick="switchCategory('${category}')"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+            
+            // Update content
+            document.querySelectorAll('.category-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`category-${category}`).classList.add('active');
+        }
+        
+        // Advanced options toggle
+        function toggleAdvanced(type, element) {
+            const content = document.getElementById(`${type}-advanced`);
+            const toggle = element || document.querySelector(`[onclick*="toggleAdvanced('${type}',"]`);
+            const icon = toggle ? toggle.querySelector('i') : null;
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                if (icon) icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('show');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            }
+        }
+        
+        // Vehicle subcategory advanced fields
+        function showVehicleAdvanced() {
+            const subcategory = document.getElementById('vehicleSubcategory').value;
+            const advancedContent = document.getElementById('vehicle-advanced');
+            
+            // Hide all advanced fields
+            advancedContent.querySelectorAll('[id$="-fields"]').forEach(field => {
+                field.style.display = 'none';
+            });
+            
+            // Show relevant fields
+            if (subcategory) {
+                const fieldsId = `${subcategory}-fields`;
+                const fields = document.getElementById(fieldsId);
+                if (fields) {
+                    fields.style.display = 'block';
+                }
+            }
+        }
+        
+        // Date calculations
         function validateDateRange() {
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
@@ -348,18 +963,226 @@
             }
         }
         
-        // Quick add toggles
-        function toggleQuickAdd(type) {
-            const content = document.getElementById(`quickAdd${type.charAt(0).toUpperCase() + type.slice(1)}`);
-            const icon = content.parentElement.querySelector('.toggle-icon');
+        function calculateCheckout() {
+            const checkin = document.getElementById('hotelCheckin').value;
+            const nights = parseInt(document.getElementById('hotelNights').value) || 0;
             
-            if (content.style.display === 'none') {
-                content.style.display = 'block';
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.style.display = 'none';
-                icon.style.transform = 'rotate(0deg)';
+            if (checkin && nights > 0) {
+                const checkinDate = new Date(checkin);
+                const checkoutDate = new Date(checkinDate);
+                checkoutDate.setDate(checkinDate.getDate() + nights);
+                
+                document.getElementById('hotelCheckout').value = checkoutDate.toISOString().split('T')[0];
             }
+        }
+        
+        function calculatePerdiemDays() {
+            const start = document.getElementById('perdiemStart').value;
+            const end = document.getElementById('perdiemEnd').value;
+            
+            if (start && end) {
+                const startDate = new Date(start);
+                const endDate = new Date(end);
+                const diffTime = Math.abs(endDate - startDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // Include both start and end days
+                
+                document.getElementById('perdiemDays').value = diffDays;
+                calculatePerdiemTotal();
+            }
+        }
+        
+        function calculatePerdiemTotal() {
+            const location = document.getElementById('perdiemLocation');
+            const days = parseInt(document.getElementById('perdiemDays').value) || 0;
+            const excludeDays = parseInt(document.getElementById('perdiemExcludeDays').value) || 0;
+            
+            if (location.value && days > 0) {
+                const rate = parseInt(location.selectedOptions[0].dataset.rate) || 0;
+                const effectiveDays = Math.max(0, days - excludeDays);
+                const total = rate * effectiveDays;
+                
+                const currency = location.value === 'international' ? 'USD' : 'IDR';
+                document.getElementById('perdiemTotal').value = `${currency} ${total.toLocaleString()}`;
+            }
+        }
+        
+        function calculateMileageTotal() {
+            const distance = parseFloat(document.getElementById('mileageDistance').value) || 0;
+            const total = distance * mileageRate;
+            
+            document.getElementById('mileagePreview').value = `${distance} km × IDR ${mileageRate.toLocaleString()} = IDR ${total.toLocaleString()}`;
+        }
+        
+        function calculateFuelTotal() {
+            const liters = parseFloat(document.getElementById('fuelLiters').value) || 0;
+            const pricePerLiter = parseFloat(document.getElementById('fuelPricePerLiter').value) || 0;
+            const total = liters * pricePerLiter;
+            
+            if (total > 0) {
+                document.getElementById('vehicleAmount').value = total.toFixed(2);
+            }
+        }
+        
+        // Quick add items
+        function addQuickItem(type) {
+            const item = collectItemData(type);
+            if (validateItemData(item, type)) {
+                quickAddItems.push(item);
+                showSuccessMessage(`${item.type} added to quick items`);
+                clearItemForm(type);
+            }
+        }
+        
+        function collectItemData(type) {
+            const item = { type: type, id: Date.now() };
+            
+            switch (type) {
+                case 'flight':
+                    item.from = document.getElementById('flightFrom').value;
+                    item.to = document.getElementById('flightTo').value;
+                    item.date = document.getElementById('flightDate').value;
+                    item.amount = document.getElementById('flightAmount').value;
+                    item.currency = document.getElementById('flightCurrency').value;
+                    item.payment_intent = document.getElementById('flightPayment').value;
+                    item.cabin = document.getElementById('flightCabin').value;
+                    item.notes = document.getElementById('flightNotes').value;
+                    break;
+                    
+                case 'hotel':
+                    item.city = document.getElementById('hotelCity').value;
+                    item.checkin = document.getElementById('hotelCheckin').value;
+                    item.nights = document.getElementById('hotelNights').value;
+                    item.checkout = document.getElementById('hotelCheckout').value;
+                    item.amount = document.getElementById('hotelAmount').value;
+                    item.payment_intent = document.getElementById('hotelPayment').value;
+                    item.business_nights = document.getElementById('hotelBusinessNights').value;
+                    item.notes = document.getElementById('hotelNotes').value;
+                    break;
+                    
+                case 'transport':
+                    item.transport_type = document.getElementById('transportType').value;
+                    item.route = document.getElementById('transportRoute').value;
+                    item.date = document.getElementById('transportDate').value;
+                    item.amount = document.getElementById('transportAmount').value;
+                    item.currency = document.getElementById('transportCurrency').value;
+                    break;
+                    
+                case 'vehicle':
+                    item.subcategory = document.getElementById('vehicleSubcategory').value;
+                    item.date = document.getElementById('vehicleDate').value;
+                    item.amount = document.getElementById('vehicleAmount').value;
+                    item.currency = document.getElementById('vehicleCurrency').value;
+                    // Add subcategory-specific fields
+                    if (item.subcategory === 'fuel') {
+                        item.liters = document.getElementById('fuelLiters').value;
+                        item.price_per_liter = document.getElementById('fuelPricePerLiter').value;
+                    }
+                    // Add other subcategory fields as needed
+                    break;
+                    
+                case 'mileage':
+                    item.date = document.getElementById('mileageDate').value;
+                    item.distance = document.getElementById('mileageDistance').value;
+                    item.from = document.getElementById('mileageFrom').value;
+                    item.to = document.getElementById('mileageTo').value;
+                    item.amount = parseFloat(item.distance) * mileageRate;
+                    break;
+                    
+                case 'meal':
+                    item.date = document.getElementById('mealDate').value;
+                    item.meal_type = document.getElementById('mealType').value;
+                    item.amount = document.getElementById('mealAmount').value;
+                    item.location = document.getElementById('mealLocation').value;
+                    item.attendees_count = document.getElementById('mealAttendees').value;
+                    item.attendees_list = document.getElementById('mealAttendeesList').value;
+                    break;
+                    
+                case 'perdiem':
+                    item.start_date = document.getElementById('perdiemStart').value;
+                    item.end_date = document.getElementById('perdiemEnd').value;
+                    item.location_tier = document.getElementById('perdiemLocation').value;
+                    item.days = document.getElementById('perdiemDays').value;
+                    item.exclude_days = document.getElementById('perdiemExcludeDays').value;
+                    item.amount = document.getElementById('perdiemTotal').value;
+                    item.notes = document.getElementById('perdiemNotes').value;
+                    break;
+                    
+                case 'other':
+                    item.category = document.getElementById('otherCategory').value;
+                    item.date = document.getElementById('otherDate').value;
+                    item.amount = document.getElementById('otherAmount').value;
+                    item.currency = document.getElementById('otherCurrency').value;
+                    item.merchant = document.getElementById('otherMerchant').value;
+                    item.notes = document.getElementById('otherNotes').value;
+                    break;
+            }
+            
+            return item;
+        }
+        
+        function validateItemData(item, type) {
+            const requiredFields = {
+                flight: ['from', 'to', 'date'],
+                hotel: ['city', 'checkin', 'nights'],
+                transport: ['transport_type', 'route', 'date'],
+                vehicle: ['subcategory', 'date', 'amount'],
+                mileage: ['date', 'distance'],
+                meal: ['date', 'meal_type', 'amount'],
+                perdiem: ['start_date', 'end_date', 'location_tier'],
+                other: ['category', 'date', 'amount']
+            };
+            
+            const required = requiredFields[type] || [];
+            for (const field of required) {
+                if (!item[field] || item[field].toString().trim() === '') {
+                    showErrorMessage(`Please fill in all required fields for ${type}`);
+                    return false;
+                }
+            }
+            
+            // Date validation
+            if (item.date) {
+                const itemDate = new Date(item.date);
+                const today = new Date();
+                const oneYearAgo = new Date();
+                oneYearAgo.setFullYear(today.getFullYear() - 1);
+                const twoYearsFromNow = new Date();
+                twoYearsFromNow.setFullYear(today.getFullYear() + 2);
+                
+                if (itemDate < oneYearAgo || itemDate > twoYearsFromNow) {
+                    showErrorMessage('Date should be within reasonable range (not more than 1 year ago or 2 years in future)');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        function clearItemForm(type) {
+            const formElements = document.querySelectorAll(`#category-${getCategoryForType(type)} input, #category-${getCategoryForType(type)} select, #category-${getCategoryForType(type)} textarea`);
+            formElements.forEach(element => {
+                if (!element.classList.contains('readonly-field') && element.type !== 'button') {
+                    if (element.tagName === 'SELECT') {
+                        element.selectedIndex = 0;
+                    } else {
+                        element.value = '';
+                    }
+                }
+            });
+        }
+        
+        function getCategoryForType(type) {
+            const categoryMap = {
+                flight: 'travel',
+                hotel: 'travel',
+                transport: 'travel',
+                vehicle: 'vehicle',
+                mileage: 'vehicle',
+                meal: 'meals',
+                perdiem: 'meals',
+                other: 'others'
+            };
+            return categoryMap[type] || 'others';
         }
         
         // Form submission
@@ -380,15 +1203,6 @@
                 }
             });
             
-            // Validate policy justifications
-            if (isValid) {
-                const hotelJustification = validateHotelJustification();
-                if (!hotelJustification.valid) {
-                    alert(hotelJustification.message);
-                    return;
-                }
-            }
-            
             if (isValid) {
                 submitExpenseForm();
             }
@@ -399,7 +1213,7 @@
             const originalText = submitBtn.textContent;
             
             // Show loading state
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
             submitBtn.disabled = true;
             
             // Disable other buttons
@@ -407,220 +1221,179 @@
                 if (btn !== submitBtn) btn.disabled = true;
             });
             
-            // Simulate form submission with potential errors
+            // Collect form data
+            const formData = {
+                reportTitle: document.getElementById('reportTitle').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                costCenter: document.getElementById('costCenter').value,
+                project: document.getElementById('project').value,
+                currency: document.getElementById('currency').value,
+                purpose: document.getElementById('purpose').value,
+                description: document.getElementById('description').value,
+                quickAddItems: quickAddItems
+            };
+            
+            // Save preferences
+            savePreferences();
+            
+            // Simulate form submission
             setTimeout(() => {
                 const success = Math.random() > 0.1; // 90% success rate
                 
                 if (success) {
                     // Show success message
                     showSuccessMessage('Expense report created successfully!');
+                    
+                    // Store form data for expense detail page
+                    localStorage.setItem('newExpenseReport', JSON.stringify(formData));
+                    
                     setTimeout(() => {
-                        window.location.href = 'expenses.html';
+                        window.location.href = 'expense-detail.html';
                     }, 1500);
                 } else {
-                    // Show error state
-                    showErrorMessage('Failed to create expense report. Please check your data and try again.');
-                    
-                    // Restore buttons
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                    document.querySelectorAll('.form-actions button').forEach(btn => {
-                        btn.disabled = false;
-                    });
-                }
-            }, 2000);
-        }
-        
-        function saveDraft() {
-            const draftBtn = document.querySelector('[onclick="saveDraft()"]');
-            const originalText = draftBtn.textContent;
-            
-            // Show loading state
-            draftBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
-            draftBtn.disabled = true;
-            
-            // Simulate save draft with potential errors
-            setTimeout(() => {
-                const success = Math.random() > 0.05; // 95% success rate
-                
-                if (success) {
-                    showSuccessMessage('Draft saved successfully!');
-                } else {
-                    showErrorMessage('Failed to save draft. Please try again.');
-                }
-                
-                // Restore button
-                draftBtn.innerHTML = originalText;
-                draftBtn.disabled = false;
-            }, 1000);
-        }
-        
-        function showSuccessMessage(message) {
-            const alert = document.createElement('div');
-            alert.className = 'alert alert-success';
-            alert.innerHTML = `
-                <i class="fas fa-check-circle me-2"></i>
-                ${message}
-            `;
-            alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            
-            document.body.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.remove();
-            }, 3000);
-        }
-        
-        function showErrorMessage(message) {
-            const alert = document.createElement('div');
-            alert.className = 'alert alert-danger';
-            alert.innerHTML = `
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                ${message}
-            `;
-            alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
-            
-            document.body.appendChild(alert);
-            
-            setTimeout(() => {
-                alert.remove();
-            }, 5000);
-        }
-        
-        function continueWithPolicyViolations() {
-            // Show policy summary if there are violations
-            const hotelAmount = parseFloat(document.getElementById('hotelAmount').value) || 0;
-            const hotelNights = parseInt(document.getElementById('hotelNights').value) || 1;
-            const perNightAmount = hotelAmount / hotelNights;
-            
-            let policyMessage = '';
-            if (hotelAmount > 0 && perNightAmount > 2000000) {
-                const reason = document.getElementById('hotelViolationReason').value;
-                const customReason = document.getElementById('hotelCustomReason').value;
-                const notes = document.getElementById('hotelJustificationNotes').value;
-                
-                policyMessage = `\n\nPolicy Violation Detected:\n- Hotel rate exceeds policy (IDR ${perNightAmount.toLocaleString('id-ID')}/night)\n- Reason: ${reason === 'other' ? customReason : reason}\n- Notes: ${notes || 'None'}`;
-            }
-            
-            // Simulate creating report and redirect to detail page
-            alert('Expense report created successfully!' + policyMessage);
-            window.location.href = 'expense-detail.html';
-        }
-        
-        // Save as draft
-        function saveDraft() {
-            const formData = new FormData(document.getElementById('createExpenseForm'));
-            // Simulate saving draft
-            alert('Draft saved successfully!');
-            window.location.href = 'expenses.html';
-        }
-        
-        // Auto-populate dates based on business purpose
-        document.getElementById('purpose').addEventListener('change', function() {
-            const purpose = this.value;
-            const today = new Date();
-            const startDateField = document.getElementById('startDate');
-            const endDateField = document.getElementById('endDate');
-            
-            if (purpose === 'conference') {
-                // Default to 3-day conference
-                const start = new Date(today);
-                start.setDate(today.getDate() + 7); // Next week
-                const end = new Date(start);
-                end.setDate(start.getDate() + 2);
-                
-                startDateField.value = start.toISOString().split('T')[0];
-                endDateField.value = end.toISOString().split('T')[0];
-            } else if (purpose === 'business-trip') {
-                // Default to 2-day business trip
-                const start = new Date(today);
-                start.setDate(today.getDate() + 3);
-                const end = new Date(start);
-                end.setDate(start.getDate() + 1);
-                
-                startDateField.value = start.toISOString().split('T')[0];
-                endDateField.value = end.toISOString().split('T')[0];
-            }
-        });
-        
-        // Policy validation functions
-        function checkHotelPolicy() {
-            const amount = parseFloat(document.getElementById('hotelAmount').value) || 0;
-            const nights = parseInt(document.getElementById('hotelNights').value) || 1;
-            const perNightAmount = amount / nights;
-            
-            const indicator = document.getElementById('hotelPolicyIndicator');
-            const justificationSection = document.getElementById('hotelJustification');
-            
-            if (amount === 0) {
-                indicator.style.display = 'none';
-                justificationSection.style.display = 'none';
-                return;
-            }
-            
-            // Mock policy rules for hotel
-            let status = 'ok';
-            let message = '';
-            let icon = 'check_circle';
-            
-            if (perNightAmount > 2000000) { // > 2M IDR per night
-                status = 'violation';
-                message = `Hotel rate exceeds maximum allowed (IDR 2,000,000/night). Current: IDR ${perNightAmount.toLocaleString('id-ID')}/night`;
-                icon = 'error';
-                justificationSection.style.display = 'block';
-                document.getElementById('hotelViolationReason').required = true;
-            } else if (perNightAmount > 1500000) { // > 1.5M IDR per night
-                status = 'warning';
-                message = `Hotel rate is high (IDR ${perNightAmount.toLocaleString('id-ID')}/night). Consider justification.`;
-                icon = 'warning';
-                justificationSection.style.display = 'none';
-                document.getElementById('hotelViolationReason').required = false;
-            } else {
-                status = 'ok';
-                message = `Hotel rate is within policy (IDR ${perNightAmount.toLocaleString('id-ID')}/night)`;
-                icon = 'check_circle';
-                justificationSection.style.display = 'none';
-                document.getElementById('hotelViolationReason').required = false;
-            }
-            
-            indicator.className = `policy-indicator ${status}`;
-            indicator.innerHTML = `<i class="material-icons" style="font-size: 16px;">${icon}</i> ${message}`;
-            indicator.style.display = 'flex';
-        }
-        
-        function toggleHotelCustomReason() {
-            const reasonSelect = document.getElementById('hotelViolationReason');
-            const customReasonGroup = document.getElementById('hotelCustomReasonGroup');
-            
-            if (reasonSelect.value === 'other') {
-                customReasonGroup.style.display = 'block';
-                document.getElementById('hotelCustomReason').required = true;
-            } else {
-                customReasonGroup.style.display = 'none';
-                document.getElementById('hotelCustomReason').required = false;
-                document.getElementById('hotelCustomReason').value = '';
-            }
-        }
-        
-        function validateHotelJustification() {
-            const justificationSection = document.getElementById('hotelJustification');
-            if (justificationSection.style.display === 'none') {
-                return { valid: true };
-            }
-            
-            const reasonSelect = document.getElementById('hotelViolationReason');
-            const customReason = document.getElementById('hotelCustomReason');
-            
-            if (!reasonSelect.value) {
-                return { valid: false, message: 'Please select a reason for hotel policy violation' };
-            }
-            
-            if (reasonSelect.value === 'other' && !customReason.value.trim()) {
-                return { valid: false, message: 'Please specify the custom reason for hotel violation' };
-            }
-            
-            return { valid: true };
-        }
-    </script>
-</body>
-</html>
+                     // Show error state
+                     showErrorMessage('Failed to create expense report. Please check your data and try again.');
+                     
+                     // Restore buttons
+                     submitBtn.innerHTML = originalText;
+                     submitBtn.disabled = false;
+                     document.querySelectorAll('.form-actions button').forEach(btn => {
+                         btn.disabled = false;
+                     });
+                 }
+             }, 2000);
+         }
+         
+         function saveDraft() {
+             const draftBtn = document.querySelector('[onclick="saveDraft()"]');
+             const originalText = draftBtn.textContent;
+             
+             // Show loading state
+             draftBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+             draftBtn.disabled = true;
+             
+             // Simulate save draft
+             setTimeout(() => {
+                 const success = Math.random() > 0.05; // 95% success rate
+                 
+                 if (success) {
+                     showSuccessMessage('Draft saved successfully!');
+                 } else {
+                     showErrorMessage('Failed to save draft. Please try again.');
+                 }
+                 
+                 // Restore button
+                 draftBtn.innerHTML = originalText;
+                 draftBtn.disabled = false;
+             }, 1000);
+         }
+         
+         // Utility functions
+         function showSuccessMessage(message) {
+             const alert = document.createElement('div');
+             alert.className = 'alert alert-success';
+             alert.innerHTML = `
+                 <i class="fas fa-check-circle"></i>
+                 ${message}
+             `;
+             alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; padding: 12px 16px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+             
+             document.body.appendChild(alert);
+             
+             setTimeout(() => {
+                 alert.remove();
+             }, 3000);
+         }
+         
+         function showErrorMessage(message) {
+             const alert = document.createElement('div');
+             alert.className = 'alert alert-danger';
+             alert.innerHTML = `
+                 <i class="fas fa-exclamation-triangle"></i>
+                 ${message}
+             `;
+             alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 9999; min-width: 300px; padding: 12px 16px; background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);';
+             
+             document.body.appendChild(alert);
+             
+             setTimeout(() => {
+                 alert.remove();
+             }, 5000);
+         }
+         
+         // Preferences management
+         function loadPreferences() {
+             try {
+                 const preferences = JSON.parse(localStorage.getItem('expenseFormPreferences') || '{}');
+                 
+                 // Load currency preference
+                 if (preferences.currency) {
+                     document.getElementById('currency').value = preferences.currency;
+                     // Update all currency selects
+                     document.querySelectorAll('select[name$="Currency"]').forEach(select => {
+                         select.value = preferences.currency;
+                     });
+                 }
+                 
+                 // Load cost center preference
+                 if (preferences.costCenter) {
+                     document.getElementById('costCenter').value = preferences.costCenter;
+                 }
+             } catch (e) {
+                 console.warn('Failed to load preferences:', e);
+             }
+         }
+         
+         function savePreferences() {
+             try {
+                 const preferences = {
+                     currency: document.getElementById('currency').value,
+                     costCenter: document.getElementById('costCenter').value,
+                     lastUsed: new Date().toISOString()
+                 };
+                 
+                 localStorage.setItem('expenseFormPreferences', JSON.stringify(preferences));
+             } catch (e) {
+                 console.warn('Failed to save preferences:', e);
+             }
+         }
+         
+         // Auto-populate dates based on business purpose
+         document.getElementById('purpose').addEventListener('change', function() {
+             const purpose = this.value;
+             const today = new Date();
+             const startDateField = document.getElementById('startDate');
+             const endDateField = document.getElementById('endDate');
+             
+             if (purpose === 'conference') {
+                 // Default to 3-day conference
+                 const start = new Date(today);
+                 start.setDate(today.getDate() + 7); // Next week
+                 const end = new Date(start);
+                 end.setDate(start.getDate() + 2);
+                 
+                 startDateField.value = start.toISOString().split('T')[0];
+                 endDateField.value = end.toISOString().split('T')[0];
+             } else if (purpose === 'business-trip') {
+                 // Default to 2-day business trip
+                 const start = new Date(today);
+                 start.setDate(today.getDate() + 3);
+                 const end = new Date(start);
+                 end.setDate(start.getDate() + 1);
+                 
+                 startDateField.value = start.toISOString().split('T')[0];
+                 endDateField.value = end.toISOString().split('T')[0];
+             }
+         });
+         
+         // Currency sync - when report currency changes, update all item currencies
+         document.getElementById('currency').addEventListener('change', function() {
+             const newCurrency = this.value;
+             document.querySelectorAll('select[name$="Currency"]').forEach(select => {
+                 select.value = newCurrency;
+             });
+         });
+     </script>
+ </body>
+ </html>
