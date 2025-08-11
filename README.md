@@ -1,6 +1,6 @@
-# Travel Expense Manager
+# TrevID - Business Companion
 
-A comprehensive web-based travel expense management system built with HTML, CSS, and JavaScript. This application helps organizations manage travel bookings, expenses, and approvals efficiently.
+TrevID is a comprehensive web-based travel expense management system built with HTML, CSS, and JavaScript. This application helps organizations manage travel bookings, expenses, and approvals efficiently. The latest update introduces quick add items for expense reports and other improvements.
 
 ## Features
 
@@ -14,6 +14,7 @@ A comprehensive web-based travel expense management system built with HTML, CSS,
 - **Expense Tracking**: Record and categorize travel expenses
 - **Receipt Management**: Upload and manage expense receipts
 - **Expense Reports**: Generate detailed expense reports
+- **Quick Add Items**: Quickly add placeholder expenses for initial estimates
 - **Budget Monitoring**: Track expenses against allocated budgets
 
 ### 📋 Approval Workflow
