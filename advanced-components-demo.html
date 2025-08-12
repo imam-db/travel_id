@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrevID - Advanced Components Demo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Component System -->
+    <link href="style.css" rel="stylesheet">
+    <link href="src/components/design-system/tokens.css" rel="stylesheet">
+    <link href="src/components/shared/button-component.css" rel="stylesheet">
+    <link href="src/components/shared/form-components.css" rel="stylesheet">
+    <link href="src/components/shared/status-badges.css" rel="stylesheet">
+    <link href="src/components/shared/card-components.css" rel="stylesheet">
+    <link href="src/components/pages/expense-form-modal.css" rel="stylesheet">
+    
+    <style>
+        /* Data Table Styles */
+        .trevid-table-wrapper {
+            background: var(--neutral-0);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            margin-bottom: var(--space-8);
+        }
+
+        .trevid-table-search {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+        }
+
+        .trevid-table-filters {
+            display: flex;
+            gap: var(--space-4);
+            align-items: end;
+            padding: var(--space-4) var(--space-6);
+            border-bottom: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-1);
+            min-width: 150px;
+        }
+
+        .filter-label {
+            font-size: var(--text-xs);
+            font-weight: var(--font-medium);
+            color: var(--neutral-600);
+        }
+
+        .trevid-table-container {
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .trevid-table-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--primary-500);
+        }
+
+        .trevid-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: var(--text-sm);
+        }
+
+        .trevid-table-head {
+            background: var(--neutral-100);
+            border-bottom: 2px solid var(--neutral-200);
+        }
+
+        .table-header {
+            padding: var(--space-4);
+            text-align: left;
+            font-weight: var(--font-semibold);
+            color: var(--neutral-700);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .table-header.sortable {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .table-header.sortable:hover {
+            background: var(--neutral-200);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-2);
+        }
+
+        .sort-indicators {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            opacity: 0.3;
+        }
+
+        .sort-icon {
+            font-size: 0.7rem;
+            display: none;
+        }
+
+        .table-header .sort-icon {
+            display: block;
+        }
+
+        .table-header.sort-asc .sort-asc,
+        .table-header.sort-desc .sort-desc {
+            opacity: 1;
+            color: var(--primary-500);
+        }
+
+        .table-cell {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--neutral-200);
+            vertical-align: middle;
+        }
+
+        .table-row:hover {
+            background: var(--neutral-50);
+        }
+
+        .table-row.selected {
+            background: var(--primary-50);
+        }
+
+        .select-column {
+            width: 40px;
+            text-align: center;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: var(--space-1);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--neutral-500);
+            cursor: pointer;
+            padding: var(--space-1);
+            border-radius: var(--radius-base);
+            transition: var(--transition-default);
+        }
+
+        .action-btn:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+
+        .action-btn.edit:hover {
+            background: var(--info-100);
+            color: var(--info-600);
+        }
+
+        .action-btn.delete:hover {
+            background: var(--error-100);
+            color: var(--error-600);
+        }
+
+        .trevid-table-empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            text-align: center;
+            color: var(--neutral-500);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-4);
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 var(--space-2) 0;
+            color: var(--neutral-700);
+        }
+
+        .trevid-table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-4) var(--space-6);
+            border-top: 1px solid var(--neutral-200);
+            background: var(--neutral-50);
+        }
+
+        .table-info {
+            display: flex;
+            gap: var(--space-4);
+            font-size: var(--text-sm);
+            color: var(--neutral-600);
+        }
+
+        .pagination {
+            display: flex;
+            gap: var(--space-1);
+            align-items: center;
+        }
+
+        .pagination-btn {
+            background: none;
+            border: 1px solid var(--neutral-300);
+            color: var(--neutral-600);
+            cursor: pointer;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-base);
+            transition: var(--transition-default);
+            min-width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-btn:hover:not(.disabled) {
+            background: var(--neutral-100);
+            border-color: var(--neutral-400);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-500);
+            border-color: var(--primary-500);
+            color: var(--neutral-0);
+        }
+
+        .pagination-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-ellipsis {
+            padding: var(--space-2);
+            color: var(--neutral-400);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .trevid-table-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                min-width: auto;
+            }
+
+            .trevid-table-footer {
+                flex-direction: column;
+                gap: var(--space-4);
+                align-items: stretch;
+            }
+
+            .table-info {
+                justify-content: center;
+            }
+
+            .pagination {
+                justify-content: center;
+            }
+
+            /* Stack table on mobile */
+            .trevid-table,
+            .trevid-table-head,
+            .trevid-table-body,
+            .table-header,
+            .table-row,
+            .table-cell {
+                display: block;
+            }
+
+            .trevid-table-head {
+                display: none;
+            }
+
+            .table-row {
+                border: 1px solid var(--neutral-200);
+                border-radius: var(--radius-lg);
+                margin-bottom: var(--space-4);
+                padding: var(--space-4);
+                background: var(--neutral-0);
+            }
+
+            .table-cell {
+                border: none;
+                padding: var(--space-2) 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .table-cell::before {
+                content: attr(data-label) ": ";
+                font-weight: var(--font-semibold);
+                color: var(--neutral-600);
+                min-width: 100px;
+            }
+
+            .select-column {
+                width: auto;
+            }
+        }
+
+        /* Demo specific styles */
+        .demo-section {
+            margin-bottom: var(--space-8);
+        }
+
+        .demo-header {
+            margin-bottom: var(--space-6);
+            text-align: center;
+        }
+
+        .demo-header h2 {
+            margin: 0 0 var(--space-2) 0;
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+            color: var(--neutral-800);
+        }
+
+        .demo-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: center;
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Advanced Components Demo</span>
+                <i class="fas fa-cogs"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-rocket"></i> Advanced Components Demo</h1>
+                <p class="page-description">Showcase of advanced TrevID components with real-world functionality</p>
+            </div>
+
+            <!-- Expense Form Modal Demo -->
+            <section class="demo-section">
+                <div class="demo-header">
+                    <h2>Advanced Expense Form Modal</h2>
+                    <p>Multi-step form with validation, file upload, and policy checking</p>
+                </div>
+                
+                <div class="demo-actions">
+                    <button class="trevid-btn trevid-btn--primary" 
+                            data-trevid-button 
+                            data-icon="fas fa-plus"
+                            onclick="showExpenseModal('create')">
+                        Add New Expense
+                    </button>
+                    <button class="trevid-btn trevid-btn--secondary" 
+                            data-trevid-button 
+                            data-icon="fas fa-edit"
+                            onclick="showExpenseModal('edit')">
+                        Edit Sample Expense
+                    </button>
+                </div>
+            </section>
+
+            <!-- Data Table Demo -->
+            <section class="demo-section">
+                <div class="demo-header">
+                    <h2>Advanced Data Table</h2>
+                    <p>Sortable, filterable, searchable table with pagination and selection</p>
+                </div>
+                
+                <div class="demo-actions">
+                    <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" 
+                            data-trevid-button 
+                            data-icon="fas fa-plus"
+                            onclick="addSampleData()">
+                        Add Sample Data
+                    </button>
+                    <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" 
+                            data-trevid-button 
+                            data-icon="fas fa-trash"
+                            onclick="clearTableData()">
+                        Clear Data
+                    </button>
+                    <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" 
+                            data-trevid-button 
+                            data-icon="fas fa-download"
+                            onclick="exportSelected()">
+                        Export Selected
+                    </button>
+                </div>
+                
+                <div id="expenses-table"></div>
+            </section>
+
+            <!-- Integration Demo -->
+            <section class="demo-section">
+                <div class="demo-header">
+                    <h2>Component Integration</h2>
+                    <p>See how components work together in real scenarios</p>
+                </div>
+                
+                <div class="trevid-card-grid trevid-card-grid--2">
+                    <div class="trevid-card">
+                        <div class="trevid-card__header">
+                            <h3 class="trevid-card__title">
+                                <i class="fas fa-chart-line"></i>
+                                Real-time Updates
+                            </h3>
+                        </div>
+                        <div class="trevid-card__body">
+                            <p>Components automatically sync data and update UI in real-time.</p>
+                            <div class="demo-metrics">
+                                <div class="metric-item">
+                                    <span class="metric-label">Total Expenses</span>
+                                    <span class="metric-value" id="total-expenses">Rp 0</span>
+                                </div>
+                                <div class="metric-item">
+                                    <span class="metric-label">Selected Items</span>
+                                    <span class="metric-value" id="selected-count">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="trevid-card">
+                        <div class="trevid-card__header">
+                            <h3 class="trevid-card__title">
+                                <i class="fas fa-mobile-alt"></i>
+                                Responsive Design
+                            </h3>
+                        </div>
+                        <div class="trevid-card__body">
+                            <p>All components are fully responsive and work seamlessly across devices.</p>
+                            <div class="responsive-demo">
+                                <button class="trevid-btn trevid-btn--small trevid-btn--tertiary" 
+                                        data-trevid-button 
+                                        onclick="simulateMobile()">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    Mobile View
+                                </button>
+                                <button class="trevid-btn trevid-btn--small trevid-btn--tertiary" 
+                                        data-trevid-button 
+                                        onclick="simulateDesktop()">
+                                    <i class="fas fa-desktop"></i>
+                                    Desktop View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="src/components/shared/button-component.js"></script>
+    <script src="src/components/shared/toast-system.js"></script>
+    <script src="src/components/shared/data-table.js"></script>
+    <script src="src/components/pages/expense-form-modal.js"></script>
+    
+    <script>
+        // Demo Data
+        const sampleExpenses = [
+            {
+                id: '1',
+                date: '2024-12-15',
+                merchant: 'Restaurant Sari Rasa',
+                category: 'meals',
+                amount: 250000,
+                currency: 'IDR',
+                status: 'approved',
+                project: 'Project Alpha'
+            },
+            {
+                id: '2',
+                date: '2024-12-14',
+                merchant: 'Grab Transport',
+                category: 'transport',
+                amount: 45000,
+                currency: 'IDR',
+                status: 'pending',
+                project: 'Project Beta'
+            },
+            {
+                id: '3',
+                date: '2024-12-13',
+                merchant: 'Shell Gas Station',
+                category: 'fuel',
+                amount: 180000,
+                currency: 'IDR',
+                status: 'rejected',
+                project: 'Sales Department'
+            },
+            {
+                id: '4',
+                date: '2024-12-12',
+                merchant: 'Hotel Santika',
+                category: 'accommodation',
+                amount: 850000,
+                currency: 'IDR',
+                status: 'approved',
+                project: 'Project Alpha'
+            },
+            {
+                id: '5',
+                date: '2024-12-11',
+                merchant: 'Office Depot',
+                category: 'office',
+                amount: 125000,
+                currency: 'IDR',
+                status: 'draft',
+                project: 'Marketing Department'
+            }
+        ];
+
+        // Initialize Data Table
+        let expensesTable;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTable();
+            updateMetrics();
+            
+            // Show welcome message
+            setTimeout(() => {
+                window.trevIDToast.success('Advanced components demo loaded successfully!', {
+                    duration: 4000
+                });
+            }, 500);
+        });
+
+        function initializeTable() {
+            const columns = [
+                {
+                    key: 'date',
+                    title: 'Date',
+                    type: 'date',
+                    sortable: true,
+                    width: '120px'
+                },
+                {
+                    key: 'merchant',
+                    title: 'Merchant',
+                    sortable: true
+                },
+                {
+                    key: 'category',
+                    title: 'Category',
+                    filterable: true,
+                    render: (value) => {
+                        const categoryLabels = {
+                            'meals': 'Meals',
+                            'transport': 'Transport',
+                            'accommodation': 'Hotel',
+                            'fuel': 'Fuel',
+                            'office': 'Office'
+                        };
+                        const badgeClasses = {
+                            'meals': 'trevid-badge--meals',
+                            'transport': 'trevid-badge--transport',
+                            'accommodation': 'trevid-badge--accommodation',
+                            'fuel': 'trevid-badge--fuel',
+                            'office': 'trevid-badge--office'
+                        };
+                        return `<span class="trevid-badge ${badgeClasses[value]} trevid-badge--small">${categoryLabels[value]}</span>`;
+                    },
+                    filterLabels: {
+                        'meals': 'Meals',
+                        'transport': 'Transport',
+                        'accommodation': 'Hotel',
+                        'fuel': 'Fuel',
+                        'office': 'Office'
+                    }
+                },
+                {
+                    key: 'amount',
+                    title: 'Amount',
+                    type: 'currency',
+                    sortable: true,
+                    width: '120px'
+                },
+                {
+                    key: 'status',
+                    title: 'Status',
+                    filterable: true,
+                    render: (value) => {
+                        const statusConfig = {
+                            'draft': 'trevid-badge--draft',
+                            'pending': 'trevid-badge--pending',
+                            'approved': 'trevid-badge--approved',
+                            'rejected': 'trevid-badge--rejected'
+                        };
+                        const icons = {
+                            'draft': 'fas fa-edit',
+                            'pending': 'fas fa-clock',
+                            'approved': 'fas fa-check',
+                            'rejected': 'fas fa-times'
+                        };
+                        return `
+                            <span class="trevid-badge ${statusConfig[value]} trevid-badge--small">
+                                <i class="${icons[value]} trevid-badge__icon"></i>
+                                ${value.charAt(0).toUpperCase() + value.slice(1)}
+                            </span>
+                        `;
+                    },
+                    filterLabels: {
+                        'draft': 'Draft',
+                        'pending': 'Pending',
+                        'approved': 'Approved',
+                        'rejected': 'Rejected'
+                    }
+                },
+                {
+                    key: 'project',
+                    title: 'Project',
+                    filterable: true
+                },
+                {
+                    key: 'actions',
+                    title: 'Actions',
+                    type: 'actions',
+                    width: '120px',
+                    actions: [
+                        {
+                            label: 'Edit',
+                            icon: 'fas fa-edit',
+                            handler: 'editExpense',
+                            className: 'edit',
+                            title: 'Edit expense'
+                        },
+                        {
+                            label: 'Delete',
+                            icon: 'fas fa-trash',
+                            handler: 'deleteExpense',
+                            className: 'delete',
+                            title: 'Delete expense'
+                        }
+                    ]
+                }
+            ];
+
+            expensesTable = new TrevIDDataTable('expenses-table', {
+                data: sampleExpenses,
+                columns: columns,
+                pageSize: 5,
+                sortable: true,
+                filterable: true,
+                searchable: true,
+                selectable: true,
+                emptyMessage: 'No expenses found. Click "Add Sample Data" to get started.'
+            });
+
+            // Listen for selection changes
+            document.getElementById('expenses-table').addEventListener('change', updateMetrics);
+        }
+
+        function showExpenseModal(mode) {
+            const sampleData = mode === 'edit' ? {
+                date: '2024-12-15',
+                merchant: 'Sample Restaurant',
+                amount: 150000,
+                currency: 'IDR',
+                category: 'meals',
+                description: 'Business lunch with client'
+            } : null;
+
+            const modal = new ExpenseFormModal({
+                title: mode === 'edit' ? 'Edit Expense' : 'Add New Expense',
+                mode: mode,
+                expenseData: sampleData,
+                onSave: (data) => {
+                    console.log('Expense saved:', data);
+                    
+                    // Add to table if creating new
+                    if (mode === 'create') {
+                        const newExpense = {
+                            id: Date.now().toString(),
+                            ...data,
+                            status: 'draft',
+                            project: data.project || 'Unassigned'
+                        };
+                        
+                        const currentData = expensesTable.options.data;
+                        currentData.push(newExpense);
+                        expensesTable.setData(currentData);
+                        updateMetrics();
+                    }
+                    
+                    window.trevIDToast.success(`Expense ${mode === 'edit' ? 'updated' : 'created'} successfully!`);
+                },
+                onCancel: () => {
+                    console.log('Modal cancelled');
+                }
+            });
+
+            modal.show();
+        }
+
+        function addSampleData() {
+            const newExpenses = [
+                {
+                    id: Date.now().toString(),
+                    date: '2024-12-16',
+                    merchant: 'Coffee Shop',
+                    category: 'meals',
+                    amount: 35000,
+                    currency: 'IDR',
+                    status: 'draft',
+                    project: 'Project Gamma'
+                },
+                {
+                    id: (Date.now() + 1).toString(),
+                    date: '2024-12-16',
+                    merchant: 'Taxi Service',
+                    category: 'transport',
+                    amount: 75000,
+                    currency: 'IDR',
+                    status: 'pending',
+                    project: 'Project Delta'
+                }
+            ];
+
+            const currentData = expensesTable.options.data;
+            expensesTable.setData([...currentData, ...newExpenses]);
+            updateMetrics();
+            
+            window.trevIDToast.success(`Added ${newExpenses.length} sample expenses!`);
+        }
+
+        function clearTableData() {
+            expensesTable.setData([]);
+            updateMetrics();
+            window.trevIDToast.info('Table data cleared');
+        }
+
+        function exportSelected() {
+            const selected = expensesTable.getSelectedRows();
+            if (selected.length === 0) {
+                window.trevIDToast.warning('Please select some rows to export');
+                return;
+            }
+            
+            window.trevIDToast.success(`Exporting ${selected.length} selected expenses...`, {
+                action: {
+                    label: 'Download',
+                    handler: 'downloadExport'
+                }
+            });
+        }
+
+        function downloadExport() {
+            window.trevIDToast.info('Export download started!');
+        }
+
+        function editExpense(id) {
+            const expense = expensesTable.options.data.find(e => e.id === id);
+            if (expense) {
+                showExpenseModal('edit');
+                window.trevIDToast.info(`Editing expense: ${expense.merchant}`);
+            }
+        }
+
+        function deleteExpense(id) {
+            const expense = expensesTable.options.data.find(e => e.id === id);
+            if (expense) {
+                if (confirm(`Are you sure you want to delete the expense from ${expense.merchant}?`)) {
+                    const currentData = expensesTable.options.data.filter(e => e.id !== id);
+                    expensesTable.setData(currentData);
+                    updateMetrics();
+                    window.trevIDToast.success('Expense deleted successfully');
+                }
+            }
+        }
+
+        function updateMetrics() {
+            const totalAmount = expensesTable.options.data.reduce((sum, expense) => sum + expense.amount, 0);
+            const selectedCount = expensesTable.getSelectedRows().length;
+            
+            document.getElementById('total-expenses').textContent = formatCurrency(totalAmount);
+            document.getElementById('selected-count').textContent = selectedCount;
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function simulateMobile() {
+            document.body.style.maxWidth = '375px';
+            document.body.style.margin = '0 auto';
+            window.trevIDToast.info('Simulating mobile view - resize window to see responsive design');
+        }
+
+        function simulateDesktop() {
+            document.body.style.maxWidth = '';
+            document.body.style.margin = '';
+            window.trevIDToast.info('Back to desktop view');
+        }
+
+        // Add some demo styles
+        const demoStyles = `
+            <style>
+            .demo-metrics {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-3);
+                margin-top: var(--space-4);
+            }
+            
+            .metric-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: var(--space-2) 0;
+                border-bottom: 1px solid var(--neutral-200);
+            }
+            
+            .metric-label {
+                font-size: var(--text-sm);
+                color: var(--neutral-600);
+            }
+            
+            .metric-value {
+                font-weight: var(--font-semibold);
+                color: var(--primary-600);
+            }
+            
+            .responsive-demo {
+                display: flex;
+                gap: var(--space-2);
+                margin-top: var(--space-4);
+            }
+            </style>
+        `;
+        document.head.insertAdjacentHTML('beforeend', demoStyles);
+    </script>
+</body>
+</html>

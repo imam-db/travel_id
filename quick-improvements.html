@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrevID - Quick Improvements Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/components/design-system/tokens.css">
+    <link rel="stylesheet" href="src/components/shared/button-component.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Quick improvements demo styles */
+        .improvement-section {
+            margin: var(--space-8) 0;
+            padding: var(--space-6);
+            background: var(--neutral-0);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .improvement-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .improvement-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-500);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-4);
+            margin-top: var(--space-6);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+        }
+        
+        .status-badge--draft { background: var(--neutral-100); color: var(--neutral-700); }
+        .status-badge--pending { background: var(--warning-100); color: var(--warning-700); }
+        .status-badge--approved { background: var(--success-100); color: var(--success-700); }
+        .status-badge--rejected { background: var(--error-100); color: var(--error-700); }
+        
+        .metric-card {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .metric-value {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-2);
+        }
+        
+        .metric-label {
+            opacity: 0.9;
+            font-size: var(--text-sm);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Hello, John Doe</span>
+                <i class="fas fa-user-circle"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-magic"></i> UI/UX Quick Improvements</h1>
+                <p class="page-description">Demo of enhanced components and interactions</p>
+            </div>
+
+            <!-- Improved Buttons -->
+            <div class="improvement-section">
+                <div class="improvement-header">
+                    <div class="improvement-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <div>
+                        <h2>Enhanced Button System</h2>
+                        <p>Consistent, accessible buttons with loading states and ripple effects</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div>
+                        <h4>Button Variants</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-3);">
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button data-icon="fas fa-plus">
+                                Primary Button
+                            </button>
+                            <button class="trevid-btn trevid-btn--secondary trevid-btn--medium" data-trevid-button data-icon="fas fa-edit">
+                                Secondary
+                            </button>
+                            <button class="trevid-btn trevid-btn--tertiary trevid-btn--medium" data-trevid-button>
+                                Tertiary
+                            </button>
+                            <button class="trevid-btn trevid-btn--danger trevid-btn--medium" data-trevid-button data-icon="fas fa-trash">
+                                Danger
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4>Button Sizes</h4>
+                        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); margin-top: var(--space-3);">
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--small" data-trevid-button>Small</button>
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button>Medium</button>
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--large" data-trevid-button>Large</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Badges -->
+            <div class="improvement-section">
+                <div class="improvement-header">
+                    <div class="improvement-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div>
+                        <h2>Status Badge System</h2>
+                        <p>Consistent visual indicators for different states</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: var(--space-3);">
+                    <span class="status-badge status-badge--draft">
+                        <i class="fas fa-edit"></i> Draft
+                    </span>
+                    <span class="status-badge status-badge--pending">
+                        <i class="fas fa-clock"></i> Pending Review
+                    </span>
+                    <span class="status-badge status-badge--approved">
+                        <i class="fas fa-check"></i> Approved
+                    </span>
+                    <span class="status-badge status-badge--rejected">
+                        <i class="fas fa-times"></i> Rejected
+                    </span>
+                </div>
+            </div>
+
+            <!-- Metric Cards -->
+            <div class="improvement-section">
+                <div class="improvement-header">
+                    <div class="improvement-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div>
+                        <h2>Enhanced Metric Cards</h2>
+                        <p>Beautiful data visualization with gradients and animations</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">Rp 8.5M</div>
+                        <div class="metric-label">Total Expenses</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, var(--success-500), var(--success-600));">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Approved Reports</div>
+                    </div>
+                    <div class="metric-card" style="background: linear-gradient(135deg, var(--warning-500), var(--warning-600));">
+                        <div class="metric-value">3</div>
+                        <div class="metric-label">Pending Approvals</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="src/components/shared/button-component.js"></script>
+</body>
+</html>

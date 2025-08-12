@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrevID Component Library</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/components/design-system/tokens.css">
+    <link rel="stylesheet" href="src/components/shared/button-component.css">
+    <link rel="stylesheet" href="src/components/shared/form-components.css">
+    <link rel="stylesheet" href="src/components/shared/status-badges.css">
+    <link rel="stylesheet" href="src/components/shared/card-components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .demo-section {
+            margin: var(--space-8) 0;
+            padding: var(--space-6);
+            background: var(--neutral-0);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+            padding-bottom: var(--space-4);
+            border-bottom: 1px solid var(--neutral-200);
+        }
+        
+        .demo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-500);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+            margin-top: var(--space-6);
+        }
+        
+        .demo-item {
+            padding: var(--space-4);
+            border: 1px solid var(--neutral-200);
+            border-radius: var(--radius-lg);
+            background: var(--neutral-50);
+        }
+        
+        .demo-item h4 {
+            margin: 0 0 var(--space-3) 0;
+            color: var(--neutral-800);
+            font-size: var(--text-base);
+        }
+        
+        .demo-showcase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-3);
+            align-items: center;
+        }
+        
+        .code-snippet {
+            background: var(--neutral-900);
+            color: var(--neutral-100);
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            overflow-x: auto;
+            margin-top: var(--space-3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            <div class="user-info">
+                <span>Component Library</span>
+                <i class="fas fa-palette"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-cubes"></i> TrevID Component Library</h1>
+                <p class="page-description">Comprehensive design system and reusable components</p>
+            </div>
+
+            <!-- Buttons -->
+            <div class="demo-section">
+                <div class="demo-header">
+                    <div class="demo-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <div>
+                        <h2>Button System</h2>
+                        <p>Consistent, accessible buttons with multiple variants and states</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h4>Button Variants</h4>
+                        <div class="demo-showcase">
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button>Primary</button>
+                            <button class="trevid-btn trevid-btn--secondary trevid-btn--medium" data-trevid-button>Secondary</button>
+                            <button class="trevid-btn trevid-btn--tertiary trevid-btn--medium" data-trevid-button>Tertiary</button>
+                            <button class="trevid-btn trevid-btn--danger trevid-btn--medium" data-trevid-button>Danger</button>
+                        </div>
+                        <div class="code-snippet">
+&lt;button class="trevid-btn trevid-btn--primary" data-trevid-button&gt;Primary&lt;/button&gt;
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Button Sizes</h4>
+                        <div class="demo-showcase">
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--small" data-trevid-button>Small</button>
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button>Medium</button>
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--large" data-trevid-button>Large</button>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Button with Icons</h4>
+                        <div class="demo-showcase">
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button data-icon="fas fa-plus">Add Expense</button>
+                            <button class="trevid-btn trevid-btn--secondary trevid-btn--medium" data-trevid-button data-icon="fas fa-download" data-icon-position="right">Export</button>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Button States</h4>
+                        <div class="demo-showcase">
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button data-loading>Loading...</button>
+                            <button class="trevid-btn trevid-btn--primary trevid-btn--medium" data-trevid-button disabled>Disabled</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Badges -->
+            <div class="demo-section">
+                <div class="demo-header">
+                    <div class="demo-icon">
+                        <i class="fas fa-tags"></i>
+                    </div>
+                    <div>
+                        <h2>Status Badge System</h2>
+                        <p>Visual indicators for different states and categories</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h4>Status Badges</h4>
+                        <div class="demo-showcase">
+                            <span class="trevid-badge trevid-badge--draft">
+                                <i class="fas fa-edit trevid-badge__icon"></i> Draft
+                            </span>
+                            <span class="trevid-badge trevid-badge--pending">
+                                <i class="fas fa-clock trevid-badge__icon"></i> Pending
+                            </span>
+                            <span class="trevid-badge trevid-badge--approved">
+                                <i class="fas fa-check trevid-badge__icon"></i> Approved
+                            </span>
+                            <span class="trevid-badge trevid-badge--rejected">
+                                <i class="fas fa-times trevid-badge__icon"></i> Rejected
+                            </span>
+                            <span class="trevid-badge trevid-badge--paid">
+                                <i class="fas fa-money-bill trevid-badge__icon"></i> Paid
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Category Badges</h4>
+                        <div class="demo-showcase">
+                            <span class="trevid-badge trevid-badge--meals">Meals</span>
+                            <span class="trevid-badge trevid-badge--transport">Transport</span>
+                            <span class="trevid-badge trevid-badge--accommodation">Hotel</span>
+                            <span class="trevid-badge trevid-badge--fuel">Fuel</span>
+                            <span class="trevid-badge trevid-badge--office">Office</span>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Badge Sizes</h4>
+                        <div class="demo-showcase">
+                            <span class="trevid-badge trevid-badge--approved trevid-badge--small">Small</span>
+                            <span class="trevid-badge trevid-badge--approved">Medium</span>
+                            <span class="trevid-badge trevid-badge--approved trevid-badge--large">Large</span>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Interactive Badges</h4>
+                        <div class="demo-showcase">
+                            <span class="trevid-badge trevid-badge--pending trevid-badge--clickable">Clickable</span>
+                            <span class="trevid-badge trevid-badge--approved trevid-badge--dismissible">
+                                Dismissible
+                                <button class="trevid-badge__close">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Components -->
+            <div class="demo-section">
+                <div class="demo-header">
+                    <div class="demo-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <div>
+                        <h2>Form Components</h2>
+                        <p>Consistent form elements with validation states</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h4>Input Fields</h4>
+                        <div class="trevid-form-group">
+                            <label class="trevid-form-label trevid-form-label--required">Merchant Name</label>
+                            <input type="text" class="trevid-input" placeholder="Enter merchant name">
+                        </div>
+                        <div class="trevid-form-group">
+                            <label class="trevid-form-label">Amount</label>
+                            <div class="trevid-input-wrapper">
+                                <i class="trevid-input-icon fas fa-dollar-sign"></i>
+                                <input type="number" class="trevid-input" placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Select & Textarea</h4>
+                        <div class="trevid-form-group">
+                            <label class="trevid-form-label">Category</label>
+                            <select class="trevid-select">
+                                <option>Select category...</option>
+                                <option>Meals & Entertainment</option>
+                                <option>Transportation</option>
+                                <option>Accommodation</option>
+                            </select>
+                        </div>
+                        <div class="trevid-form-group">
+                            <label class="trevid-form-label">Description</label>
+                            <textarea class="trevid-textarea" placeholder="Enter description..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Validation States</h4>
+                        <div class="trevid-form-group trevid-form-group--error">
+                            <label class="trevid-form-label">Email</label>
+                            <input type="email" class="trevid-input" value="invalid-email">
+                            <div class="trevid-form-error">
+                                <i class="fas fa-exclamation-circle"></i>
+                                Please enter a valid email address
+                            </div>
+                        </div>
+                        <div class="trevid-form-group trevid-form-group--success">
+                            <label class="trevid-form-label">Phone</label>
+                            <input type="tel" class="trevid-input" value="+1234567890">
+                            <div class="trevid-form-success">
+                                <i class="fas fa-check-circle"></i>
+                                Phone number is valid
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>File Upload</h4>
+                        <div class="trevid-file-upload">
+                            <input type="file" accept="image/*">
+                            <div class="trevid-file-upload__icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="trevid-file-upload__text">
+                                <p><strong>Drop receipt here</strong></p>
+                                <p>or click to browse</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards -->
+            <div class="demo-section">
+                <div class="demo-header">
+                    <div class="demo-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h2>Card Components</h2>
+                        <p>Flexible card layouts for different content types</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h4>Basic Cards</h4>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                            <div class="trevid-card">
+                                <div class="trevid-card__header">
+                                    <h3 class="trevid-card__title">Card Title</h3>
+                                    <p class="trevid-card__subtitle">Card subtitle</p>
+                                </div>
+                                <div class="trevid-card__body">
+                                    <p>This is a basic card with header and body content.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Metric Cards</h4>
+                        <div class="trevid-card trevid-card--metric">
+                            <div class="trevid-card__body">
+                                <div class="trevid-metric__value">Rp 8.5M</div>
+                                <div class="trevid-metric__label">Total Expenses</div>
+                                <div class="trevid-metric__change trevid-metric__change--positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    +12% from last month
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Expense Card</h4>
+                        <div class="trevid-card">
+                            <div class="trevid-expense-card">
+                                <div class="trevid-expense-card__icon trevid-expense-card__icon--meals">
+                                    <i class="fas fa-utensils"></i>
+                                </div>
+                                <div class="trevid-expense-card__content">
+                                    <h4 class="trevid-expense-card__title">Restaurant ABC</h4>
+                                    <div class="trevid-expense-card__meta">
+                                        <span>Dec 15, 2024</span>
+                                        <span>•</span>
+                                        <span class="trevid-badge trevid-badge--meals trevid-badge--small">Meals</span>
+                                    </div>
+                                    <div class="trevid-expense-card__amount">Rp 250,000</div>
+                                </div>
+                                <div class="trevid-expense-card__actions">
+                                    <span class="trevid-badge trevid-badge--approved trevid-badge--small">
+                                        <i class="fas fa-check trevid-badge__icon"></i>
+                                        Approved
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="demo-item">
+                        <h4>Travel Card</h4>
+                        <div class="trevid-card">
+                            <div class="trevid-travel-card">
+                                <div class="trevid-card__body">
+                                    <div class="trevid-travel-card__header">
+                                        <h4 class="trevid-travel-card__title">Business Trip to Singapore</h4>
+                                        <span class="trevid-badge trevid-badge--pending trevid-badge--small">Pending</span>
+                                    </div>
+                                    <div class="trevid-travel-card__route">
+                                        <span>Jakarta</span>
+                                        <i class="fas fa-plane trevid-travel-card__route-arrow"></i>
+                                        <span>Singapore</span>
+                                    </div>
+                                    <div class="trevid-travel-card__details">
+                                        <div class="trevid-travel-card__detail">
+                                            Departure
+                                            <strong>Dec 20, 2024</strong>
+                                        </div>
+                                        <div class="trevid-travel-card__detail">
+                                            Return
+                                            <strong>Dec 25, 2024</strong>
+                                        </div>
+                                        <div class="trevid-travel-card__detail">
+                                            Budget
+                                            <strong>$2,500</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trevid-travel-card__footer">
+                                    <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" data-trevid-button>View Details</button>
+                                    <button class="trevid-btn trevid-btn--primary trevid-btn--small" data-trevid-button>Book Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Demo -->
+            <div class="demo-section">
+                <div class="demo-header">
+                    <div class="demo-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div>
+                        <h2>Toast Notifications</h2>
+                        <p>Contextual feedback messages with different types</p>
+                    </div>
+                </div>
+                
+                <div class="demo-grid">
+                    <div class="demo-item">
+                        <h4>Toast Types</h4>
+                        <div class="demo-showcase">
+                            <button class="trevid-btn trevid-btn--success trevid-btn--small" onclick="showToastDemo('success')">Success</button>
+                            <button class="trevid-btn trevid-btn--danger trevid-btn--small" onclick="showToastDemo('error')">Error</button>
+                            <button class="trevid-btn trevid-btn--secondary trevid-btn--small" onclick="showToastDemo('warning')">Warning</button>
+                            <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" onclick="showToastDemo('info')">Info</button>
+                        </div>
+                        <div class="code-snippet">
+window.trevIDToast.success('Expense saved successfully!');
+window.trevIDToast.error('Failed to save expense');
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="src/components/shared/button-component.js"></script>
+    <script src="src/components/shared/toast-system.js"></script>
+    <script>
+        function showToastDemo(type) {
+            const messages = {
+                success: 'Expense saved successfully!',
+                error: 'Failed to save expense. Please try again.',
+                warning: 'This expense exceeds your budget limit.',
+                info: 'New expense report is ready for review.'
+            };
+            
+            window.trevIDToast[type](messages[type]);
+        }
+        
+        // Demo file upload
+        document.querySelectorAll('.trevid-file-upload input[type="file"]').forEach(input => {
+            input.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    window.trevIDToast.success(`File "${e.target.files[0].name}" uploaded successfully!`);
+                }
+            });
+        });
+        
+        // Demo dismissible badges
+        document.querySelectorAll('.trevid-badge__close').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.closest('.trevid-badge').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

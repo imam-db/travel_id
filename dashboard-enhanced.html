@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrevID - Enhanced Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Enhanced Component System -->
+    <link href="style.css" rel="stylesheet">
+    <link href="src/components/design-system/tokens.css" rel="stylesheet">
+    <link href="src/components/shared/button-component.css" rel="stylesheet">
+    <link href="src/components/shared/form-components.css" rel="stylesheet">
+    <link href="src/components/shared/status-badges.css" rel="stylesheet">
+    <link href="src/components/shared/card-components.css" rel="stylesheet">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3d0974">
+    <link rel="icon" href="/assets/brand/favicon.ico">
+    <link rel="apple-touch-icon" href="/assets/brand/trevid_icon_192.png">
+</head>
+<body>
+    <!-- Enhanced Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img 
+                    class="brand-logo" 
+                    src="assets/brand/trevid_logo.png" 
+                    srcset="/assets/brand/trevid_logo.png 1x, /assets/brand/trevid_logo@2x.png 2x" 
+                    alt="TrevID – Business Companion" 
+                    width="140" height="36" />
+            </div>
+            
+            <!-- Enhanced Quick Actions -->
+            <div class="quick-actions-desktop">
+                <button class="trevid-btn trevid-btn--primary trevid-btn--small" 
+                        data-trevid-button 
+                        data-icon="fas fa-plus"
+                        onclick="showExpenseForm()">
+                    Add Expense
+                </button>
+                <button class="trevid-btn trevid-btn--secondary trevid-btn--small" 
+                        data-trevid-button 
+                        data-icon="fas fa-plane"
+                        onclick="window.location.href='travel-new.html'">
+                    New Trip
+                </button>
+                <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" 
+                        data-trevid-button 
+                        data-icon="fas fa-money-bill"
+                        onclick="window.location.href='cash-advance.html'">
+                    Cash Advance
+                </button>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?name=John+Doe&background=3d0974&color=fff" 
+                         alt="John Doe" width="32" height="32">
+                </div>
+                <div class="user-details">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-role">Sales Manager</span>
+                </div>
+                <button class="user-menu-btn" onclick="toggleUserMenu()">
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Enhanced Navigation -->
+    <nav class="bottom-nav">
+        <a href="dashboard-enhanced.html" class="nav-item active" aria-current="page">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="expenses.html" class="nav-item">
+            <i class="fas fa-receipt"></i>
+            <span>Expenses</span>
+            <span class="trevid-badge trevid-badge--warning trevid-badge--small nav-badge">3</span>
+        </a>
+        <a href="travel.html" class="nav-item">
+            <i class="fas fa-plane"></i>
+            <span>Travel</span>
+        </a>
+        <a href="#" class="nav-item" onclick="showMoreMenu()">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>More</span>
+            <span class="trevid-badge trevid-badge--pending trevid-badge--small nav-badge">5</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h1>Good morning, John! 👋</h1>
+                        <p>Here's your expense overview for December 2024</p>
+                    </div>
+                    <div class="welcome-actions">
+                        <button class="trevid-btn trevid-btn--primary trevid-btn--medium" 
+                                data-trevid-button 
+                                data-icon="fas fa-camera"
+                                onclick="openReceiptScanner()">
+                            Scan Receipt
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Enhanced Metrics Cards -->
+            <section class="metrics-section">
+                <div class="trevid-card-grid trevid-card-grid--3">
+                    <!-- Budget Overview Card -->
+                    <div class="trevid-card trevid-card--metric">
+                        <div class="trevid-card__body">
+                            <div class="trevid-metric__value">Rp 8.5M</div>
+                            <div class="trevid-metric__label">Total Expenses</div>
+                            <div class="trevid-metric__change trevid-metric__change--positive">
+                                <i class="fas fa-arrow-up"></i>
+                                +12% from last month
+                            </div>
+                            <div class="metric-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 68%"></div>
+                                </div>
+                                <span class="progress-text">68% of budget used</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Approvals Card -->
+                    <div class="trevid-card trevid-card--metric" style="background: linear-gradient(135deg, var(--warning-500), var(--warning-600));">
+                        <div class="trevid-card__body">
+                            <div class="trevid-metric__value">5</div>
+                            <div class="trevid-metric__label">Pending Approvals</div>
+                            <div class="trevid-metric__change">
+                                <i class="fas fa-clock"></i>
+                                2 due today
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reimbursements Card -->
+                    <div class="trevid-card trevid-card--metric" style="background: linear-gradient(135deg, var(--success-500), var(--success-600));">
+                        <div class="trevid-card__body">
+                            <div class="trevid-metric__value">Rp 2.1M</div>
+                            <div class="trevid-metric__label">To be Reimbursed</div>
+                            <div class="trevid-metric__change">
+                                <i class="fas fa-calendar"></i>
+                                Expected Dec 30
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions Section -->
+            <section class="quick-actions-section">
+                <div class="section-header">
+                    <h2>Quick Actions</h2>
+                    <p>Common tasks to get you started</p>
+                </div>
+                
+                <div class="quick-actions-grid">
+                    <div class="trevid-card trevid-card--clickable" onclick="openReceiptScanner()">
+                        <div class="trevid-card__body">
+                            <div class="action-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <h3>Scan Receipt</h3>
+                            <p>Quickly add expenses by scanning receipts</p>
+                        </div>
+                    </div>
+                    
+                    <div class="trevid-card trevid-card--clickable" onclick="window.location.href='travel-new.html'">
+                        <div class="trevid-card__body">
+                            <div class="action-icon">
+                                <i class="fas fa-plane"></i>
+                            </div>
+                            <h3>Book Travel</h3>
+                            <p>Plan and book your next business trip</p>
+                        </div>
+                    </div>
+                    
+                    <div class="trevid-card trevid-card--clickable" onclick="window.location.href='mwp.html'">
+                        <div class="trevid-card__body">
+                            <div class="action-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <h3>Monthly Plan</h3>
+                            <p>Create your monthly working plan</p>
+                        </div>
+                    </div>
+                    
+                    <div class="trevid-card trevid-card--clickable" onclick="window.location.href='cash-advance.html'">
+                        <div class="trevid-card__body">
+                            <div class="action-icon">
+                                <i class="fas fa-money-bill"></i>
+                            </div>
+                            <h3>Cash Advance</h3>
+                            <p>Request advance for upcoming expenses</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity Section -->
+            <section class="recent-activity-section">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                    <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" 
+                            data-trevid-button 
+                            onclick="window.location.href='expenses.html'">
+                        View All
+                    </button>
+                </div>
+                
+                <div class="activity-list">
+                    <!-- Recent Expense Items -->
+                    <div class="trevid-card">
+                        <div class="trevid-expense-card">
+                            <div class="trevid-expense-card__icon trevid-expense-card__icon--meals">
+                                <i class="fas fa-utensils"></i>
+                            </div>
+                            <div class="trevid-expense-card__content">
+                                <h4 class="trevid-expense-card__title">Restaurant Sari Rasa</h4>
+                                <div class="trevid-expense-card__meta">
+                                    <span>Dec 15, 2024</span>
+                                    <span>•</span>
+                                    <span class="trevid-badge trevid-badge--meals trevid-badge--small">Meals</span>
+                                </div>
+                                <div class="trevid-expense-card__amount">Rp 250,000</div>
+                            </div>
+                            <div class="trevid-expense-card__actions">
+                                <span class="trevid-badge trevid-badge--approved trevid-badge--small">
+                                    <i class="fas fa-check trevid-badge__icon"></i>
+                                    Approved
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trevid-card">
+                        <div class="trevid-expense-card">
+                            <div class="trevid-expense-card__icon trevid-expense-card__icon--transport">
+                                <i class="fas fa-car"></i>
+                            </div>
+                            <div class="trevid-expense-card__content">
+                                <h4 class="trevid-expense-card__title">Grab to Client Meeting</h4>
+                                <div class="trevid-expense-card__meta">
+                                    <span>Dec 14, 2024</span>
+                                    <span>•</span>
+                                    <span class="trevid-badge trevid-badge--transport trevid-badge--small">Transport</span>
+                                </div>
+                                <div class="trevid-expense-card__amount">Rp 45,000</div>
+                            </div>
+                            <div class="trevid-expense-card__actions">
+                                <span class="trevid-badge trevid-badge--pending trevid-badge--small">
+                                    <i class="fas fa-clock trevid-badge__icon"></i>
+                                    Pending
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trevid-card">
+                        <div class="trevid-expense-card">
+                            <div class="trevid-expense-card__icon trevid-expense-card__icon--fuel">
+                                <i class="fas fa-gas-pump"></i>
+                            </div>
+                            <div class="trevid-expense-card__content">
+                                <h4 class="trevid-expense-card__title">Shell Gas Station</h4>
+                                <div class="trevid-expense-card__meta">
+                                    <span>Dec 13, 2024</span>
+                                    <span>•</span>
+                                    <span class="trevid-badge trevid-badge--fuel trevid-badge--small">Fuel</span>
+                                </div>
+                                <div class="trevid-expense-card__amount">Rp 180,000</div>
+                            </div>
+                            <div class="trevid-expense-card__actions">
+                                <span class="trevid-badge trevid-badge--rejected trevid-badge--small">
+                                    <i class="fas fa-times trevid-badge__icon"></i>
+                                    Rejected
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upcoming Travel Section -->
+            <section class="upcoming-travel-section">
+                <div class="section-header">
+                    <h2>Upcoming Travel</h2>
+                    <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" 
+                            data-trevid-button 
+                            onclick="window.location.href='travel.html'">
+                        View All
+                    </button>
+                </div>
+                
+                <div class="travel-list">
+                    <div class="trevid-card">
+                        <div class="trevid-travel-card">
+                            <div class="trevid-card__body">
+                                <div class="trevid-travel-card__header">
+                                    <h4 class="trevid-travel-card__title">Business Trip to Singapore</h4>
+                                    <span class="trevid-badge trevid-badge--approved trevid-badge--small">Approved</span>
+                                </div>
+                                <div class="trevid-travel-card__route">
+                                    <span>Jakarta (CGK)</span>
+                                    <i class="fas fa-plane trevid-travel-card__route-arrow"></i>
+                                    <span>Singapore (SIN)</span>
+                                </div>
+                                <div class="trevid-travel-card__details">
+                                    <div class="trevid-travel-card__detail">
+                                        Departure
+                                        <strong>Dec 20, 2024</strong>
+                                    </div>
+                                    <div class="trevid-travel-card__detail">
+                                        Return
+                                        <strong>Dec 25, 2024</strong>
+                                    </div>
+                                    <div class="trevid-travel-card__detail">
+                                        Budget
+                                        <strong>$2,500</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="trevid-travel-card__footer">
+                                <button class="trevid-btn trevid-btn--tertiary trevid-btn--small" data-trevid-button>
+                                    View Details
+                                </button>
+                                <button class="trevid-btn trevid-btn--primary trevid-btn--small" data-trevid-button>
+                                    Manage Booking
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <button class="trevid-btn trevid-btn--primary trevid-btn--fab" 
+            data-trevid-button 
+            onclick="showQuickActionMenu()"
+            aria-label="Quick actions">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="src/components/shared/button-component.js"></script>
+    <script src="src/components/shared/toast-system.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        // Enhanced Dashboard Functionality
+        function openReceiptScanner() {
+            window.location.href = 'receipt-scanner-demo.html';
+        }
+        
+        function showExpenseForm() {
+            window.trevIDToast.info('Opening expense form...', {
+                action: {
+                    label: 'Quick Add',
+                    handler: 'quickAddExpense'
+                }
+            });
+            // In real app, this would open a modal or navigate to form
+        }
+        
+        function quickAddExpense() {
+            window.trevIDToast.success('Quick expense form opened!');
+        }
+        
+        function toggleUserMenu() {
+            window.trevIDToast.info('User menu functionality coming soon!');
+        }
+        
+        function showMoreMenu() {
+            window.trevIDToast.info('More menu with additional options', {
+                duration: 3000
+            });
+        }
+        
+        function showQuickActionMenu() {
+            // Show floating menu with quick actions
+            const actions = [
+                { label: 'Add Expense', icon: 'fas fa-plus', action: 'showExpenseForm' },
+                { label: 'Scan Receipt', icon: 'fas fa-camera', action: 'openReceiptScanner' },
+                { label: 'New Trip', icon: 'fas fa-plane', action: () => window.location.href = 'travel-new.html' }
+            ];
+            
+            window.trevIDToast.info('Quick actions: Add Expense, Scan Receipt, New Trip', {
+                duration: 4000,
+                action: {
+                    label: 'Add Expense',
+                    handler: 'showExpenseForm'
+                }
+            });
+        }
+        
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show welcome message
+            setTimeout(() => {
+                window.trevIDToast.success('Welcome back! You have 5 pending approvals.', {
+                    duration: 5000,
+                    action: {
+                        label: 'View',
+                        handler: () => window.location.href = 'approvals.html'
+                    }
+                });
+            }, 1000);
+            
+            // Simulate real-time updates
+            setTimeout(() => {
+                updateMetrics();
+            }, 3000);
+        });
+        
+        function updateMetrics() {
+            // Simulate metric updates
+            const progressFill = document.querySelector('.progress-fill');
+            if (progressFill) {
+                progressFill.style.width = '72%';
+                document.querySelector('.progress-text').textContent = '72% of budget used';
+            }
+        }
+    </script>
+
+    <style>
+        /* Enhanced Dashboard Styles */
+        .welcome-section {
+            margin-bottom: var(--space-8);
+        }
+        
+        .welcome-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-6);
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-6);
+        }
+        
+        .welcome-text h1 {
+            margin: 0 0 var(--space-2) 0;
+            font-size: var(--text-2xl);
+            font-weight: var(--font-bold);
+        }
+        
+        .welcome-text p {
+            margin: 0;
+            opacity: 0.9;
+        }
+        
+        .metrics-section {
+            margin-bottom: var(--space-8);
+        }
+        
+        .metric-progress {
+            margin-top: var(--space-4);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            margin-bottom: var(--space-2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--radius-full);
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: var(--text-xs);
+            opacity: 0.8;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-800);
+        }
+        
+        .section-header p {
+            margin: var(--space-1) 0 0 0;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+        
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-100);
+            color: var(--primary-600);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--space-3);
+        }
+        
+        .quick-actions-grid .trevid-card h3 {
+            margin: 0 0 var(--space-2) 0;
+            font-size: var(--text-lg);
+            font-weight: var(--font-semibold);
+            color: var(--neutral-800);
+        }
+        
+        .quick-actions-grid .trevid-card p {
+            margin: 0;
+            color: var(--neutral-600);
+            font-size: var(--text-sm);
+        }
+        
+        .activity-list,
+        .travel-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .user-avatar img {
+            border-radius: 50%;
+        }
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: var(--font-medium);
+            color: var(--neutral-800);
+        }
+        
+        .user-role {
+            font-size: var(--text-xs);
+            color: var(--neutral-500);
+        }
+        
+        .user-menu-btn {
+            background: none;
+            border: none;
+            color: var(--neutral-500);
+            cursor: pointer;
+            padding: var(--space-1);
+            border-radius: var(--radius-base);
+            transition: var(--transition-default);
+        }
+        
+        .user-menu-btn:hover {
+            background: var(--neutral-100);
+            color: var(--neutral-700);
+        }
+        
+        .nav-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .welcome-content {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--space-4);
+            }
+            
+            .quick-actions-desktop {
+                display: none;
+            }
+            
+            .user-details {
+                display: none;
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</body>
+</html>
